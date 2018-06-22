@@ -26,6 +26,6 @@ class CheckDomain implements CustomValidationInterface
     }
 
     public function errorMessage(){
-        return 'Nguồn phải là tên miền .com, .vn, ...';
+        return 'Bạn phải nhập tên miền .com, .vn, ...';
     }
 }

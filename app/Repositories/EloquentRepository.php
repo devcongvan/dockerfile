@@ -20,10 +20,7 @@ abstract class EloquentRepository implements RepositoryInterface
 
     abstract public function setModel();
 
-    public function getAll()
-    {
-        return $this->_model->Orderby('id','desc')->get();
-    }
+    abstract function getAll(array $condition=[], $limit=10);
 
     public function getById($id)
     {

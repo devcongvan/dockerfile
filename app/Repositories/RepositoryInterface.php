@@ -11,7 +11,7 @@ namespace App\Repositories;
 
 interface RepositoryInterface
 {
-    public function getAll();
+    public function getAll(array $condidtion,$limit);
 
     public function getById($id);
 

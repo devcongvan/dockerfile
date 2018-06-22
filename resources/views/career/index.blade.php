@@ -40,23 +40,27 @@
                     <section class="col-lg-12 candidate-sideright">
                         <!-- box thông tin cơ bản -->
                         <div class="card" id="thongtincoban">
+                            <form method="get">
                             <div class=" p-0 row">
+
                                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                    <input type="text" name="" class="form-group" placeholder="Ghõ tên ngành nghề">
+                                    <input type="text" name="name" class="form-group"  placeholder="Ghõ tên ngành nghề">
                                 </div>
                                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                    <select class="form-group">
+                                    <select class="form-group" name="option" id="career-search-option" placeholder="Ghõ tên ngành nghề">
                                         <option value="">-- Tìm kiếm tùy chọn --</option>
-                                        <option value="">Kỹ năng mới</option>
-                                        <option value="">Kỹ năng nhiều ứng viên nhất</option>
+                                        <option value='new'>Ngành nghề mới</option>
+                                        <option value='top'>Ngành nghề nhiều ứng viên nhất</option>
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    <button type="button" class="btn btn-default full-width btn-blue"><i class="nav-icon fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                                    <button type="submit" class="btn btn-default full-width btn-blue"><i class="nav-icon fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
                                 </div>
+
                             </div><!-- /.card-header -->
+                            </form>
                             <div class="card-searchinfo">
-                                <b>1 - 12 </b> trong <b> {{$careers->count()}} </b> ngành nghề <span></span>
+                                <b>{{$careers->firstItem()}} - {{$careers->lastItem()}} </b> trong <b> {{$careers->total()}} </b> ngành nghề <span></span>
                             </div>
                             <div class="card-body" style="border-top: none; padding: 0; padding-top: 0!important; margin-top: 0!important">
                                 <div class="row candidateBox career-list">
@@ -72,9 +76,11 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody class="result">
-                                                @foreach($careers as $index => $item)
+                                                @php $n=$careers->firstItem() @endphp
+                                                @foreach($careers as $item)
+                                                    {{--{{$n++}}--}}
                                                 <tr class="result-item">
-                                                    <td class="result-index">{{$index+1}}</td>
+                                                    <td class="result-index">{{$n++}}</td>
                                                     <td class="result-name">{{$item->ca_name}}</td>
                                                     <td>1523</td>
                                                     <td><button type="button" data-id="{{$item->id}}" class="btn btn-default career-list-edit" style=""><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -90,13 +96,7 @@
                                 </div> <!-- /. candidateBox -->
                             </div><!-- /.card-body -->
                             <div class="card-footer">
-                                <ul class="pagination pagination-sm">
-                                    <li class="page-item"><a href="#" class="page-link">«</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">3</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">»</a></li>
-                                </ul>
+                                {{$careers->appends(['name'=>Request::get('name'),'option'=>Request::get('option')])->render()}}
                             </div>
                         </div>
                         <!-- /.card -->
@@ -140,21 +140,22 @@
             <div class="modal-content">
                 <div id="newcareer">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm ngành nghề</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Xóa ngành nghề</h5>
                     </div>
                     <div class="modal-body row">
+                        Bạn có muốn xóa ngành nghề này không?
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            Tên ngành nghề <span class="important">*</span>
+
                         </div>
-                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                            <input type="hidden" name="id" value="">
-                            <input type="text" name="ca_name" class="form-group full-width">
-                            <span class="candidate-text-error"></span>
-                        </div>
+                        {{--<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">--}}
+                            {{--<input type="hidden" name="id" value="">--}}
+                            {{--<input type="text" name="ca_name" class="form-group full-width">--}}
+                            {{--<span class="candidate-text-error"></span>--}}
+                        {{--</div>--}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Đóng</button><button type="button" class="btn btn-blue btn-default candidate-popup-button-add"><i class="fa fa-plus" aria-hidden="true"></i> Thêm</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-edit hide"><i class="fa fa-wrench" aria-hidden="true"></i> Sửa</button>
+                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Không</button>
+                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-trash"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
                     </div>
                 </div>
 

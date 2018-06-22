@@ -40,6 +40,8 @@ Route::group(['prefix' => 'career'], function() {
 
         Route::post('edit','CareerController@updatePostAjax')->name('ajax.career.update');
 
+        Route::get('delete/{id}','CareerController@destroyAjax');
+
     });
 
 });

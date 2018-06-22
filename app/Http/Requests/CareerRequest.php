@@ -24,11 +24,12 @@ class CareerRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
+
         return [
 
-            'ca_name'=>'required|unique:careers,ca_name'
+            'ca_name'=>'required|unique:careers,ca_name,'.$request->get('id')
         ];
     }
 

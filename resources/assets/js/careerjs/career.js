@@ -2,18 +2,19 @@ import toastr from 'toastr/build/toastr.min';
 
 const URL_CREATE_CAREER='career/ajax/new';
 const URL_UPDATE_CAREER='career/ajax/edit';
+const URL_DELETE_CAREER='career/ajax/delete';
 
 var Career={
 
-    init(){
+    init:function(){
         this.alertConfig();
         this.addCareer();
         this.onCreate();
-        this.onUpdate();
         this.editCareer();
+        this.deleteCareer();
     },
 
-    alertConfig(){
+    alertConfig:function(){
         toastr.options = {
             "closeButton": true,
             "debug": false,
@@ -33,15 +34,15 @@ var Career={
         };
     },
 
-    displayAlert(message,type='success'){
+    displayAlert:function(message,type='success'){
         toastr[type](message);
     },
 
-    displayError(message){
+    displayError:function(message){
         $('.candidate-text-error').text(message);
     },
 
-    renderItem(data){
+    renderItem:function(data){
         var html='<tr class="result-item">\n' +
             '<td class="result-index">1</td>\n' +
             '<td class="result-name">'+data.ca_name+'</td>\n' +
@@ -58,11 +59,12 @@ var Career={
 
     },
 
-    clearInput(){
+    clearInputError(){
         $('input[name="ca_name"]').val('');
+        $('.candidate-text-error').html('');
     },
 
-    addCareer(){
+    addCareer:function(){
         let that=this;
         $('.candidate-popup-button-add').click(function () {
 
@@ -85,7 +87,7 @@ var Career={
                         that.displayAlert(reponse.message);
                         that.renderItem(reponse.result);
                         $('#candidate-popup').modal('hide');
-                        that.clearInput();
+                        that.clearInputError();
                     })
                     .fail(function(error) {
                         that.displayError(error.responseJSON.errors.ca_name);
@@ -95,10 +97,11 @@ var Career={
         })
     },
 
-    editCareer(){
+    editCareer:function(){
         let that=this;
 
         $('.career-list-edit').click(function () {
+            that.clearInputError();
 
             // closest: tìm tới phần tử cha mong muốn
             var $resultName=$(this).closest('.result-item').find('.result-name');
@@ -116,6 +119,8 @@ var Career={
 
                 let $input=$('input[name="ca_name"]');
                 let inputText=$input.val();
+
+                console.log(inputText);
 
                 if (!inputText){
                     that.displayError('Tên ngành nghề không được để trống');
@@ -136,7 +141,7 @@ var Career={
 
                             $('#candidate-popup').modal('hide');
 
-                            that.clearInput();
+                            that.clearInputError();
 
                         })
                         .fail(function(error) {
@@ -149,14 +154,45 @@ var Career={
 
         });
 
-
-
-
-
-
     },
 
-    onCreate(){
+    deleteCareer:function(){
+        var that=this;
+
+        $('.career-list-delete').click(function () {
+            var id=$(this).data('id');
+
+            var $resultItem=$(this).closest('.result-item');
+            var resultItemIndex=$resultItem.index();
+
+            $('.candidate-popup-button-trash').off('click').click(function () {
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: URL_DELETE_CAREER+'/'+id,
+                    type: 'GET',
+                    dataType: 'HTML',
+                    // data: {id: id},
+                })
+                    .done(function(reponse) {
+
+                    })
+                    .fail(function(error) {
+                        that.displayAlert('Xóa ngành nghề thành công.');
+                        $('#candidate-confirm').modal('hide');
+                        $resultItem.remove();
+
+                        for(let i=resultItemIndex;i<=$('.result-item').length;i++){
+                            $('.result-item').eq(i).find('.result-index').html(i+1);
+                        }
+
+                    });
+            });
+        })
+    },
+
+    onCreate:function(){
         var that=this;
         $('button[data-target="#candidate-popup"]').click(function () {
             that.clearInput();
@@ -166,13 +202,6 @@ var Career={
         })
     },
 
-    onUpdate(){
-
-    },
-
-    renderRow(data){
-
-    },
 
 
 };

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Career;
 use App\Repositories\Career\CareerEloquentRepository;
 use App\Http\Requests\CareerRequest;
+use Illuminate\Http\Request;
 
 class CareerController extends Controller
 {
@@ -15,9 +16,21 @@ class CareerController extends Controller
         $this->careerRepository=$career;
     }
 
-    public function index(){
+    public function index(Request $request)
+    {
 
-        $careers=$this->careerRepository->getAll();
+        $searchName = $request->get('name');
+
+        $condition  = [];
+
+        $condition['name'] = $searchName;
+        $condition['orderByCaName'] = 'Desc';
+
+        $condition['orderById']='Desc';
+
+        $condition['searchOption']=$request->get('option');
+
+        $careers=$this->careerRepository->getAll($condition,12);
 
         return view('career.index',compact('careers'));
     }
@@ -49,6 +62,9 @@ class CareerController extends Controller
 
     public function storePostAjax(CareerRequest $request){
 
+        $arr=[
+
+        ];
 
         $career=$this->careerRepository->create($request->all());
 
@@ -93,5 +109,11 @@ class CareerController extends Controller
             return redirect('career/list')->with('success','Xóa thành công');
         }
             return redirect('career/list')->with('fail','Ngành nghề không tồn tại');
+    }
+
+    public function destroyAjax($id){
+
+        return $this->careerRepository->delete($id);
+
     }
 }
