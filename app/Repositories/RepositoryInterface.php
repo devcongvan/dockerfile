@@ -13,7 +13,7 @@ interface RepositoryInterface
 {
     public function getAll(array $condidtion,$limit);
 
-    public function getById($id);
+    public function getById($id,$with);
 
     public function create(array $attributes);
 

@@ -15,19 +15,21 @@ class CreateCandidatesTable extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('can_name');
-            $table->date('can_birthday');
-            $table->integer('can_gender');
-            $table->text('can_avatar');
-            $table->integer('can_phone');
-            $table->string('can_email');
-            $table->string('can_address');
-            $table->integer('can_location_id');
-            $table->string('can_skype');
-            $table->string('can_facebook');
-            $table->string('can_linkedin');
-            $table->string('can_github');
-            $table->integer('can_source_id');
+            $table->string('can_name')->nullable();
+            $table->date('can_birthday')->nullable();
+            $table->integer('can_year')->nullable();
+            $table->integer('can_gender')->nullable();
+            $table->text('can_avatar')->nullable();
+            $table->integer('can_phone')->nullable();
+            $table->string('can_email')->nullable();
+            $table->string('can_address')->nullable();
+            $table->string('hometown')->nullable();
+            $table->string('can_skype')->nullable();
+            $table->string('can_facebook')->nullable();
+            $table->string('can_linkedin')->nullable();
+            $table->string('can_github')->nullable();
+            $table->integer('can_source_id')->nullable();
+            $table->string('can_title')->nullable();
 
             $table->timestamps();
         });

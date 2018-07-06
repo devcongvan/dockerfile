@@ -11,4 +11,8 @@ class Source extends Model
     protected $fillable=[
         'so_name','so_slug'
     ];
+    
+    public function candidate(){
+        return $this->hasMany(Candidate::class,'can_source_id','id');
+    }
 }

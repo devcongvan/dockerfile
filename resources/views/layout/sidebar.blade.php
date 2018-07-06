@@ -11,15 +11,15 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 <li class="nav-item has-treeview menu-open">
-                    <a href="#" class="nav-link active">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-dashboard"></i>
                         <p>
                             Trang quản trị
                         </p>
                     </a>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                <li class="nav-item has-treeview {{Request::is('candidate/list')||Request::is('candidate/new')?'menu-open':''}}">
+                    <a href="#" class="nav-link {{Request::is('candidate/list')||Request::is('candidate/new')||Request::is('candidate/edit/*')?'active':''}}">
                         <i class="nav-icon fa fa-users" aria-hidden="true"></i>
                         <p>
                             Quản lý ứng viên
@@ -28,21 +28,21 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="candidate/list" class="nav-link">
+                            <a href="{{route('candidate.list')}}" class="nav-link {{Request::is('candidate/list')?'active':''}}">
                                 <i class="nav-icon fa fa-list-ul" aria-hidden="true"></i>
                                 <p>Danh sách ứng viên</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="candidate/new" class="nav-link">
+                            <a href="{{route('candidate.new')}}" class="nav-link {{Request::is('candidate/new')?'active':''}}">
                                 <i class="nav-icon fa fa-plus" aria-hidden="true"></i>
                                 <p>Thêm ứng viên</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                <li class="nav-item has-treeview {{Request::is('career/list')||Request::is('career/new')?'menu-open':''}}">
+                    <a href="#" class="nav-link {{Request::is('career/list')||Request::is('career/new')?'active':''}}">
                         <i class="nav-icon fa fa-building-o" aria-hidden="true"></i>
                         <p>
                             Quản lý ngành nghề
@@ -51,21 +51,21 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="career/list" class="nav-link">
+                            <a href="career/list" class="nav-link {{Request::is('career/list')?'active':''}}">
                                 <i class="nav-icon fa fa-list-ul" aria-hidden="true"></i>
                                 <p>Danh sách ngành nghề</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="career/new" class="nav-link">
+                            <a href="career/new" class="nav-link {{Request::is('career/new')?'active':''}}">
                                 <i class="nav-icon fa fa-plus" aria-hidden="true"></i>
                                 <p>Thêm ngành nghề</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                <li class="nav-item has-treeview {{Request::is('source/list')||Request::is('source/new')?'menu-open':''}}">
+                    <a href="#" class="nav-link {{Request::is('source/list')||Request::is('source/new')?'active':''}}">
                         <i class="nav-icon fa fa-cubes" aria-hidden="true"></i>
                         <p>
                             Quản lý nguồn
@@ -74,21 +74,21 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="source/list" class="nav-link">
+                            <a href="source/list" class="nav-link {{Request::is('source/list')?'active':''}}">
                                 <i class="nav-icon fa fa-list-ul" aria-hidden="true"></i>
                                 <p>Danh sách nguồn</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="source/new" class="nav-link">
+                            <a href="source/new" class="nav-link {{Request::is('source/new')?'active':''}}">
                                 <i class="nav-icon fa fa-plus" aria-hidden="true"></i>
                                 <p>Thêm nguồn</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
+                <li class="nav-item has-treeview {{Request::is('skill/list')||Request::is('skill/new')?'menu-open':''}}">
+                    <a href="#" class="nav-link {{Request::is('skill/list')||Request::is('skill/new')?'active':''}}">
                         <i class="nav-icon fa fa-code" aria-hidden="true"></i>
                         <p>
                             Quản lý ký năng
@@ -97,13 +97,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="skill/list" class="nav-link">
+                            <a href="skill/list" class="nav-link {{Request::is('skill/list')?'active':''}}">
                                 <i class="nav-icon fa fa-list-ul" aria-hidden="true"></i>
                                 <p>Danh sách kỹ năng</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="skill/new" class="nav-link">
+                            <a href="skill/new" class="nav-link {{Request::is('skill/new')?'active':''}}">
                                 <i class="nav-icon fa fa-plus" aria-hidden="true"></i>
                                 <p>Thêm kỹ năng</p>
                             </a>

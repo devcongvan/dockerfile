@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Validations\CheckDomain;
 use Illuminate\Validation\Factory;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class SourceRequest extends FormRequest
 {
@@ -29,10 +30,10 @@ class SourceRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
-            'so_name'=>'required|unique:sources,so_name|is_domain'
+            'so_name'=>'required|max:191|unique:sources,so_name|is_domain'.$request->get('id')
 
         ];
     }
@@ -42,6 +43,7 @@ class SourceRequest extends FormRequest
         return [
             'so_name.required'=>'Tên nguồn không được để trống',
             'so_name.unique'=>'Tên nguồn đã tồn tại',
+            'so_name.max'=>'Tên nguồn quá dài'
         ];
     }
 

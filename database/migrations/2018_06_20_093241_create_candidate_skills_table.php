@@ -15,8 +15,8 @@ class CreateCandidateSkillsTable extends Migration
     {
         Schema::create('candidates_skills', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('cs_candidates_id');
-            $table->integer('cs_skills_id');
+            $table->integer('cs_candidates_id')->nullable();
+            $table->integer('cs_skills_id')->nullable();
 
             $table->timestamps();
         });

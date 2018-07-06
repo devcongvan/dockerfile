@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SkillRequest;
 use App\Repositories\Skill\SkillEloquentRepository;
+use Illuminate\Http\Request;
 
 class SkillController extends Controller
 {
@@ -14,11 +15,38 @@ class SkillController extends Controller
         $this->skillRepository=$skillEloquentRepository;
     }
 
-    public function index(){
+    public function index(Request $request){
 
-        $skills=$this->skillRepository->getAll();
+//        dd($request->all());
+
+        $condition['orderById']='Desc';
+
+        $condition['name']=$request->get('name');
+
+        $condition['searchOption']=$request->get('option');
+
+        $skills=$this->skillRepository->getAll($condition,3);
 
         return view('skill.index',compact('skills'));
+    }
+
+    public function show(){
+
+    }
+
+    public function searchAjaxSelect2(Request $request){
+
+        $searchText=$request->get('q');
+
+        $result=$this->skillRepository->search($searchText);
+
+        $formatted_tags = [];
+
+        foreach ($result as $item) {
+            $formatted_tags[] = ['id' => $item->id.'|'.$item->sk_name, 'text' => $item->sk_name];
+        }
+
+        return response($formatted_tags);
     }
 
     public function store(){
@@ -30,6 +58,20 @@ class SkillController extends Controller
         $this->skillRepository->create($request->all());
 
         return redirect('skill/list')->with('success','Thêm kỹ năng thành công');
+    }
+
+    public function storePostAjax(SkillRequest $request){
+        $arr=[
+            'sk_name'=>$request->get('sk_name')
+        ];
+
+
+        $skills=$this->skillRepository->create($arr);
+
+        return response([
+            'message'=>'Thêm kỹ năng thành công',
+            'result'=>$skills
+        ]);
     }
 
     public function update($id){
@@ -51,10 +93,35 @@ class SkillController extends Controller
         return redirect('skill/list')->with('fail','Sửa kỹ năng không thành công');
     }
 
+    public function updatePostAjax(SkillRequest $request){
+
+        $arr=[
+            'id'=>$request->get('id'),
+            'sk_name'=>$request->get('sk_name')
+        ];
+
+        $result=$this->skillRepository->updateAjax($arr);
+
+        return response([
+            'message'=>'Sửa kỹ năng thành công',
+            'result'=>$result
+        ]);
+
+    }
+
     public function destroy($id){
         if ($this->skillRepository->delete($id)){
             return redirect('skill/list')->with('success','Xóa thành công');
         }
         return redirect('skill/list')->with('fail','Kỹ năng không tồn tại');
+    }
+
+    public function destroyAjax(Request $request){
+
+        $this->skillRepository->delete($request->get('id'));
+
+        return response([
+            'message'=>'Xóa kỹ năng thành công thành công'
+        ]);
     }
 }

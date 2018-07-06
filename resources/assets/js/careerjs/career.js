@@ -7,11 +7,13 @@ const URL_DELETE_CAREER='career/ajax/delete';
 var Career={
 
     init:function(){
+
         this.alertConfig();
         this.addCareer();
         this.onCreate();
         this.editCareer();
         this.deleteCareer();
+        this.selectSearch();
     },
 
     alertConfig:function(){
@@ -66,7 +68,7 @@ var Career={
 
     addCareer:function(){
         let that=this;
-        $('.candidate-popup-button-add').click(function () {
+        $('.career-popup').find('.candidate-popup-button-add').click(function () {
 
             let $input=$('input[name="ca_name"]');
             let inputText=$input.val();
@@ -100,7 +102,7 @@ var Career={
     editCareer:function(){
         let that=this;
 
-        $('.career-list-edit').click(function () {
+        $(document).on('click','.career-list-edit',function(){
             that.clearInputError();
 
             // closest: tìm tới phần tử cha mong muốn
@@ -109,13 +111,18 @@ var Career={
 
             var id=$(this).data('id');
 
+
             $('input[name="ca_name"]').val(resultText);
 
-            $('.candidate-popup-button-add').addClass('hide');
-            $('.candidate-popup-button-edit').removeClass('hide');
+
+
+            $('.career-popup .candidate-popup-button-add').addClass('hide');
+            $('.career-popup .candidate-popup-button-edit').removeClass('hide');
+
+            $('.career-popup #exampleModalLabel').html('Sửa ngành nghề');
             $('#candidate-popup').modal('show');
 
-            $('.candidate-popup-button-edit').off('click').click(function () {
+            $('.career-popup .candidate-popup-button-edit').off('click').click(function () {
 
                 let $input=$('input[name="ca_name"]');
                 let inputText=$input.val();
@@ -159,13 +166,15 @@ var Career={
     deleteCareer:function(){
         var that=this;
 
-        $('.career-list-delete').click(function () {
+        $(document).on('click','.career-list-delete',function () {
             var id=$(this).data('id');
+
+            $('#candidate-confirm').modal('show');
 
             var $resultItem=$(this).closest('.result-item');
             var resultItemIndex=$resultItem.index();
 
-            $('.candidate-popup-button-trash').off('click').click(function () {
+            $('.career-confirm .candidate-popup-button-trash').off('click').click(function () {
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -194,13 +203,22 @@ var Career={
 
     onCreate:function(){
         var that=this;
-        $('button[data-target="#candidate-popup"]').click(function () {
-            that.clearInput();
+        $('button[data-target="#candidate-popup"].career').click(function () {
 
-            $('.candidate-popup-button-edit').addClass('hide');
-            $('.candidate-popup-button-add').removeClass('hide');
+            that.clearInputError();
+
+            $('#exampleModalLabel').html('Thêm ngành nghề');
+
+            $('.career-popup .candidate-popup-button-edit').addClass('hide');
+            $('.career-popup .candidate-popup-button-add').removeClass('hide');
         })
     },
+
+    selectSearch:function () {
+        $('#career-search-option').change(function () {
+            this.form.submit();
+        })
+    }
 
 
 

@@ -1,0 +1,1 @@
+module.exports = __webpack_public_path__ + "line-awesome.woff2?452a5b42cb4819f09d35bcf6cbdb24c1";

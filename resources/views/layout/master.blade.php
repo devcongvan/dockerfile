@@ -17,7 +17,6 @@
 
     <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css">
 
-    <link rel="stylesheet" type="text/css" href="css/main.css">
 
     <link rel="stylesheet" type="text/css" href="css/main2.css">
 
@@ -40,8 +39,10 @@
 <!-- jQuery -->
 
 
-<script src="js/main.js"></script>
 
+
+
+{{--<script src="js/main.js"></script>--}}
 
 
 <script src="js/main2.js"></script>

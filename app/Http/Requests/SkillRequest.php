@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Http\Request;
+
 class SkillRequest extends FormRequest
 {
     /**
@@ -21,10 +23,10 @@ class SkillRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
-            'sk_name'=>'required|unique:skills,sk_name'
+            'sk_name'=>'required|max:191|unique:skills,sk_name,'.$request->get('id')
         ];
     }
 
@@ -32,7 +34,8 @@ class SkillRequest extends FormRequest
     {
         return [
           'sk_name.required'=>'Tên kỹ năng không được để trống',
-            'sk_name.unique'=>'Tên kỹ năng đã tồn tại'
+            'sk_name.unique'=>'Tên kỹ năng đã tồn tại',
+            'sk_name.max'=>'Tên kỹ năng quá dài'
         ];
     }
 }

@@ -22,9 +22,13 @@ abstract class EloquentRepository implements RepositoryInterface
 
     abstract function getAll(array $condition=[], $limit=10);
 
-    public function getById($id)
+    public function getById($id,$with='')
     {
-        $result=$this->_model->find($id);
+        if (!empty($with)){
+            $result=$this->_model->with($with)->find($id);
+        }else{
+            $result = $this->_model->find($id);
+        }
         return $result;
     }
 
@@ -42,9 +46,14 @@ abstract class EloquentRepository implements RepositoryInterface
         return false;
     }
 
-    public function updateAjax(array $attributes){
-
+    public function updateMulti(array $arrID,array $arrData){
+        if ($this->_model->whereIn('id',$arrID)->update($arrData)){
+            return true;
+        }
+        return false;
     }
+
+    abstract public function updateAjax(array $attributes);
 
     public function delete($id)
     {
@@ -54,6 +63,11 @@ abstract class EloquentRepository implements RepositoryInterface
             return true;
         }
         return false;
+    }
+
+    public function deleteByCandidateId($id,$field_name)
+    {
+        $this->_model->where($field_name, $id)->delete();
     }
 
     protected function to_slug($str) {

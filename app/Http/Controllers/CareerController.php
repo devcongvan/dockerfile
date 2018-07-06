@@ -33,10 +33,28 @@ class CareerController extends Controller
         $careers=$this->careerRepository->getAll($condition,12);
 
         return view('career.index',compact('careers'));
+
     }
 
-    public function indexAjax(){
-        return json_encode($this->careerRepository->getAll());
+    public function searchSelect2Ajax(Request $request){
+        $term = trim($request->q);
+
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+
+        $searchText=$request->get('q');
+
+        $result=$this->careerRepository->search($searchText);
+
+        $formatted_tags = [];
+
+        foreach ($result as $item) {
+            $formatted_tags[] = ['id' => $item->id .'|'. $item->ca_name, 'text' => $item->ca_name];
+        }
+
+        return response($formatted_tags);
+
     }
 
     public function show(){
@@ -63,7 +81,7 @@ class CareerController extends Controller
     public function storePostAjax(CareerRequest $request){
 
         $arr=[
-
+            'ca_name'=>$request->get('name')
         ];
 
         $career=$this->careerRepository->create($request->all());

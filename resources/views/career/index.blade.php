@@ -16,7 +16,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
-                                <button type="button" data-toggle="modal" data-backdrop="static" data-target="#candidate-popup" class="btn btn-default btn-blue"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm ngành nghề</button>
+                                <button type="button" data-toggle="modal" data-backdrop="static" data-target="#candidate-popup" class="career btn btn-default btn-blue"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm ngành nghề</button>
                             </li>
                         </ol>
                     </div><!-- /.col -->
@@ -44,13 +44,13 @@
                             <div class=" p-0 row">
 
                                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                    <input type="text" name="name" class="form-group"  placeholder="Ghõ tên ngành nghề">
+                                    <input type="text" name="name" value="{{Request::get('name')}}" class="form-group"  placeholder="Ghõ tên ngành nghề">
                                 </div>
                                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                                     <select class="form-group" name="option" id="career-search-option" placeholder="Ghõ tên ngành nghề">
                                         <option value="">-- Tìm kiếm tùy chọn --</option>
-                                        <option value='new'>Ngành nghề mới</option>
-                                        <option value='top'>Ngành nghề nhiều ứng viên nhất</option>
+                                        <option value='new' {{Request::get('option')=='new'?'selected':''}} >Ngành nghề mới</option>
+                                        <option value='top' {{Request::get('option')=='top'?'selected':''}} >Ngành nghề nhiều ứng viên nhất</option>
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -108,7 +108,7 @@
         <!-- /.content -->
     </div>
     <!-- Modal -->
-    <div class="modal fade candidate-popup" id="candidate-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade candidate-popup career-popup" id="candidate-popup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div id="newcareer">
@@ -135,7 +135,7 @@
         </div>
     </div>
 
-    <div class="modal fade candidate-popup" id="candidate-confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade candidate-popup career-confirm" id="candidate-confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div id="newcareer">
@@ -163,15 +163,3 @@
         </div>
     </div>
 @endsection
-
-@section('script')
-    <script type="text/javascript">
-
-
-        $(function () {
-
-        })
-        
-        
-    </script>
-    @endsection

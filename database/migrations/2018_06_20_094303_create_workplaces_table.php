@@ -15,8 +15,8 @@ class CreateWorkplacesTable extends Migration
     {
         Schema::create('workplaces', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('wp_candidates_id');
-            $table->integer('wp_locations_id');
+            $table->integer('wp_candidates_id')->nullable();
+            $table->integer('wp_locations_id')->nullable();
             $table->timestamps();
         });
     }

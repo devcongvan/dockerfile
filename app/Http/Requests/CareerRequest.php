@@ -28,8 +28,7 @@ class CareerRequest extends FormRequest
     {
 
         return [
-
-            'ca_name'=>'required|unique:careers,ca_name,'.$request->get('id')
+            'ca_name'=>'required|max:191|unique:careers,ca_name,'.$request->get('id')
         ];
     }
 
@@ -37,7 +36,8 @@ class CareerRequest extends FormRequest
     {
         return [
             'ca_name.required'=>'Tên ngành nghề không được để trống',
-            'ca_name.unique'=>'Tên ngành nghề đã tồn tại'
+            'ca_name.unique'=>'Tên ngành nghề đã tồn tại',
+            'ca_name.max'=>'Tên ngành nghề quá dài'
         ];
     }
 

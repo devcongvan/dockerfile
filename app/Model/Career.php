@@ -11,4 +11,12 @@ class Career extends Model
     protected $fillable=[
       'ca_name', 'ca_slug'
     ];
+
+    public function candidateCareer(){
+        return $this->hasMany(CandidateCareer::class,'cc_careers_id');
+    }
+
+
+
+
 }
