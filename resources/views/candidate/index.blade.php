@@ -1088,7 +1088,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1121,7 +1121,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên đang bận</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-red c-white">Ứng viên đang bận</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1130,12 +1130,15 @@
                                                 <div class="diary-item-rate">
 
                                                 </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại cho ứng viên</span>
+                                                <div class="bg">
+                                                    <div class="diary-item-notice">
+                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại cho ứng viên</span>
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>
                                                 </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -1154,7 +1157,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-blue c-white">Ứng viên có nhu cầu</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1184,7 +1187,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1193,11 +1196,13 @@
                                                 <div class="diary-item-rate">
 
                                                 </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                                </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                <div class="bg">
+                                                    <div class="diary-item-notice">
+                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1217,7 +1222,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-yellow c-white">Ứng viên chưa có nhu cầu</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1226,11 +1231,13 @@
                                                 <div class="diary-item-rate">
 
                                                 </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại khi ứng viên có nhu cầu</span>
-                                                </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                <div class="bg">
+                                                    <div class="diary-item-notice">
+                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại khi ứng viên có nhu cầu</span>
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1247,7 +1254,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-aqua c-white">Ứng viên hẹn phỏng vấn</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1256,12 +1263,15 @@
                                                 <div class="diary-item-rate">
 
                                                 </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
+                                                <div class="bg">
+                                                    <div class="diary-item-notice">
+                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>
                                                 </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -1280,7 +1290,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-brown c-white">Ứng viên sắp nghỉ</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1289,11 +1299,13 @@
                                                 <div class="diary-item-rate">
 
                                                 </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên nghỉ việc</span>
-                                                </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                <div class="bg">
+                                                    <div class="diary-item-notice">
+                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên nghỉ việc</span>
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>    
                                                 </div>
                                             </div>
                                         </div>
@@ -1310,7 +1322,7 @@
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                                             <div class="diary-item-main">
                                                 <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</span>
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-purple c-white">Ứng viên là sinh viên</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
                                                         <a class="dropdown-item" href="#" data-id="16">Xóa</a>
@@ -1319,11 +1331,13 @@
                                                 <div class="diary-item-rate">
 
                                                 </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên tốt nghiệp</span>
-                                                </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                <div class="bg">
+                                                    <div class="diary-item-notice">
+                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên tốt nghiệp</span>
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1364,7 +1378,7 @@
                                         Đặt lịch
                                     </div>
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text" class="full-width form-group">
+                                        <input type="text" class="full-width form-group datetimepicker" placeholder="20/10/2017">
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
                                         lúc
@@ -1378,15 +1392,6 @@
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
                                         <input type="text" class="full-width form-group">
                                     </div>
-                                </div>
-                                <div style="opacity: 0;" class="row box2 candidate-evaluate-main-diary-composer-row">
-                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
-                                        Thông báo
-                                    </div>
-                                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text" class="form-group full-width">
-                                    </div>
-
                                 </div>
                                 <div class="box3 margin-bottom" style="display: none">
                                     <div class="row candidate-evaluate-main-diary-composer-row">
@@ -1417,7 +1422,7 @@
                                     <li><a href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> Mẫu</a></li>
                                 </ul>
                             </div>
-                            <div class="candidate-evaluate-main-mail-list">
+                            <div class="candidate-evaluate-main-mail-list" >
                                 <div class="candidate-evaluate-main-mail-list-bar">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
                                             <div class="checkall-bar" >
@@ -1582,7 +1587,7 @@
                             </div>
                             <div class="candidate-evaluate-main-mail-sendmail">
                                 <div class="candidate-evaluate-main-mail-top">
-                                    <a class="pull-left a-hover" href="#"><i class="fa fa-close" aria-hidden="true"></i></a>
+                                    <a class="pull-left a-hover close" href="#"><i class="fa fa-close" aria-hidden="true"></i></a>
                                     <a class="pull-right a-hover" href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> Chọn mẫu có sẵn</a>
                                     <div class="clearfix"></div>
                                 </div>
@@ -1663,7 +1668,6 @@
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/2.6.1/simplebar.min.js"></script>
     <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
         $(function () {

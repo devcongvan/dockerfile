@@ -424,7 +424,7 @@ button.toast-close-button {
 }
 
 .ql-editor {
-  height: 270px;
+  height: 260px;
   padding: 5px;
 }
 
@@ -464,7 +464,7 @@ button.toast-close-button {
 }
 
 .c-yellow {
-  color: yellow;
+  color: #E67E22;
 }
 
 .c-aqua {
@@ -477,6 +477,49 @@ button.toast-close-button {
 
 .c-purple {
   color: purple;
+}
+
+.c-white {
+  color: #fff;
+}
+
+.bg-main {
+  background: #AB1D1D;
+}
+
+.bg-green {
+  background: #2ECC71;
+  padding: 2px 5px;
+}
+
+.bg-red {
+  background: red;
+  padding: 2px 5px;
+}
+
+.bg-blue {
+  background: #2980B9;
+  padding: 2px 5px;
+}
+
+.bg-yellow {
+  background: #E67E22;
+  padding: 2px 5px;
+}
+
+.bg-aqua {
+  background: #3498DB;
+  padding: 2px 5px;
+}
+
+.bg-brown {
+  background: brown;
+  padding: 2px 5px;
+}
+
+.bg-purple {
+  background: #AF7AC5;
+  padding: 2px 5px;
 }
 
 .a-hover:hover {
@@ -1861,7 +1904,8 @@ select {
 }
 
 .candidate-evaluate-main-diary-list .diary-item .bg {
-  background: #f9f9f9;
+  padding-top: 10px;
+  background: #ECECEC;
 }
 
 .candidate-evaluate-main-diary-list .diary-item:hover .pull-right {
@@ -1917,8 +1961,7 @@ select {
 }
 
 .candidate-evaluate-main-diary-list .diary-item-note {
-  padding: 5px;
-  background: #ECECEC;
+  padding: 10px 2px;
 }
 
 .candidate-evaluate-main-diary-list .diary-item-main {
@@ -2025,7 +2068,7 @@ select {
 
 .candidate-evaluate-main-mail-bottom .right {
   text-align: right;
-  width: 45%;
+  width: 42%;
   font-size: 30px;
 }
 

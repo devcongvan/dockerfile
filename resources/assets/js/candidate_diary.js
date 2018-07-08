@@ -80,7 +80,7 @@ var CandidateDiary={
                     height:'55px'
                 });
                 $('.ql-editor').animate({
-                    height:'240px'
+                    height:'230px'
                 });
 
                 $(this).data('toggle','on')
@@ -91,15 +91,11 @@ var CandidateDiary={
                     height:'25px'
                 });
                 $('.ql-editor').animate({
-                    height:'270px'
+                    height:'260px'
                 });
 
                 $(this).data('toggle','off');
             }
-
-
-
-
         })
     },
 
@@ -125,6 +121,18 @@ var CandidateDiary={
                 });
                 $(this).data('toggle',true)
             }
+        });
+
+        $('.candidate-evaluate-main-mail-top .close').click(function(e){
+            e.preventDefault();
+            $('.candidate-evaluate-main-mail-sendmail').animate({
+                width: '-2%',
+                opacity: 0
+            });
+            $('.candidate-evaluate-main-mail-list').animate({
+                width: '100%',
+            });
+            $('.candidate-evaluate-main-mail-list .option').data('toggle', false)
         })
     },
 
