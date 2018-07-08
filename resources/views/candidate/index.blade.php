@@ -1060,273 +1060,276 @@
                 <div class="modal-body">
                     <div class="candidate-evaluate-sidebar">
                         <ul class="nav">
-                            <li class="nav-item active">
-                                <a href="#"><img src="http://icons.iconarchive.com/icons/icons8/ios7/32/Users-Edit-User-icon.png">
+                            <li class="nav-item active" data-tab="candidate-evaluate-main-diary">
+                                <a ><img class="other-icon" src="http://icons.iconarchive.com/icons/icons8/ios7/32/Users-Edit-User-icon.png">
                                     <p>Nhật ký</p></a></li>
-                            <li class="nav-item"><a href="#"><img src="upload/icon/icons8-open-envelope-50.png">
+                            <li class="nav-item" data-tab="candidate-evaluate-main-mail"><a><img class="other-icon" src="upload/icon/icons8-open-envelope-50.png">
                                     <p>Mail</p></a></li>
                         </ul>
                     </div>
                     <div class="candidate-evaluate-main">
                         <div class="candidate-evaluate-main-diary">
-                            <div class="candidate-evaluate-main-diary-list" data-simplebar>
-                                <div class="month-break" month="Tháng 7 năm 2018">
-                                </div>
+                            <div class="candidate-evaluate-main-diary-list">
+                                <div class="candidate-evaluate-main-diary-list-scroll scroll"  >
+                                    <div class="candidate-evaluate-loading">Đã tải hết dữ liệu</div>
+                                    <div class="candidate-evaluate-loading">Đang tải dữ liệu mới ...</div>
 
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
+                                    <div class="month-break" month="Tháng 7 năm 2018">
+                                    </div>
+
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="bg">
+                                                    <div class="diary-item-rate">
+                                                        <span><i class="fa fa-star" aria-hidden="true"></i></span><span> Thật không thể tin nổi</span>
+                                                    </div>
+                                                    <div class="diary-item-notice">
+
+                                                    </div>
+                                                    <div class="diary-item-note">
+                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
                                                 </div>
                                             </div>
-                                            <div class="bg">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên đang bận</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
                                                 <div class="diary-item-rate">
-                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> Thật không thể tin nổi</span>
+
                                                 </div>
                                                 <div class="diary-item-notice">
-
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại cho ứng viên</span>
                                                 </div>
                                                 <div class="diary-item-note">
                                                     Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
+                                    <div class="month-break" month="Tháng 6 năm 2018">
                                     </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên đang bận</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
-
-                                            </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại cho ứng viên</span>
-                                            </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="diary-item-rate">
 
-                                <div class="month-break" month="Tháng 6 năm 2018">
-                                </div>
-
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                </div>
+                                                <div class="diary-item-notice">
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
+                                                </div>
+                                                <div class="diary-item-note">
+                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
-
-                                            </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                            </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
-
-                                            </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                            </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="diary-item-rate">
 
-                                <div class="month-break" month="Tháng 5 năm 2018">
-                                </div>
-
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                </div>
+                                                <div class="diary-item-notice">
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
+                                                </div>
+                                                <div class="diary-item-note">
+                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
-
-                                            </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại khi ứng viên có nhu cầu</span>
-                                            </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
+                                    <div class="month-break" month="Tháng 5 năm 2018">
                                     </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
-
-                                            </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                            </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="diary-item-rate">
 
-                                <div class="month-break" month="Tháng 4 năm 2018">
-                                </div>
-
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                </div>
+                                                <div class="diary-item-notice">
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại khi ứng viên có nhu cầu</span>
+                                                </div>
+                                                <div class="diary-item-note">
+                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
-
-                                            </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên nghỉ việc</span>
-                                            </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="diary-item row">
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                        <div class="diary-item-avatar">
-                                            <div class="img">
-                                                <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                        <div class="diary-item-main">
-                                            <div class="diary-item-header">
-                                                <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</span>
-                                                <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                    <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
                                                 </div>
                                             </div>
-                                            <div class="diary-item-rate">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="diary-item-rate">
 
+                                                </div>
+                                                <div class="diary-item-notice">
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
+                                                </div>
+                                                <div class="diary-item-note">
+                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                </div>
                                             </div>
-                                            <div class="diary-item-notice">
-                                                <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên tốt nghiệp</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="month-break" month="Tháng 4 năm 2018">
+                                    </div>
+
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
+                                                </div>
                                             </div>
-                                            <div class="diary-item-note">
-                                                Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="diary-item-rate">
+
+                                                </div>
+                                                <div class="diary-item-notice">
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên nghỉ việc</span>
+                                                </div>
+                                                <div class="diary-item-note">
+                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="diary-item row">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                            <div class="diary-item-avatar">
+                                                <div class="img">
+                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
+                                            <div class="diary-item-main">
+                                                <div class="diary-item-header">
+                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</span>
+                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
+                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                    </div>
+                                                </div>
+                                                <div class="diary-item-rate">
+
+                                                </div>
+                                                <div class="diary-item-notice">
+                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên tốt nghiệp</span>
+                                                </div>
+                                                <div class="diary-item-note">
+                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="candidate-evaluate-loading">Đang tải dữ liệu mới ...</div>
-                                <div class="candidate-evaluate-loading">Đã tải hết dữ liệu</div>
 
                                 <div class="option">
                                     <a href="#" id="updown"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
@@ -1401,6 +1404,254 @@
 
                             </div>
                         </div>
+                        <div class="candidate-evaluate-main-mail slide-out">
+                            <div class="candidate-evaluate-main-mail-nav">
+                                <div class="candidate-evaluate-main-mail-sender">
+                                    <div>Nguyễn HR,</div>
+                                    <div>nguyen.hr@gmail.com</div>
+                                </div>
+                                <ul class="candidate-evaluate-main-mail-nav-list">
+                                    <li class="active"><a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i> Thư đến</a></li>
+                                    <li><a href="#"><i class="fa fa-paper-plane" aria-hidden="true"></i> Thư đã gửi</a></li>
+                                    <li><a href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Thư nháp</a></li>
+                                    <li><a href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> Mẫu</a></li>
+                                </ul>
+                            </div>
+                            <div class="candidate-evaluate-main-mail-list">
+                                <div class="candidate-evaluate-main-mail-list-bar">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
+                                            <div class="checkall-bar" >
+                                                <input type="checkbox" name="" class="form-group">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                                            <div class="search-bar" >
+                                                <input type="text" name="" class="form-group" placeholder="Tìm kiếm">
+                                                <div class="line"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+                                            <div class="number-bar" >
+                                                10/15 thư
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
+                                            <div class="delete-bar a-hover" >
+                                                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="candidate-evaluate-main-mail-list-content scroll" >
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn Ây</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn Bi</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn C</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn D</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn E</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn D</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="candidate-evaluate-main-mail-item">
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
+                                            <input type="checkbox" name="">
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
+                                            <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn E</a></div>
+                                            <div class="pull-right a-hover">
+                                                <i class="fa fa-paperclip" aria-hidden="true"></i> 15 tháng 6
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-pin">
+                                            <a href="#" class="mail-item-pin a-hover"><i class="fa fa-thumb-tack" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-title">
+                                            <a href="#" class="a-hover"><b>VNP Group - Thư mời nhận việc </b></a><span>- Chào bạn, Nguyễn Văn Ây ...</span>
+                                        </div>
+                                    </div>
+                                    
+
+                                    <div class="text-center c-main" style="padding: 10px 0">
+                                        Đang tải thêm các thư trước đây ...
+                                    </div>
+                                    <div class="text-center c-main" style="padding: 10px 0">
+                                        Không còn thư nào
+                                    </div>
+                                </div>
+                                <div class="option a-hover" data-toggle="false">
+                                    <a><img class="other-icon" src="upload/icon/icons8-composing-mail-50.png"></a>
+                                </div>
+                            </div>
+                            <div class="candidate-evaluate-main-mail-sendmail">
+                                <div class="candidate-evaluate-main-mail-top">
+                                    <a class="pull-left a-hover" href="#"><i class="fa fa-close" aria-hidden="true"></i></a>
+                                    <a class="pull-right a-hover" href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> Chọn mẫu có sẵn</a>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="candidate-evaluate-main-mail-content">
+                                    <div class="candidate-evaluate-main-mail-row row">
+                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                            Tới
+                                        </div>
+                                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                                            <input type="text" placeholder="example@gmail.com" name="" class="form-group full-width">
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="candidate-evaluate-main-mail-row row ">
+                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                            Tiêu đề
+                                        </div>
+                                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                                            <input type="text" placeholder="Viết tiêu đề thư ở đây" name="" class="form-group full-width">
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="candidate-evaluate-main-mail-row row autosendmail">
+                                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                                            Đặt lịch gửi Mail tự động
+                                        </div>
+                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right">
+                                            <a data-toggle="off" id="toggle"><i class="fa fa-toggle-off" aria-hidden="true"></i></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <br>
+                                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                            <input type="text" name="" placeholder="20:30" class="form-group text-center full-width">
+                                        </div>
+                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+                                            ngày
+                                        </div>
+                                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                            <input type="text" name="" placeholder="20/10/2018" class="form-group text-center full-width">
+                                        </div>
+                                    </div>
+                                    <div class="candidate-evaluate-main-mail-row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div id="editor">
+                                              <p>Hello World!</p>
+                                              <p>Some initial <strong>bold</strong> text</p>
+                                              <p><br></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="candidate-evaluate-main-mail-bottom">
+                                    <ul class="left">
+                                        <li><a class="a-hover" href="#"><i class="fa fa-paperclip" aria-hidden="true"></i> Đính kèm file</a></li>
+                                        <li><a class="a-hover" href="#"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Lưu nháp</a></li>
+                                        <li><a class="a-hover" href="#"><i class="fa fa-file-text-o" aria-hidden="true"></i> Lưu mẫu</a></li>
+                                    </ul>
+                                    <div class="right">
+                                        <a class="a-hover" href="#"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
+
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1412,58 +1663,40 @@
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplebar/2.6.1/simplebar.min.js"></script>
+    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
         $(function () {
-            var hyhy=0;
-            $('a[href="#candidate-evaluate"]').click(function () {
-                setTimeout(function () {
-                    var listHeight = $('.candidate-evaluate-main-diary-list').height();
-                    $('.candidate-evaluate-main-diary-composer').on('mouseenter', function () {
-                        $('.candidate-evaluate-main-diary-list').scrollTop(listHeight);
-                        var mainHeight = $('.candidate-evaluate-main').height();
+            var options = {
+                placeholder: 'Soạn Mail ...',
+                modules: {
+                    toolbar: [
+                        [{ 'font': [] }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        ['bold', 'italic', 'underline'],        // toggled buttons
+                        [{ 'color': [] }, { 'background': [] }],
+      // custom button values
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                        [{ 'direction': 'rtl' }],                         // text direction
+                        [{ 'align': [] }],
+                        ['blockquote', 'code-block', 'link'],
+                        ['clean']                                     // remove formatting button
+                    ]
+                },
+                theme: 'snow'
+            };
 
-                        var composerHeight = $(this).height();
-                        hyhy= mainHeight - composerHeight + 'px';
-                        $('.candidate-evaluate-main-diary-list').animate({
-                            height: mainHeight - composerHeight + 'px'
-                        }, 300);
-                        $('.candidate-evaluate-main-diary-composer').off('click').on('click',function () {
-                            $('.candidate-evaluate-main-diary-list').height(hyhy);
-                            $('.candidate-evaluate-main-diary-composer').attr('click',true);
-                        })
-                    });
+            var quill = new Quill('#editor', options);
 
-                    $('.candidate-evaluate-main-diary-composer').on('mouseleave', function () {
-                        if($('.candidate-evaluate-main-diary-composer').attr('click')==true){
-                            $('.candidate-evaluate-main-diary-list').animate({
-                                height: listHeight + 'px'
-                            }, 300);
-                        }
-                        $(document).off('click').on('click',function () {
-                            $('.candidate-evaluate-main-diary-composer').attr('click',false);
-                            $('.candidate-evaluate-main-diary-list').animate({
-                                height: listHeight + 'px'
-                            }, 300);
-                        })
-                    });
-
-                },200);
-            })
-
-
-
-
-        });
+        })
     </script>
 
     @if(Session::has('message'))
 
 
         <script type="text/javascript">
-
-            new SimpleBar($('.time_line')[0]);
-            new SimpleBar($('.candidate-evaluate-main-diary-list')[0]);
 
             toastr.options = {
                 "closeButton": true,

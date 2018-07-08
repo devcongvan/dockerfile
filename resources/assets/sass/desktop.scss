@@ -1,3 +1,7 @@
+// import componant
+@import 'candidate_evaluate.scss';
+
+@import 'texteditor.scss';
 
 // import
 
@@ -25,12 +29,16 @@ $bg_sidebar_item_active: #DFDFDF;
 
 $bg_header: #AB1D1D;
 
+$bg_evaluate_sidebar: #f0eee6;
 // color variable
 
 %border-common{
   border: 1px solid $border_color;
 }
 
+.c-main{
+  color:$bg_header;
+}
 .c-green{
   color: green;
 }
@@ -52,6 +60,11 @@ $bg_header: #AB1D1D;
 .c-purple{
   color: purple;
 }
+.a-hover{
+  &:hover{
+    color: $bg_header;
+  }
+}
 
 .full-width{
   width: 100%!important;
@@ -60,6 +73,19 @@ body{
   font-size: 13px !important;
   overflow: visible!important;
   padding-right: 0 !important;
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+  &::-webkit-scrollbar-thumb {
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+  &::-webkit-scrollbar-track
+  {
+    background-color: transparent;
+  }
 }
 .wrapper{
   overflow: visible!important;
@@ -181,6 +207,28 @@ select{
 }
 // modal
 
+.scroll{
+  height: 100%;
+  overflow: auto;
+  // margin-right: -6px;
+  transition: .5s;
+  overscroll-behavior-y: contain;
+  &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;              
+  }
+  &::-webkit-scrollbar-thumb {
+      transition: .5s;
+      border-radius: 4px;
+      background-color: rgba(0,0,0,.5);
+      box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+  &::-webkit-scrollbar-track
+  {
+    background-color: transparent;
+  }
+}
+// custom scroll
 // common style
 
 // style for collase sidebar nav
@@ -547,7 +595,8 @@ select{
     transition: .5s;
     border-right: 1px solid $border_color;
   }
-  &-sidebar{
+  &-
+  {
     .badge{
       background:$bg_header;
       color: #fff;
@@ -581,6 +630,7 @@ select{
       flex-wrap:wrap;
       input{
         width: 92px;
+
         margin-bottom: 10px;
       }
     }
@@ -1007,7 +1057,7 @@ select{
 .candidate-evaluate{
   .modal{
     &-content{
-      width: 800px !important;  
+      width: 960px;
     }
     &-header{
       border:none;
@@ -1070,18 +1120,22 @@ select{
       
     }
   }
+  .other-icon{
+    width: 25px;
+  }
   &-sidebar{
     position: relative;
     z-index: 99999999;
     box-shadow: 0 0 10px 0px rgba(0,0,0,.5);
     width: 70px;
-    background: #f0eee6;
-    height: 450px;
+    background: $bg_evaluate_sidebar;
+    height: 550px;
     .nav{
       padding: 0 !important;
       list-style: none;
       margin: 0 !important;
       &-item{
+        cursor: pointer;
         width: 100%;
         padding: 0 !important;
         a{
@@ -1091,9 +1145,6 @@ select{
           padding: 7px 0;
           color: #444;
           margin-top: 5px;
-          img{
-            width: 25px;
-          }
           p{
             padding: 0 !important;
             margin: 0 !important;
@@ -1106,16 +1157,36 @@ select{
     }
   }
   &-main{
-    width: 730px;
-    height: 450px;
+    .slide-out{
+      opacity: 0;
+      margin-left: -100%;
+    }
+    a{
+      color: #444;
+    }
+    width: 890px;
+    height: 550px;
     &-diary{
+      position: absolute;
+      width: 890px;
+      background: #fff;
+      transition: .7s;
       &-list{
-        max-height: 432px;
-        overflow: auto;
+        height: 500px;
+        .scroll{
+          height: 500px;
+        }
+        position: relative;
+        &-content{
+          position: relative;
+          z-index: 1;
+
+        }
         .horizontal{
           display: none;
         }
         .option{
+          z-index: 2;
           position: absolute;
           right: 10px;
           bottom: 5px;
@@ -1227,11 +1298,13 @@ select{
         }
       }
       &-composer{
+        position: relative;
+        z-index: 2;
         transition: .2s;
         background: #f9f9f9;
         padding: 10px 0;
         border-top: 1px solid $bg_sidebar;
-        &:hover{
+        &:hover, &.hover{
           .box1{
             display: none!important;
           }
@@ -1240,9 +1313,6 @@ select{
           }
           .box3{
             display: block!important;
-          }
-          .candidate-evaluate-main-diary-list{
-            max-height: 416px;
           }
         }
         .margin-bottom{
@@ -1263,8 +1333,140 @@ select{
         }
       }
     }
+    &-mail{
+      position: absolute;
+      width: 890px;
+      background: #fff;
+      transition: .7s;
+      &-item{
+        .mail-item-pin{
+          &.active{
+            color: red;
+          }
+        }
+        .item-title{
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        display: flex;
+        flex-wrap: wrap;
+        padding: 10px 0;
+        &:hover,&.active{
+          background: $bg_evaluate_sidebar;
+        }
+      }
+      &-bottom{
+        padding: 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content:space-between;
+        .left{
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          li{
+            margin-right: 5px;
+            display: inline-block;
+          }
+        }
+        .right{
+          text-align: right;
+          width: 45%;
+          font-size: 30px;
+        }
+      }
+      &-sender{
+        padding-left: 15px;
+      }
+      &-row{
+        padding: 2px 0;
+        margin: 2px 0;
+        display: flex;
+        align-items: baseline;
+      }
+      &-nav{
+        background: #f0eee6;
+        display: flex;
+        align-items: center;
+        justify-content:space-between;
+        &-list{
+
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          clear: both;
+            li{
+            float: left;
+              &.active, &:hover{
+                a{background: #fff;}
+              }
+            a{
+              color: #555;
+              display: block;
+              padding: 0px 15px;
+              font-size: 14px; 
+              line-height: 50px;  
+            }
+          }
+        }
+      }
+      &-list{
+        position: relative;
+        height: 500px;
+        float: left;
+        width: 100%;
+        &-content{
+          height: 460px!important;
+        }
+        &-bar{
+          display: flex;
+          align-items: center;
+          padding: 5px 0;
+          background: #f9f9f9;
+          .search-bar{
+            input{
+              background:transparent;
+              border: none;
+            }
+          }
+        }
+        .option{
+          position: absolute;
+          cursor: pointer;
+          right: 15px;
+          bottom: 5px;
+        }
+      }
+      &-sendmail{
+        overflow: hidden;
+        .autosendmail{
+          overflow: hidden;
+          height: 25px;
+          &.show{
+            height: 55px;
+          }
+          #toggle{
+            cursor: pointer;
+          }
+        }
+        background:#f9f9f9;
+        padding: 10px;
+        height: 500px;
+        float: right;
+        width: 0%;
+        input[type="text"]{
+          background: transparent;
+          border: none;
+          &:focus{
+            border: none;
+          }
+        }
+      }
+    }
   }
 }
+
 
 .candidateBox{
   position: relative;
@@ -1665,5 +1867,3 @@ select{
   }
 }
 
-// import componant
-@import 'candidate_evaluate.scss';

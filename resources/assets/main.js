@@ -11,7 +11,7 @@ import 'select2/dist/js/select2.min';
 //
 import './adminlte/js/adminlte';
 //
-// import 'simplebar/dist/simplebar';
+import 'simplebar/dist/simplebar';
 //
 // // import './js/script2.js';
 //
@@ -33,4 +33,6 @@ import './js/source';
 import './js/skill';
 //
 import './js/candidate';
+
+import './js/candidate_diary';
 
