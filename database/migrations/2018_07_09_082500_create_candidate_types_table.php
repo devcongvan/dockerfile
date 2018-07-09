@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterCandidateTableAddUnique extends Migration
+class CreateCandidateTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class AlterCandidateTableAddUnique extends Migration
      */
     public function up()
     {
-        Schema::table('candidates', function (Blueprint $table) {
-
-            $table->unique(['can_email','can_phone']);
-
+        Schema::create('candidate_types', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('canty_name');
+            $table->string('canty_color');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +28,6 @@ class AlterCandidateTableAddUnique extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('candidate_types');
     }
 }

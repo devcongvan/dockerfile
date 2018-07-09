@@ -10,11 +10,15 @@ var CandidateDiary={
         this.switchEvaluateTab();
         this.checkMailItem();
         this.pinItem();
+        this.changeCandidateType();
+        this.scrollTopBottomDiary();
+        this.confirm();
     },
 
     composerEffect:function () {
 
         var mainHeight = $('.candidate-evaluate-main').height();
+        console.log(mainHeight);
         $('a[href="#candidate-evaluate"]').click(function () {
             setTimeout(function () {
                 var listHeight = $('.candidate-evaluate-main-diary-list').height();
@@ -172,7 +176,92 @@ var CandidateDiary={
 
 
         })
-    }
+    },
+
+    changeCandidateType:function () {
+        $('.candidate-evaluate-main-diary-list #dropdownMenuButton').click(function () {
+            alert();
+        })
+
+        $('.candidate-evaluate-main-diary-list .list-type .dropdown-item').click(function(e){
+            e.preventDefault();
+            $('.candidate-evaluate-main-diary-composer-push').data('type',$(this).data('type'));
+            if ($(this).data('type')=='tiemnang'){
+                $('.rate').css('display','flex');
+                $('.set-calendar').css('display','none');
+            }else{
+                $('.rate').css('display','none');
+                $('.set-calendar').css('display','flex');
+            }
+        })
+    },
+
+    scrollTopBottomDiary:function () {
+        $('#updown').click(function(e){
+            e.preventDefault();
+            var typeScroll=$(this).data('scroll');
+
+            if (typeScroll=='bottom'){
+                $(this).find('.fa').removeClass('fa-chevron-circle-up');
+                $(this).find('.fa').addClass('fa-chevron-circle-down');
+                $('.candidate-evaluate-main-diary-list-scroll').animate({
+                    scrollTop:50
+                });
+                $(this).data('scroll','top');
+            }else if(typeScroll=='top'){
+                $(this).find('.fa').removeClass('fa-chevron-circle-down');
+                $(this).find('.fa').addClass('fa-chevron-circle-up');
+                $('.candidate-evaluate-main-diary-list-scroll').animate({
+                    scrollTop:$('.candidate-evaluate-main-diary-list-scroll')[0].scrollHeight
+                });
+                $(this).data('scroll','bottom');
+            }
+
+        });
+    },
+
+    confirm:function () {
+        $('.candidate-evaluate-confirm').find('.btn-close').click(function () {
+
+            $('.candidate-evaluate-confirm').addClass('hide');
+
+            $('.candidate-evaluate-overlay').addClass('hide');
+
+        });
+
+        $('.candidate-evaluate-alert').find('.btn-close').click(function () {
+
+            $('.candidate-evaluate-overlay').addClass('hide');
+
+            $('.candidate-evaluate-alert').addClass('hide');
+
+        });
+
+        $('.dropdown-item[data-confirm="diary"]').on('click',function (e) {
+            e.preventDefault();
+            $('.candidate-evaluate-confirm').removeClass('hide');
+            $('.candidate-evaluate-overlay').removeClass('hide');
+            $('.candidate-evaluate-confirm').find('.modal-body').html('Bạn có muốn xóa nhật ký này không?');
+        });
+
+        $('a[data-confirm="mail"]').click(function(e){
+            e.preventDefault();
+            var mailCheckLenght=$('input[name="mail_item[]"]:checked').length;
+            if (mailCheckLenght==0){
+                $('.candidate-evaluate-overlay').removeClass('hide');
+                $('.candidate-evaluate-alert').removeClass('hide');
+
+            }else{
+                $('.candidate-evaluate-overlay').removeClass('hide');
+                $('.candidate-evaluate-confirm').removeClass('hide');
+                $('.candidate-evaluate-confirm').find('.modal-body').html('Bạn có muốn xóa '+mailCheckLenght+' Mail này không?');
+
+            }
+
+        })
+    },
+
+
 }
 
 $(function () {

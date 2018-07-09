@@ -49,8 +49,7 @@
                             </div><!-- /.card-header -->
                             @if($total=$candidates->total())
                                 <div class="card-searchinfo">
-                                    <b>{{$candidates->firstItem()!=0?$candidates->firstItem():0}} - {{$candidates->lastItem()!=0?$candidates->lastItem():0}} </b> trong
-                                    <b> {{$total}} </b> ứng viên <span></span>
+                                    <b>{{$candidates->firstItem()!=0?$candidates->firstItem():0}} - {{$candidates->lastItem()!=0?$candidates->lastItem():0}} </b>trong<b> {{$total}} </b> ứng viên <span></span>
                                 </div>
                             @endif
                             <div class="card-body candidate-list">
@@ -59,6 +58,7 @@
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                                             @isset($candidates)
+                                                @php $notdata='Chưa có dữ liệu'; @endphp
                                                 @foreach($candidates as $item)
                                                     <div class="candidate-item row" style="overflow: hidden">
                                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -99,7 +99,7 @@
                                                                                 <i class="fa fa-globe" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="">
-                                                                                <h6>{{!empty($item->source->so_name)?$item->source->so_name:'Chưa có nguồn'}} - {{!empty($item->can_title)?$item->can_title:''}}</h6>
+                                                                                <h6>{{!empty($item->source->so_name)?$item->source->so_name:$notdata}} - {{!empty($item->can_title)?$item->can_title:$notdata}}</h6>
                                                                             </div>
                                                                         </div> <!-- /. box -->
                                                                     </div>
@@ -110,27 +110,27 @@
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                                                             </div>
-                                                                            <div class="box-text">{{empty($item->can_address)?'Chưa có địa chỉ':$item->can_address}}</div>
+                                                                            <div class="box-text">{{empty($item->can_address)?$notdata:$item->can_address}}</div>
                                                                         </div> <!-- /. box -->
                                                                         <div class="box ">
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-birthday-cake" aria-hidden="true"></i>
                                                                             </div>
-                                                                            <div class="box-text">{{!empty($item->can_year)?(date('Y')-$item->can_year).' tuổi':(!empty($item->can_birthday)?floor((time() - strtotime($item->can_birthday)) / (60*60*24*365)).' tuổi':'Chưa có ngày sinh')}} </div>
+                                                                            <div class="box-text">{{!empty($item->can_year)?(date('Y')-$item->can_year).' tuổi':(!empty($item->can_birthday)?floor((time() - strtotime($item->can_birthday)) / (60*60*24*365)).' tuổi':$notdata)}} </div>
                                                                         </div> <!-- /. box -->
 
                                                                         <div class="box ">
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-mobile" aria-hidden="true"></i>
                                                                             </div>
-                                                                            <div class="box-text">{{empty($item->can_phone)?'Chưa có số điện thoại': (stripos($item->can_phone,'0')!=false?'0'.$item->can_phone:$item->can_phone)}}</div>
+                                                                            <div class="box-text">{{empty($item->can_phone)?$notdata: (stripos($item->can_phone,'0')!=false?'0'.$item->can_phone:$item->can_phone)}}</div>
                                                                         </div> <!-- /. box -->
                                                                         <div class="box">
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">{{empty($item->can_email)?'Chưa có Email':$item->can_email}}</a>
+                                                                                <a href="#">{{empty($item->can_email)?$notdata:$item->can_email}}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -141,7 +141,7 @@
                                                                                 <i class="fa fa-skype" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">{{!empty($item->can_skype)?$item->can_skype:$update}}</a>
+                                                                                <a href="#">{{!empty($item->can_skype)?$item->can_skype:$notdata}}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -151,7 +151,7 @@
                                                                                 <i class="fa fa-facebook-square" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">{{!empty($item->can_facebook)?$item->can_facebook:$update}}</a>
+                                                                                <a href="#">{{!empty($item->can_facebook)?$item->can_facebook:$notdata}}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -161,7 +161,7 @@
                                                                                 <i class="fa fa-linkedin-square" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">{{$item->can_linkedin or $update}}</a>
+                                                                                <a href="#">{{!empty($item->can_linkedin)?$item->can_linkedin:$notdata}}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -170,24 +170,24 @@
                                                                                 <i class="fa fa-github" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">{{$item->can_github or $update}}</a>
+                                                                                <a href="#">{{!empty($item->can_github)?$item->can_github:$notdata}}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
                                                                     </div>
 
-                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">
                                                                         <div class="row">
-
-                                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                            <span> - 5 sao</span>
-                                                                        </div>
-                                                                        <div class="row">
-                                                                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium consectetur eum facere inventore, maiores maxime pariatur quo saepe unde veritatis. Asperiores deleniti dignissimos eaque magni minima natus porro quae vel.</div>
+                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                                <span>20:30 ngày 15/05/2018</span>
+                                                                                <span class="bg-green c-white">Ứng viên tiềm năng</span>
+                                                                            </div>
+                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                                <span class="time-expired"><i class="fa fa-clock-o"></i>  23:30, 21 tháng 5, báo trước 5 phút </span>
+                                                                            </div>
+                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                                                <span>Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao</span>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -207,18 +207,72 @@
                                                 <div>Thứ tự sắp xếp</div>
                                                 <ul>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status" checked> Ứng viên mới
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status" > Ứng viên mới
                                                             <span class="badge pull-right">151</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> Ứng viên mới cập nhật
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên mới cập nhật
                                                             <span class="badge pull-right">240</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> Đánh giá cao nhất
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên tiềm năng
                                                             <span class="badge pull-right">360</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> Đánh giá thấp nhất
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên bận
+                                                            <span class="badge pull-right">100</span></label></li>
+                                                    <li>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên có nhu cầu
+                                                            <span class="badge pull-right">100</span></label></li>
+                                                    <li>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên chưa có nhu cầu
+                                                            <span class="badge pull-right">100</span></label></li>
+                                                    <li>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên hẹn phỏng vấn
+                                                            <span class="badge pull-right">100</span></label></li>
+                                                    <li>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên sắp nghỉ
+                                                            <span class="badge pull-right">100</span></label></li>
+                                                    <li>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên là sinh viên
                                                             <span class="badge pull-right">100</span></label></li>
                                                 </ul>
+                                            </div>
+                                        </div> <!-- /. candidate sidebar item -->
+
+                                        <div class="candidate-sidebar-item radiobox d-flex" style="">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div>Thời gian viết nhật ký</div>
+                                                <div class="row">
+                                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                                        Ngày
+                                                    </div>
+                                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                                                        <input type="text" placeholder="20/10/2018" name="" class="form-group">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                                        Giờ
+                                                    </div>
+                                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                                                        <input type="text" placeholder="20:30" name="" class="form-group">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- /. candidate sidebar item -->
+
+                                        <div class="candidate-sidebar-item radiobox d-flex" style="">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div>Khoảng thời gian viết nhật ký</div>
+                                                <div class="row">
+                                                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                                        <input type="text" name="" placeholder="20/10/2018" class="form-group">
+                                                    </div>
+                                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                                        đến
+                                                    </div>
+                                                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                                        <input type="text" name="" placeholder="20/10/2018" class="form-group">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
 
@@ -227,19 +281,19 @@
                                                 <div>Nguồn ứng viên</div>
                                                 <ul>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status" checked> 123job
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> 123job
                                                             <span class="badge pull-right">151</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> vietnamwork
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> vietnamwork
                                                             <span class="badge pull-right">240</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> itviec
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> itviec
                                                             <span class="badge pull-right">360</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> vieclam24h
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> vieclam24h
                                                             <span class="badge pull-right">100</span></label></li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status"> careerbuilder
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> careerbuilder
                                                             <span class="badge pull-right">100</span></label></li>
                                                 </ul>
                                             </div>
@@ -250,7 +304,7 @@
                                                 <div>Đánh giá</div>
                                                 <ul>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status" checked>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
@@ -258,7 +312,7 @@
                                                             <i class="fa fa-star-half-o" aria-hidden="true"></i><span class="badge pull-right">151</span></label>
                                                     </li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status">
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
@@ -266,7 +320,7 @@
                                                             <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">240</span></label>
                                                     </li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status">
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star-half-o" aria-hidden="true"></i>
@@ -274,7 +328,7 @@
                                                             <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">360</span></label>
                                                     </li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status">
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star-half-o" aria-hidden="true"></i>
                                                             <i class="fa fa-star-o" aria-hidden="true"></i>
@@ -282,7 +336,7 @@
                                                             <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">100</span></label>
                                                     </li>
                                                     <li>
-                                                        <label class="full-width"><input type="radio" name="candidate_status">
+                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
                                                             <i class="fa fa-star-half-o" aria-hidden="true"></i>
                                                             <i class="fa fa-star-o" aria-hidden="true"></i>
                                                             <i class="fa fa-star-o" aria-hidden="true"></i>
@@ -296,7 +350,7 @@
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Địa điểm</div>
-                                                <select class="select2" name="workplace[]" multiple="multiple">
+                                                <select class="select3" name="workplace[]" multiple="multiple">
                                                     <option value="hanoi">Hà Nội</option>
                                                     <option value="hochiminh">Hải Phòng</option>
                                                     <option value="dannag">Đà Nẵng</option>
@@ -309,7 +363,7 @@
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Ngành nghề</div>
-                                                <select class="select2" name="career[]" multiple="multiple">
+                                                <select class="select3" name="career[]" multiple="multiple">
                                                     <option value="hanoi">IT phần cứng</option>
                                                     <option value="hochiminh">IT phần mềm</option>
                                                     <option value="dannag">Kế toán</option>
@@ -322,7 +376,7 @@
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div> Kỹ năng</div>
-                                                <select class="select2" name="career[]" multiple="multiple">
+                                                <select class="select3" name="career[]" multiple="multiple">
                                                     <option value="hanoi">IT phần cứng</option>
                                                     <option value="hochiminh">IT phần mềm</option>
                                                     <option value="dannag">Kế toán</option>
@@ -1091,7 +1145,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="bg">
@@ -1124,7 +1178,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-red c-white">Ứng viên đang bận</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" href="#" data-confirm="diary" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1160,7 +1214,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-blue c-white">Ứng viên có nhu cầu</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1190,7 +1244,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1225,7 +1279,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-yellow c-white">Ứng viên chưa có nhu cầu</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1257,7 +1311,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-aqua c-white">Ứng viên hẹn phỏng vấn</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1293,7 +1347,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-brown c-white">Ứng viên sắp nghỉ</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1325,7 +1379,7 @@
                                                     <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-purple c-white">Ứng viên là sinh viên</span>
                                                     <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                                     <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-id="16">Xóa</a>
+                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
                                                     </div>
                                                 </div>
                                                 <div class="diary-item-rate">
@@ -1344,21 +1398,21 @@
                                     </div>
                                 </div>
 
-
                                 <div class="option">
-                                    <a href="#" id="updown"><i class="fa fa-chevron-circle-down" aria-hidden="true"></i></a>
+                                    <a href="#" id="updown" data-scroll='bottom'><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></a>
                                     <a href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</a>
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên bận</a>
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</a>
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</a>
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</a>
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</a>
-                                        <a class="dropdown-item" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</a>
+                                    <div class="dropdown-menu list-type" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" data-type="tiemnang" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</a>
+                                        <a class="dropdown-item" data-type="ban" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên bận</a>
+                                        <a class="dropdown-item" data-type="conhucau" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</a>
+                                        <a class="dropdown-item" data-type="chuaconhucau" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</a>
+                                        <a class="dropdown-item" data-type="henphongvan" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</a>
+                                        <a class="dropdown-item" href="#" data-type="sapnghi" data-id="{{$item->id}}"><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</a>
+                                        <a class="dropdown-item" data-type="sinhvien" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</a>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="candidate-evaluate-main-diary-composer" data-click="false" >
                                 <div style="display: block" class="box1 margin-bottom">
                                     <div class="row candidate-evaluate-main-diary-composer-row">
@@ -1373,24 +1427,46 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="opacity: 0;" class="row box2 candidate-evaluate-main-diary-composer-row">
+                                <div style="opacity: 0; display: none;" class="row box2 candidate-evaluate-main-diary-composer-row set-calendar">
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
                                         Đặt lịch
                                     </div>
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text" class="full-width form-group datetimepicker" placeholder="20/10/2017">
+                                        <input type="text text-center" class="full-width form-group datetimepicker" placeholder="20/10/2017">
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
                                         lúc
                                     </div>
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text" class="full-width form-group">
+                                        <input type="text text-center timepicker" placeholder="20:30" class="full-width form-group">
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
                                         trước
                                     </div>
                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text" class="full-width form-group">
+                                        <select class="form-group">
+                                            <option value="">-- Chọn khoảng thời gian --</option>
+                                            <option value="">Trước 30 phút</option>
+                                            <option value="">Trước 1 tiếng</option>
+                                            <option value="">Trước 1 ngày</option>
+                                            <option value="">Trước 3 ngày</option>
+                                            <option value="">Trước 5 ngày</option>
+                                            <option value="">Trước 7 ngày</option>
+                                            <option value="">Trước 15 ngày</option>
+                                            <option value="">Trước 30 ngày</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="opacity: 0;" class="row box2 candidate-evaluate-main-diary-composer-row rate">
+                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
+                                        Đánh giá
+                                    </div>
+                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
                                     </div>
                                 </div>
                                 <div class="box3 margin-bottom" style="display: none">
@@ -1402,7 +1478,7 @@
                                             <textarea name="" rows="1" class="full-width form-group"></textarea>
                                         </div>
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <a href="#" class="candidate-evaluate-main-diary-composer-push"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
+                                            <a href="#" data-type="tiemnang" class="candidate-evaluate-main-diary-composer-push"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -1442,14 +1518,14 @@
                                         </div>
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center">
                                             <div class="delete-bar a-hover" >
-                                                <a href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                                <a href="#" data-confirm="mail"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                             </div>
                                         </div>
                                     </div>
                                 <div class="candidate-evaluate-main-mail-list-content scroll" >
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn Ây</a></div>
@@ -1467,7 +1543,7 @@
 
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn Bi</a></div>
@@ -1485,7 +1561,7 @@
 
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn C</a></div>
@@ -1503,7 +1579,7 @@
 
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn D</a></div>
@@ -1521,7 +1597,7 @@
 
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn E</a></div>
@@ -1539,7 +1615,7 @@
 
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn D</a></div>
@@ -1557,7 +1633,7 @@
 
                                     <div class="candidate-evaluate-main-mail-item">
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center item-checkbox">
-                                            <input type="checkbox" name="">
+                                            <input type="checkbox" name="mail_item[]">
                                         </div>
                                         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 item-sender">
                                             <div class="pull-left"><a href="#">Tôi <i class="fa fa-long-arrow-right" aria-hidden="true"></i> Nguyễn Văn E</a></div>
@@ -1658,6 +1734,36 @@
                             <div class="clearfix"></div>
                         </div>
                     </div>
+                    <div class="candidate-evaluate-confirm hide">
+                        <div class="modal-header">
+                            <h5 class="c-white">Thông báo</h5>
+                        </div>
+                        <div class="modal-body">
+                            Bạn có muốn xóa nhật ký này?
+                        </div>
+                        <div class="modal-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-secondary btn-close">Đóng</button>
+                                <button type="button" class="btn btn-default btn-delete">Xóa</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="candidate-evaluate-alert hide">
+                        <div class="modal-header">
+                            <h5 class="c-white">Thông báo</h5>
+                        </div>
+                        <div class="modal-body">
+                            Bạn chưa chọn Mail nào
+                        </div>
+                        <div class="modal-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-secondary btn-close">Đóng</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                    <div class="candidate-evaluate-overlay hide"></div>
                 </div>
             </div>
         </div>

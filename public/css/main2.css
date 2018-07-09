@@ -977,6 +977,16 @@ select {
   border-bottom: 1px solid #f2f2f2;
 }
 
+.candidate-item .time-expired {
+  text-decoration: line-through;
+}
+
+.candidate-item .diary-box {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: #ececec;
+}
+
 .candidate-item.selected {
   border-left: 1px solid #AB1D1D;
   background: #F7F9FA;
@@ -1130,50 +1140,50 @@ select {
   border-right: 1px solid #f2f2f2;
 }
 
-.candidate- .badge {
+.candidate-sidebar .badge {
   background: #AB1D1D;
   color: #fff;
 }
 
-.candidate- .evaluate .fa {
+.candidate-sidebar .evaluate .fa {
   margin-left: 10px;
   color: #AB1D1D;
 }
 
-.candidate--item {
+.candidate-sidebar-item {
   line-height: 2 !important;
   padding: 20px 0;
 }
 
-.candidate--item:hover {
+.candidate-sidebar-item:hover {
   background: #F7F9FA;
 }
 
-.candidate--item.radiobox ul {
+.candidate-sidebar-item.radiobox ul {
   list-style: none;
   padding: 0 !important;
   margin-bottom: 0;
 }
 
-.candidate--item.radiobox label {
+.candidate-sidebar-item.radiobox label {
   font-weight: 400;
 }
 
-.candidate- .age {
+.candidate-sidebar .age {
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
 }
 
-.candidate- .age input {
+.candidate-sidebar .age input {
   width: 92px;
   margin-bottom: 10px;
 }
 
-.candidate- .select2-selection {
+.candidate-sidebar .select2-selection {
   background: transparent;
 }
 
-.candidate- .select2-selection__rendered {
+.candidate-sidebar .select2-selection__rendered {
   background: #fff;
 }
 
@@ -1681,6 +1691,46 @@ select {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  position: relative;
+}
+
+.candidate-evaluate-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999999;
+}
+
+.candidate-evaluate-confirm,
+.candidate-evaluate-alert {
+  width: 250px;
+  background: #fff;
+  z-index: 999999999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.candidate-evaluate-confirm .modal-header,
+.candidate-evaluate-alert .modal-header {
+  padding: 0;
+  margin: 0;
+}
+
+.candidate-evaluate-confirm .modal-body,
+.candidate-evaluate-alert .modal-body {
+  padding: 1rem !important;
+}
+
+.candidate-evaluate-confirm .modal-footer,
+.candidate-evaluate-alert .modal-footer {
+  padding: 1rem;
+  border-top: 1px solid #e9ecef;
 }
 
 .candidate-evaluate-loading {
@@ -1975,8 +2025,13 @@ select {
   -webkit-transition: .2s;
   transition: .2s;
   background: #f9f9f9;
-  padding: 10px 0;
+  padding-top: 10px;
+  padding-bottom: 1px;
   border-top: 1px solid #ECECEC;
+}
+
+.candidate-evaluate-main-diary-composer-row {
+  padding-bottom: 10px;
 }
 
 .candidate-evaluate-main-diary-composer:hover .box1,
