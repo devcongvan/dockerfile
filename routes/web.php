@@ -128,13 +128,11 @@ Route::group(['prefix' => 'location'], function() {
 
 Route::group(['prefix' => 'diary'], function() {
 
-    Route::get('hihi','DiaryController@index');
-
     Route::group(['prefix' => 'ajax'], function() {
 
-        Route::get('select2Search', 'LocationController@searchAjaxSelect2')->name('ajax.location.search');
+        Route::get('list','DiaryController@index')->name('diary.ajax.list');
 
-        Route::post('test','LocationController@test');
+        Route::get('new','DiaryController@store')->name('diary.ajax.new');
 
 
     });

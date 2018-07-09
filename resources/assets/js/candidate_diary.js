@@ -2,6 +2,8 @@ import 'simplebar/dist/simplebar';
 
 var CandidateDiary={
 
+    candidateId:0,
+
     init:function () {
         this.composerEffect();
         this.listScroll();
@@ -13,54 +15,72 @@ var CandidateDiary={
         this.changeCandidateType();
         this.scrollTopBottomDiary();
         this.confirm();
+        this.pushDiary();
     },
 
     composerEffect:function () {
-
+        var $this=this;
         var mainHeight = $('.candidate-evaluate-main').height();
-        console.log(mainHeight);
         $('a[href="#candidate-evaluate"]').click(function () {
+            $this.candidateId=$(this).data('id');
+            $this.rate();
             setTimeout(function () {
                 var listHeight = $('.candidate-evaluate-main-diary-list').height();
                 $('.candidate-evaluate-main-diary-list-scroll').scrollTop($('.candidate-evaluate-main-diary-list-scroll')[0].scrollHeight);
 
                 $('.candidate-evaluate-main-diary-composer').off('mouseenter').on('mouseenter', function () {
-                    var composerHeight = $(this).height();
-                    $('.candidate-evaluate-main-diary-list').animate({
-                        height: mainHeight - composerHeight + 'px'
-                    }, 300);
+
                     $('.candidate-evaluate-main-diary-list-scroll').animate({
-                        height: mainHeight - composerHeight + 'px'
+                        height: '460px'
                     }, 300);
+
+                    $(this).animate({
+                        height: '100px'
+                    }, 300);
+                    $('.candidate-evaluate-main-diary-list .option').animate({
+                        bottom:'55px'
+                    });
 
                 });
 
                 $('.candidate-evaluate-main-diary-composer').off('mouseleave').on('mouseleave', function () {
                         if ($('.candidate-evaluate-main-diary-composer').data('click')==false){
-                            $('.candidate-evaluate-main-diary-list').animate({
-                                height: listHeight + 'px'
-                            }, 300);
                             $('.candidate-evaluate-main-diary-list-scroll').animate({
-                                height: listHeight + 'px'
+                                height: '488px'
                             }, 300);
 
+                            $(this).animate({
+                                height: '53px'
+                            }, 300);
+                            $('.candidate-evaluate-main-diary-list .option').animate({
+                                bottom:'10px'
+                            })
                         }
                 });
 
                 $('.candidate-evaluate-main-diary-composer').off('click').click(function () {
                     $(this).data('click',true);
                     $(this).addClass('hover');
-                    $('.candidate-evaluate-main-diary-list-scroll').scrollTop($('.candidate-evaluate-main-diary-list-scroll')[0].scrollHeight);
+                    $('.candidate-evaluate-main-diary-list-scroll').animate({
+                        scrollTop:$('.candidate-evaluate-main-diary-list-scroll')[0].scrollHeight
+                    });
 
                 });
 
                     $(document).click(function(event) {
                         if (!$(event.target).closest(".candidate-evaluate-main-diary-composer").length) {
                             $('.candidate-evaluate-main-diary-composer').data('click',false);
-                            $('.candidate-evaluate-main-diary-list, .candidate-evaluate-main-diary-list-scroll').animate({
-                                height: listHeight + 'px'
+                            $('.candidate-evaluate-main-diary-list-scroll').animate({
+                                height: '488px'
                             }, 300);
+
+                            $('.candidate-evaluate-main-diary-composer').animate({
+                                height: '53px'
+                            })
                             $('.candidate-evaluate-main-diary-composer').removeClass('hover');
+                            $('.candidate-evaluate-main-diary-list .option').animate({
+                                bottom:'10px'
+                            })
                         }
                     });
 
@@ -179,14 +199,50 @@ var CandidateDiary={
     },
 
     changeCandidateType:function () {
-        $('.candidate-evaluate-main-diary-list #dropdownMenuButton').click(function () {
-            alert();
-        })
-
-        $('.candidate-evaluate-main-diary-list .list-type .dropdown-item').click(function(e){
+        var $this=this;
+        var flag=false;
+        $('.candidate-evaluate-main-diary-list #dropdownMenuButton').click(function (e) {
             e.preventDefault();
-            $('.candidate-evaluate-main-diary-composer-push').data('type',$(this).data('type'));
-            if ($(this).data('type')=='tiemnang'){
+            var dropDownMenuButton=$(this);
+            var url=$(this).data('url');
+            var dataRender=$(this).data('render');
+            var dropDownItemLength=$('.list-type .dropdown-item').length;
+
+            if (flag==false&&dropDownItemLength==0){
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    // data: {param1: 'value1'},
+                })
+                    .done(function(reponse) {
+                        $this.renderCandidateType(reponse.candidate_types);
+                        flag=true;
+                    })
+                    .fail(function(error) {
+
+                    });
+            }
+
+
+
+        });
+
+    },
+
+    renderCandidateType:function(data){
+        var html='';
+        $.each(data,function(index,item){
+            var dropitem='<a class="dropdown-item" data-type="tiemnang" href="#" data-id="'+item.id+'"><i class="fa fa-circle" style="color: '+item.canty_color+'" aria-hidden="true"></i> '+item.canty_name+'</a>';
+            html+=dropitem;
+        });
+        $('.candidate-evaluate-main-diary-list .dropdown-menu').html(html);
+
+        $('.candidate-evaluate-main-diary-list .list-type .dropdown-item').bind('click',function(e){
+            e.preventDefault();
+            var candidateTypeId=$(this).data('id');
+            $('.candidate-evaluate-main-diary-composer-push').data('candidate-type-id',candidateTypeId);
+            if (candidateTypeId=='1'){
                 $('.rate').css('display','flex');
                 $('.set-calendar').css('display','none');
             }else{
@@ -239,6 +295,7 @@ var CandidateDiary={
 
         $('.dropdown-item[data-confirm="diary"]').on('click',function (e) {
             e.preventDefault();
+            alert();
             $('.candidate-evaluate-confirm').removeClass('hide');
             $('.candidate-evaluate-overlay').removeClass('hide');
             $('.candidate-evaluate-confirm').find('.modal-body').html('Bạn có muốn xóa nhật ký này không?');
@@ -250,6 +307,7 @@ var CandidateDiary={
             if (mailCheckLenght==0){
                 $('.candidate-evaluate-overlay').removeClass('hide');
                 $('.candidate-evaluate-alert').removeClass('hide');
+                $('.candidate-evaluate-alert .modal-body').html('Bạn chưa chọn Mail nào');
 
             }else{
                 $('.candidate-evaluate-overlay').removeClass('hide');
@@ -260,6 +318,83 @@ var CandidateDiary={
 
         })
     },
+
+    rate:function(){
+        var list_candidate_rate=[];
+        $.getJSON( "json/candidate_rate.json", function( data ) {
+            var items = [];
+
+            list_candidate_rate=data;
+
+            $(document).on('mouseover', '.rateCandidate-item', function () {
+                var onStar = $(this).data('value'); // The star currently mouse on
+                $('.rateCandidate-text').html(data[onStar].name);
+                $('.rateCandidate-scrore').val(onStar);
+
+                // Now highlight all the stars that's not after the current hovered star
+                $(this).parent().children('.rateCandidate-item').each(function (e) {
+                    if (e < onStar) {
+                        $(this).addClass('rateCandidate-check');
+                    }
+                    else {
+                        $(this).removeClass('rateCandidate-check');
+                    }
+                });
+
+                $(this).parent().children('.rateskill-input').val(onStar);
+            }).on('mouseout', function () {
+                $(this).parent().children('.rateCandidate-item').each(function (e) {
+                    $(this).removeClass('rateCandidate-check');
+                });
+            });
+
+        });
+
+
+
+
+    },
+
+    pushDiary:function () {
+        var $this=this;
+        $('.candidate-evaluate-main-diary-composer-push').click(function(e){
+            e.preventDefault();
+            var rateCandidateScore=$('.rateCandidate-scrore').val();
+            var candidateTypeId=$(this).data('candidate-type-id');
+
+            if (candidateTypeId==0){
+                $('.candidate-evaluate-overlay').removeClass('hide');
+                $('.candidate-evaluate-alert').removeClass('hide');
+                $('.candidate-evaluate-alert .modal-body').html('Bạn chưa chọn loại ứng viên');
+            }else{
+                var url=$(this).data('url');
+                var data= {
+                    'd_cantype_id': candidateTypeId,
+                    'd_can_id': $this.candidateId,
+                    'd_evaluate':$('.rateCandidate-scrore').val(),
+                    'd_set_calendar':$('input[name="set-calendar-date"]').val(),
+                    'd_set_time':$('input[name="set-calendar-time"]').val(),
+                    'd_notice_before':$('select[name="set-calendar-before"]').val(),
+                    'd_note':$('textarea[name="note"]').val()
+                };
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {data: data},
+                })
+                    .done(function(reponse) {
+                        console.log(reponse);
+                    })
+                    .fail(function(error) {
+                        console.log(error);
+                    });
+
+
+            }
+        })
+    }
 
 
 }

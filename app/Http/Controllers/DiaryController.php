@@ -18,11 +18,19 @@ class DiaryController extends Controller
     }
 
     public function index(){
+        $diary=$this->candidateTypeRepository->getAll();
 
+        return response([
+            'candidate_types'=>$diary
+        ]);
     }
 
     public function getCandidateType(){
         $diary=$this->candidateTypeRepository->getAll();
         dd($diary);
+    }
+
+    public function store(Request $request){
+        dump($request->all());
     }
 }

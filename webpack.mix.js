@@ -25,6 +25,10 @@ mix.webpackConfig({
             {
                 test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
                 loader: 'file-loader?name=[name].[ext]?[hash]'
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                loader: "file-loader?name=/resources/assets/jqueryautocomplete/images/[name].[ext]"
             }
         ],
         loaders: [

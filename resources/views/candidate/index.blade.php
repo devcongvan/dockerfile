@@ -1400,89 +1400,97 @@
 
                                 <div class="option">
                                     <a href="#" id="updown" data-scroll='bottom'><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></a>
-                                    <a href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                    <a href="#" id="dropdownMenuButton" data-url="{{route('diary.ajax.list')}}" data-toggle="dropdown" data-render="false" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                     <div class="dropdown-menu list-type" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" data-type="tiemnang" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</a>
+                                        {{-- <a class="dropdown-item" data-type="tiemnang" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</a>
                                         <a class="dropdown-item" data-type="ban" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên bận</a>
                                         <a class="dropdown-item" data-type="conhucau" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</a>
                                         <a class="dropdown-item" data-type="chuaconhucau" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</a>
                                         <a class="dropdown-item" data-type="henphongvan" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</a>
                                         <a class="dropdown-item" href="#" data-type="sapnghi" data-id="{{$item->id}}"><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</a>
-                                        <a class="dropdown-item" data-type="sinhvien" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</a>
+                                        <a class="dropdown-item" data-type="sinhvien" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</a> --}}
                                     </div>
                                 </div>
                             </div>
 
                             <div class="candidate-evaluate-main-diary-composer" data-click="false" >
-                                <div style="display: block" class="box1 margin-bottom">
-                                    <div class="row candidate-evaluate-main-diary-composer-row">
+                                <div class="wrap">
+                                    <div style="" class="row box1 candidate-evaluate-main-diary-composer-row set-calendar" style="display: none;">
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
-                                            Ghi chú
+                                            Đặt lịch
                                         </div>
-                                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-evaluate-main-diary-composer-input">
-                                            <textarea name="" rows="1" class="full-width form-group"></textarea>
+                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
+                                            <input type="text text-center" name="set-calendar-date" class="full-width form-group datetimepicker" placeholder="20/10/2017">
                                         </div>
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <a href="#" class="candidate-evaluate-main-diary-composer-push"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
+                                            lúc
+                                        </div>
+                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
+                                            <input type="text text-center timepicker" name="set-calendar-time" placeholder="20:30" class="full-width form-group">
+                                        </div>
+                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
+                                            trước
+                                        </div>
+                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
+                                            <select class="form-group" name="set-calendar-before">
+                                                <option value="">-- Chọn khoảng thời gian --</option>
+                                                <option value="Trước 30 phút">Trước 30 phút</option>
+                                                <option value="Trước 1 tiếng">Trước 1 tiếng</option>
+                                                <option value="Trước 1 ngày">Trước 1 ngày</option>
+                                                <option value="Trước 3 ngày">Trước 3 ngày</option>
+                                                <option value="Trước 5 ngày">Trước 5 ngày</option>
+                                                <option value="Trước 7 ngày">Trước 7 ngày</option>
+                                                <option value="Trước 15 ngày">Trước 15 ngày</option>
+                                                <option value="Trước 30 ngày">Trước 30 ngày</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div style="opacity: 0; display: none;" class="row box2 candidate-evaluate-main-diary-composer-row set-calendar">
-                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
-                                        Đặt lịch
-                                    </div>
-                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text text-center" class="full-width form-group datetimepicker" placeholder="20/10/2017">
-                                    </div>
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
-                                        lúc
-                                    </div>
-                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <input type="text text-center timepicker" placeholder="20:30" class="full-width form-group">
-                                    </div>
-                                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
-                                        trước
-                                    </div>
-                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                        <select class="form-group">
-                                            <option value="">-- Chọn khoảng thời gian --</option>
-                                            <option value="">Trước 30 phút</option>
-                                            <option value="">Trước 1 tiếng</option>
-                                            <option value="">Trước 1 ngày</option>
-                                            <option value="">Trước 3 ngày</option>
-                                            <option value="">Trước 5 ngày</option>
-                                            <option value="">Trước 7 ngày</option>
-                                            <option value="">Trước 15 ngày</option>
-                                            <option value="">Trước 30 ngày</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div style="opacity: 0;" class="row box2 candidate-evaluate-main-diary-composer-row rate">
-                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
-                                        Đánh giá
-                                    </div>
-                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                    </div>
-                                </div>
-                                <div class="box3 margin-bottom" style="display: none">
-                                    <div class="row candidate-evaluate-main-diary-composer-row">
+                                    <div style=" height: 48px" class="row box2 candidate-evaluate-main-diary-composer-row rate">
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
-                                            Ghi chú
+                                            Đánh giá
                                         </div>
-                                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-evaluate-main-diary-composer-input">
-                                            <textarea name="" rows="1" class="full-width form-group"></textarea>
-                                        </div>
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <a href="#" data-type="tiemnang" class="candidate-evaluate-main-diary-composer-push"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
+                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                                            <div class="rateCandidate">
+                                                <div class="rateCandidate-item" data-value="1">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>        
+                                                    <i class="fa fa-star-o" aria-hidden="true"></i>        
+                                                </div>
+                                                <div class="rateCandidate-item" data-value="2">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>        
+                                                    <i class="fa fa-star-o" aria-hidden="true"></i>        
+                                                </div>
+                                                <div class="rateCandidate-item" data-value="3">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>        
+                                                    <i class="fa fa-star-o" aria-hidden="true"></i>        
+                                                </div>
+                                                <div class="rateCandidate-item" data-value="4">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>        
+                                                    <i class="fa fa-star-o" aria-hidden="true"></i>        
+                                                </div>
+                                                <div class="rateCandidate-item" data-value="5">
+                                                    <i class="fa fa-star" aria-hidden="true"></i>        
+                                                    <i class="fa fa-star-o" aria-hidden="true"></i>        
+                                                </div>
+                                                <div class="rateCandidate-text ml-15px"></div>
+                                                <input type="hidden" name="rateCandidate-scrore" class="rateCandidate-scrore" value="">
+                                            </div>
 
+                                        </div>
+                                    </div>
+                                    <div class="box3 margin-bottom" >
+                                        <div class="row candidate-evaluate-main-diary-composer-row">
+                                            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-title">
+                                                Ghi chú
+                                            </div>
+                                            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-evaluate-main-diary-composer-input">
+                                                <textarea name="note" rows="1" class="full-width form-group"></textarea>
+                                            </div>
+                                            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                                <a href="#" data-candidate-type-id="0" data-url="{{route('diary.ajax.new')}}" class="candidate-evaluate-main-diary-composer-push"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="candidate-evaluate-main-mail slide-out">
