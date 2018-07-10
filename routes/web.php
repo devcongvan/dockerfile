@@ -132,7 +132,7 @@ Route::group(['prefix' => 'diary'], function() {
 
         Route::get('list','DiaryController@index')->name('diary.ajax.list');
 
-        Route::get('new','DiaryController@store')->name('diary.ajax.new');
+        Route::post('new','DiaryController@store')->name('diary.ajax.new');
 
 
     });

@@ -21382,6 +21382,9 @@ module.exports = __webpack_amd_options__;
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_simplebar_dist_simplebar__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_simplebar_dist_simplebar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_simplebar_dist_simplebar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_toastr_build_toastr_min__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_toastr_build_toastr_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_toastr_build_toastr_min__);
+
 
 
 var CandidateDiary = {
@@ -21736,17 +21739,33 @@ var CandidateDiary = {
                 };
 
                 $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     url: url,
                     type: 'POST',
                     dataType: 'JSON',
                     data: { data: data }
                 }).done(function (reponse) {
-                    console.log(reponse);
+                    $this.displayAlert(reponse.message);
                 }).fail(function (error) {
-                    console.log(error);
+                    $this.displayAlert(error.message, 'error');
                 });
             }
         });
+    },
+
+    appendDiaryItem: function appendDiaryItem(data) {
+        var item = '<div class="diary-item row">\n' + '                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">\n' + '                                            <div class="diary-item-avatar">\n' + '                                                <div class="img">\n' + '                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">\n' + '                                                </div>\n' + '                                            </div>\n' + '                                        </div>\n' + '                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">\n' + '                                            <div class="diary-item-main">\n' + '                                                <div class="diary-item-header">\n' + '                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-red c-white">Ứng viên đang bận</span>\n' + '                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>\n' + '                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">\n' + '                                                        <a class="dropdown-item" href="#" data-confirm="diary" data-id="16">Xóa</a>\n' + '                                                    </div>\n' + '                                                </div>\n' + '                                                <div class="diary-item-rate">\n' + '\n' + '                                                </div>\n' + '                                                <div class="bg">\n' + '                                                    <div class="diary-item-notice">\n' + '                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại cho ứng viên</span>\n' + '                                                    </div>\n' + '                                                    <div class="diary-item-note">\n' + '                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao\n' + '                                                    </div>\n' + '                                                </div>\n' + '                                            </div>\n' + '                                        </div>\n' + '                                    </div>';
+
+        $('.');
+    },
+
+    displayAlert: function displayAlert(message) {
+        var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+
+
+        __WEBPACK_IMPORTED_MODULE_1_toastr_build_toastr_min___default.a[type](message);
     }
 
 };

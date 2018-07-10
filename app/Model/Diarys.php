@@ -13,6 +13,7 @@ class Diarys extends Model
         'd_can_id',
         'd_evaluate',
         'd_set_calendar',
+        'd_set_time',
         'd_notice_before',
         'd_note'
     ];
