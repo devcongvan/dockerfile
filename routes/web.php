@@ -130,11 +130,17 @@ Route::group(['prefix' => 'diary'], function() {
 
     Route::group(['prefix' => 'ajax'], function() {
 
-        Route::get('list','DiaryController@index')->name('diary.ajax.list');
+        Route::post('list','DiaryController@index')->name('diary.ajax.list');
 
-        Route::post('new','DiaryController@store')->name('diary.ajax.new');
+        Route::get('listCandidateType','DiaryController@indexCandidateType')->name('diary.ajax.listCandidateType');
+
+        Route::post('new','DiaryController@storeAjax')->name('diary.ajax.new');
+
+        Route::post('delete','DiaryController@destroyAjax')->name('diary.ajax.delete');
 
 
     });
 });
+
+Route::get('testdiary','DiaryController@testdiary');
 

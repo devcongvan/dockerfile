@@ -1,0 +1,1 @@
+module.exports = __webpack_public_path__ + "fontello.ttf?8f13eeb6d015605ac225e7a28f31211c";

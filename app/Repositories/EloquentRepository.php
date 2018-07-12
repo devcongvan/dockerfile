@@ -32,6 +32,14 @@ abstract class EloquentRepository implements RepositoryInterface
         return $result;
     }
 
+    public function getFirst($column='id'){
+        return $this->_model->first();
+    }
+
+    public function getLast($column='id'){
+        return $this->_model->orderby($column,'desc')->first();
+    }
+
     public function create(array $attributes){
         return $this->_model->create($attributes);
     }
@@ -51,6 +59,13 @@ abstract class EloquentRepository implements RepositoryInterface
             return true;
         }
         return false;
+    }
+
+    public function updateAfield($id,$field,$value){
+        $aTable=$this->_model->find($id);
+        $aTable->$field=$value;
+        $aTable->save();
+
     }
 
     abstract public function updateAjax(array $attributes);

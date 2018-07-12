@@ -86,7 +86,7 @@
                                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                             <a class="dropdown-item" href="{{route('candidate.edit', ['id' => $item->id])}}" data-id="{{$item->id}}">Sửa</a>
                                                                             <a class="dropdown-item" href="#" data-id="{{$item->id}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">Xóa</a>
-                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="{{$item->id}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">Đánh giá</a>
+                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="{{$item->id}}" data-name="{{$item->can_name}}" data-avatar="{{$item->can_avatar}}" data-age="{{!empty($item->can_year)?(date('Y')-$item->can_year).' tuổi':(!empty($item->can_birthday)?floor((time() - strtotime($item->can_birthday)) / (60*60*24*365)).' tuổi':$notdata)}}" data-title="{{!empty($item->can_title)?$item->can_title:$notdata}}" data-delete-url="{{route('diary.ajax.delete')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">Đánh giá</a>
                                                                         </div>
                                                                     </div>
                                                                     <div class="clearfix"></div>
@@ -176,20 +176,35 @@
 
                                                                     </div>
 
+                                                                    @if(!empty($item->can_diary))
+
+                                                                        @php
+                                                                            $can_diary=json_decode($item->can_diary);
+                                                                                $diary=json_decode($can_diary->diary);
+                                                                                $candidateType=json_decode($can_diary->candidateType);
+                                                                        @endphp
+
                                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">
                                                                         <div class="row">
                                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span>20:30 ngày 15/05/2018</span>
-                                                                                <span class="bg-green c-white">Ứng viên tiềm năng</span>
+                                                                                <span>{{$diary->created_at}}</span>
+                                                                                <span class="bg-green c-white" style="background: {{$candidateType->canty_color}}!important;">{{$candidateType->canty_name}}</span>
                                                                             </div>
                                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span class="time-expired"><i class="fa fa-clock-o"></i>  23:30, 21 tháng 5, báo trước 5 phút </span>
+                                                                                @if(!empty($diary->d_evaluate))
+                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> {{$diary->d_evaluate}}</span>
+                                                                                    @else
+                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i>  {{$diary->d_set_time}}, {{$diary->d_set_calendar}}, {{$diary->d_notice_before}} </span>
+                                                                                @endif
                                                                             </div>
                                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span>Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao</span>
+                                                                                <span>{{$diary->d_note}}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                        @endif
+
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1107,7 +1122,7 @@
                             </div>
                         </li>
                         <li class="candidate-evaluate-header-control-item">
-                            <a href="#" title="Đóng" data-dismiss="modal"><i class="fa fa-times-circle-o" aria-hidden="true"></i></a>
+                            <a href="#" title="Đóng" class="off" data-dismiss="modal"><i class="fa fa-times-circle-o" aria-hidden="true"></i></a>
                         </li>
                     </ul>
                 </div>
@@ -1124,291 +1139,52 @@
                     <div class="candidate-evaluate-main">
                         <div class="candidate-evaluate-main-diary">
                             <div class="candidate-evaluate-main-diary-list">
-                                <div class="candidate-evaluate-main-diary-list-scroll scroll"  >
-                                    <div class="candidate-evaluate-loading">Đã tải hết dữ liệu</div>
-                                    <div class="candidate-evaluate-loading">Đang tải dữ liệu mới ...</div>
+                                <div class="candidate-evaluate-main-diary-list-scroll scroll" data-url="{{route('diary.ajax.list')}}" >
 
-                                    <div class="month-break" month="Tháng 7 năm 2018">
-                                    </div>
+                                    {{--<div class="candidate-evaluate-loading">Đã tải hết dữ liệu</div>--}}
+                                    {{--<div class="candidate-evaluate-loading">Đang tải dữ liệu mới ...</div>--}}
 
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-rate">
-                                                        <span><i class="fa fa-star" aria-hidden="true"></i></span><span> Thật không thể tin nổi</span>
-                                                    </div>
-                                                    <div class="diary-item-notice">
+                                    <div class="month-break" month="Tháng 7 năm 2018"></div>
 
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>
-                                                </div>
+                                    {{--<div class="diary-item row">--}}
+                                        {{--<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">--}}
+                                            {{--<div class="diary-item-avatar">--}}
+                                                {{--<div class="img">--}}
+                                                    {{--<img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">--}}
+                                            {{--<div class="diary-item-main">--}}
+                                                {{--<div class="diary-item-header">--}}
+                                                    {{--<span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>--}}
+                                                    {{--<a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>--}}
+                                                    {{--<div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">--}}
+                                                        {{--<a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="bg">--}}
+                                                    {{--<div class="diary-item-rate">--}}
+                                                        {{--<span><i class="fa fa-star" aria-hidden="true"></i></span><span> Thật không thể tin nổi</span>--}}
+                                                    {{--</div>--}}
+                                                    {{--<div class="diary-item-notice">--}}
 
-                                            </div>
-                                        </div>
-                                    </div>
+                                                    {{--</div>--}}
+                                                    {{--<div class="diary-item-note">--}}
+                                                        {{--Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
 
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-red c-white">Ứng viên đang bận</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" href="#" data-confirm="diary" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
 
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-notice">
-                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại cho ứng viên</span>
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="month-break" month="Tháng 6 năm 2018">
-                                    </div>
-
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-blue c-white">Ứng viên có nhu cầu</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
-
-                                                </div>
-                                                <div class="diary-item-notice">
-                                                    <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                                </div>
-                                                <div class="diary-item-note">
-                                                    Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-green c-white">Ứng viên tiềm năng</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
-
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-notice">
-                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="month-break" month="Tháng 5 năm 2018">
-                                    </div>
-
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-yellow c-white">Ứng viên chưa có nhu cầu</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
-
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-notice">
-                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ lại khi ứng viên có nhu cầu</span>
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-aqua c-white">Ứng viên hẹn phỏng vấn</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
-
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-notice">
-                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ phỏng vấn khi ứng viên có nhu cầu</span>
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="month-break" month="Tháng 4 năm 2018">
-                                    </div>
-
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-brown c-white">Ứng viên sắp nghỉ</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
-
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-notice">
-                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên nghỉ việc</span>
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>    
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="diary-item row">
-                                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                            <div class="diary-item-avatar">
-                                                <div class="img">
-                                                    <img class="img-reponsive" src="upload/avatar/228161052_hotgirl-reuters-kieu-trinh6-1496928968014.jpg" alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
-                                            <div class="diary-item-main">
-                                                <div class="diary-item-header">
-                                                    <span>Nguyễn HR, </span><span>20:30 ngày 15</span><span class="bg-purple c-white">Ứng viên là sinh viên</span>
-                                                    <a href="#" class="pull-right" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
-                                                    <div class="dropdown-menu show" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(735px, 67px, 0px);" x-out-of-boundaries="">
-                                                        <a class="dropdown-item" data-confirm="diary" href="#" data-id="16">Xóa</a>
-                                                    </div>
-                                                </div>
-                                                <div class="diary-item-rate">
-
-                                                </div>
-                                                <div class="bg">
-                                                    <div class="diary-item-notice">
-                                                        <span><i class="fa fa-clock-o"></i> 23:30, 21 tháng 5, báo trước 5 phút </span><span><i class="fa fa-bullhorn"></i> Liên hệ trước khi ứng viên tốt nghiệp</span>
-                                                    </div>
-                                                    <div class="diary-item-note">
-                                                        Ứng viên tinh thông mọi kỹ năng, đang được các nhà tuyển dụng tuy lùng gắt gao
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div class="option">
                                     <a href="#" id="updown" data-scroll='bottom'><i class="fa fa-chevron-circle-up" aria-hidden="true"></i></a>
-                                    <a href="#" id="dropdownMenuButton" data-url="{{route('diary.ajax.list')}}" data-toggle="dropdown" data-render="false" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
+                                    <a href="#" id="dropdownMenuButton" data-url="{{route('diary.ajax.listCandidateType')}}" data-toggle="dropdown" data-render="false" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-h" aria-hidden="true"></i></a>
                                     <div class="dropdown-menu list-type" aria-labelledby="dropdownMenuButton">
-                                        {{-- <a class="dropdown-item" data-type="tiemnang" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-green" aria-hidden="true"></i> Ứng viên tiềm năng</a>
-                                        <a class="dropdown-item" data-type="ban" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-red" aria-hidden="true"></i> Ứng viên bận</a>
-                                        <a class="dropdown-item" data-type="conhucau" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-blue" aria-hidden="true"></i> Ứng viên có nhu cầu</a>
-                                        <a class="dropdown-item" data-type="chuaconhucau" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-yellow" aria-hidden="true"></i> Ứng viên chưa có nhu cầu</a>
-                                        <a class="dropdown-item" data-type="henphongvan" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-aqua" aria-hidden="true"></i> Ứng viên hẹn phỏng vấn</a>
-                                        <a class="dropdown-item" href="#" data-type="sapnghi" data-id="{{$item->id}}"><i class="fa fa-circle c-brown" aria-hidden="true"></i> Ứng viên sắp nghỉ</a>
-                                        <a class="dropdown-item" data-type="sinhvien" href="#" data-id="{{$item->id}}"><i class="fa fa-circle c-purple" aria-hidden="true"></i> Ứng viên là sinh viên</a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -1420,13 +1196,21 @@
                                             Đặt lịch
                                         </div>
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                            <input type="text text-center" name="set-calendar-date" class="full-width form-group datetimepicker" placeholder="20/10/2017">
+                                            <input type="text text-center" name="set-calendar-date" class="full-width form-group datepicker" placeholder="20/10/2017">
                                         </div>
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
                                             lúc
                                         </div>
                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 candidate-evaluate-main-diary-composer-input">
-                                            <input type="text text-center timepicker" name="set-calendar-time" placeholder="20:30" class="full-width form-group">
+                                            <input type="text text-center timepicker" name="set-calendar-time" placeholder="20:30" class="full-width form-group timepicker">
+                                            {{-- <div class="timepicker-box">
+                                                <div class="timepicker-box-header">
+                                                    Chọn giờ
+                                                </div>
+                                                <div class="timepicker-box-body">
+                                                    <div class="timepicker-box-time hour"></div>
+                                                </div>
+                                            </div> --}}
                                         </div>
                                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 candidate-evaluate-main-diary-composer-input">
                                             trước

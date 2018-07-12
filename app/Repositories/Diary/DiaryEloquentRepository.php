@@ -7,14 +7,14 @@
  */
 
 namespace App\Repositories\Diary;
-use App\Model\Diarys;
+use App\Model\Diary;
 use App\Repositories\EloquentRepository;
 
 class DiaryEloquentRepository extends EloquentRepository
 {
     public function setModel()
     {
-        return Diarys::class;
+        return Diary::class;
         // TODO: Implement setModel() method.
     }
 
@@ -38,10 +38,24 @@ class DiaryEloquentRepository extends EloquentRepository
             $selectList=$selectList->orderBy($orderby['field'],$orderby['type']);
         }
 
+        if ($skip=array_get($condition,'start')){
+            $selectList=$selectList->skip($skip);
+        }
+
+        if ($take=array_get($condition,'limit')){
+            $selectList=$selectList->take($take);
+        }
+
         if ($paginate==true){
             $selectList=$selectList->paginate($limit);
         }elseif(array_get($condition, 'count')==true){
             $selectList = $selectList->count();
+        }elseif(array_get($condition,'first')==true){
+            $selectList = $selectList->first();
+        }elseif($min=array_get($condition,'min')){
+            $selectList = $selectList->min($min);
+        }elseif ($max=array_get($condition,'max')){
+            $selectList = $selectList->max($max);
         }else{
             $selectList = $selectList->get();
         }

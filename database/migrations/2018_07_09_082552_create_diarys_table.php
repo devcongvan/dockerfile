@@ -17,11 +17,12 @@ class CreateDiarysTable extends Migration
             $table->increments('id');
             $table->integer('d_cantype_id');
             $table->integer('d_can_id');
-            $table->integer('d_evaluate')->nullable();
+            $table->string('d_evaluate')->nullable();
             $table->string('d_set_calendar')->nullable();
             $table->string('d_set_time')->nullable();
             $table->string('d_notice_before')->nullable();
             $table->string('d_note')->nullable();
+            $table->string('d_breaktime')->nullable();
             $table->timestamps();
         });
     }

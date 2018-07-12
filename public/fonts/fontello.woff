@@ -1,0 +1,1 @@
+module.exports = __webpack_public_path__ + "fontello.woff?492102fff9ed1f7764be064e61ce686d";

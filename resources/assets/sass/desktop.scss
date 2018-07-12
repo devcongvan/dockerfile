@@ -32,6 +32,7 @@ $bg_header: #AB1D1D;
 $bg_evaluate_sidebar: #f0eee6;
 // color variable
 
+
 %border-common{
   border: 1px solid $border_color;
 }
@@ -98,6 +99,10 @@ $bg_evaluate_sidebar: #f0eee6;
 
 .ml-15px{
   margin-left: 15px;
+}
+
+.padding-md{
+  padding: 1rem;
 }
 
 .a-hover{
@@ -269,6 +274,29 @@ select{
   }
 }
 // custom scroll
+
+.wickedpicker{
+  position: fixed!important;
+  left: 649px!important;
+  top: 290px!important;
+  z-index: 99999!important;
+
+}
+.wickedpicker__controls__control-up:before{
+  font-family: 'FontAwesome';
+  content: '\f113'!important;
+}
+.wickedpicker__controls__control-down{
+    &:before{
+  font-family: 'FontAwesome';
+  content: '\f110'!important;
+}  
+&:after{
+  display: none;
+}
+}
+
+// timepicker
 // common style
 
 // style for collase sidebar nav
@@ -1042,7 +1070,7 @@ select{
   }
   &-menu {
     box-shadow: 0 0.1rem 0.5rem rgba(0, 0, 0, .175);
-    left: -55px !important;
+    left: -55px;
     border-radius: 0;
     border: none;
     min-width: auto;
@@ -1315,9 +1343,11 @@ select{
         .diary-item{
           width: 97%;
           margin: auto;
+          margin-top: 25px;
           margin-bottom: 35px;
           padding-right: 5px;
           line-height: 1.5;
+          overflow: hidden;
           .bg{
             padding-top: 10px;
             background: $bg_sidebar;

@@ -776,8 +776,9 @@ var Candidate = {
 
     configDatepicker: function () {
         $('.datepicker').datepicker({
-            // format: 'dd-mm-yyyy',
-            // todayHighlight: true,
+            format: 'dd-mm-yyyy',
+            todayHighlight: true,
+            defaultViewDate: new Date(),
         });
     },
 

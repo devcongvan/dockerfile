@@ -7,14 +7,14 @@
  */
 
 namespace App\Repositories\CandidateType;
-use App\Model\CandidateTypes;
+use App\Model\CandidateType;
 use App\Repositories\EloquentRepository;
 
 class CandidateTypeEloquentRepository extends EloquentRepository
 {
     public function setModel()
     {
-        return CandidateTypes::class;
+        return CandidateType::class;
         // TODO: Implement setModel() method.
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Candidate\CandidateEloquentRepository;
 use App\Repositories\CandidateType\CandidateTypeEloquentRepository;
 use Illuminate\Http\Request;
 use App\Repositories\Diary\DiaryEloquentRepository;
@@ -10,28 +11,66 @@ class DiaryController extends Controller
 {
     protected $diaryRepository;
     protected $candidateTypeRepository;
+    protected $candidateRepository;
 
-    public function __construct(DiaryEloquentRepository $diaryEloquentRepository,CandidateTypeEloquentRepository $candidateTypeEloquentRepository)
+    public function __construct(DiaryEloquentRepository $diaryEloquentRepository,CandidateTypeEloquentRepository $candidateTypeEloquentRepository,
+CandidateEloquentRepository $candidateEloquentRepository)
     {
         $this->diaryRepository=$diaryEloquentRepository;
         $this->candidateTypeRepository=$candidateTypeEloquentRepository;
+        $this->candidateRepository=$candidateEloquentRepository;
     }
 
-    public function index(){
-        $diary=$this->candidateTypeRepository->getAll();
+    public function index(Request $request){
+        $condition=[
+            'with'=>'candidateType',
+            'where'=>['d_can_id'=>$request->get('d_can_id')],
+            'orderby'=>[
+                'field'=>'id',
+                'type'=>'DESC'
+            ],
+            'limit'=>$request->get('limit'),
+            'start'=>$request->get('start'),
+        ];
+
+        $result=$this->diaryRepository->getAll($condition);
+
+        if (!is_object($result)){
+            return response([
+                'message'=>'Nhật ký đã được tải hết'
+            ]);
+        }else{
+            return response([
+                'result'=>$result
+            ]);
+        }
+    }
+
+    public function indexCandidateType(){
+        $candidateType=$this->candidateTypeRepository->getAll();
 
         return response([
-            'candidate_types'=>$diary
+            'candidate_types'=>$candidateType
         ]);
     }
 
-    public function getCandidateType(){
-        $diary=$this->candidateTypeRepository->getAll();
-        dd($diary);
-    }
-
-    public function store(Request $request){
+    public function storeAjax(Request $request){
         $diary=$request->data;
+
+        $lastDiary=$this->diaryRepository->getLast();
+        $currentMonth=date('m');
+        $lastMonth=date('m',strtotime($lastDiary->created_at));
+
+        if ($lastMonth<$currentMonth){
+            $dateString='Tháng '.$lastMonth.' năm '.date('Y',strtotime($lastDiary->created_at));
+            $arr=[
+                'd_cantype_id'=>0,
+                'd_can_id'=>$diary['d_can_id'],
+                'd_breaktime'=>$dateString
+            ];
+
+            $breaktime=$this->diaryRepository->create($arr);
+        }
 
         if (!empty($diary['d_can_id'])&&!empty($diary['d_cantype_id'])){
             $arr=[
@@ -44,17 +83,70 @@ class DiaryController extends Controller
                 'd_note'=>$diary['d_note']
 
             ];
-            if ($obj=$this->diaryRepository->create($arr)){
+
+            if ($diaryReceive=$this->diaryRepository->create($arr)){
+
+                $oop=[
+                    'diary'=>json_encode($diaryReceive),
+                    'candidateType'=>json_encode($diaryReceive->candidateType)
+                ];
+                $this->candidateRepository->update($diary['d_can_id'],['can_diary'=>json_encode($oop)]);
+
                 return response([
                     'message'=>'Thêm nhật ký thành công',
-                    'result'=>$obj
+                    'breaktime'=>isset($breaktime)?$breaktime:false,
+                    'result'=>$diaryReceive,
+                    'candidateType'=>$diaryReceive->candidateType,
+                    'type'=>'success'
                 ]);
             }
+
+
+
         }
 
         return response([
-            'message'=>'Đã có lỗi xảy ra. Vui lòng kiểm tra lại các trường đã nhập'
+            'message'=>'Đã có lỗi xảy ra. Vui lòng kiểm tra lại các trường đã nhập',
+            'type'=>'warning'
         ]);
 
+    }
+
+    public function destroyAjax(Request $request){
+        $id=$request->get('id');
+
+        $prevItemId=$this->diaryRepository->getAll(['where'=>[['id','<',$id]],'max'=>'id']);
+        $nextItemId=$this->diaryRepository->getAll(['where'=>[['id','>',$id]],'min'=>'id']);
+
+        $nextItem=$this->diaryRepository->getById($nextItemId);
+        $prevItem=$this->diaryRepository->getById($prevItemId);
+
+        if (!empty($nextItem->d_breaktime)&&!empty($prevItem->d_breaktime)){
+            $this->diaryRepository->delete($nextItemId);
+        }
+
+        if ($this->diaryRepository->delete($id)){
+            return response([
+                'type'=>'success',
+                'message'=>'Đã xóa một nhật ký',
+                'prev'=>$prevItem,
+                'next'=>$nextItem
+            ]);
+        }
+
+        return response([
+            'type'=>'warning',
+            'message'=>'Đã có lỗi xảy ra. Vui lòng load lại trang và thực hiện lại thao tác vừa rồi!'
+        ]);
+
+    }
+
+    public function testdiary(){
+        $arr=[
+            'can_diary'=>'sadfaskdfjhaskdfhskjdfhaskjd'
+        ];
+        $candidate=$this->candidateRepository->update(29,$arr);
+
+        dd($candidate);
     }
 }

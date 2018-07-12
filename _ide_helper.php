@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.6.26 on 2018-07-09 09:18:52.
+ * Generated for Laravel 5.6.26 on 2018-07-12 11:18:32.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -13173,6 +13173,59 @@ namespace Barryvdh\Debugbar {
  
 }
 
+namespace Cviebrock\LaravelElasticsearch { 
+
+    class Facade {
+        
+        /**
+         * Retrieve or build the named connection.
+         *
+         * @param string|null $name
+         * @return \Cviebrock\LaravelElasticsearch\Client 
+         * @static 
+         */ 
+        public static function connection($name = null)
+        {
+            return \Cviebrock\LaravelElasticsearch\Manager::connection($name);
+        }
+        
+        /**
+         * Get the default connection.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getDefaultConnection()
+        {
+            return \Cviebrock\LaravelElasticsearch\Manager::getDefaultConnection();
+        }
+        
+        /**
+         * Set the default connection.
+         *
+         * @param string $connection
+         * @static 
+         */ 
+        public static function setDefaultConnection($connection)
+        {
+            return \Cviebrock\LaravelElasticsearch\Manager::setDefaultConnection($connection);
+        }
+        
+        /**
+         * Return all of the created connections.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getConnections()
+        {
+            return \Cviebrock\LaravelElasticsearch\Manager::getConnections();
+        }
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -15520,6 +15573,8 @@ namespace  {
     class View extends \Illuminate\Support\Facades\View {}
 
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
+
+    class Elasticsearch extends \Cviebrock\LaravelElasticsearch\Facade {}
  
 }
 

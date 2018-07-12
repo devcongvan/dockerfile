@@ -23,7 +23,8 @@ class Candidate extends Model
         'can_github',
         'can_source_id',
         'can_title',
-        'can_year'
+        'can_year',
+        'can_diary'
     ];
 
     public function candidateInfo()
@@ -53,6 +54,10 @@ class Candidate extends Model
     
     public function source(){
         return $this->belongsTo(Source::class,'can_source_id','id');
+    }
+
+    public function diary(){
+        return $this->hasMany(Diary::class,'d_can_id','id');
     }
 
 }
