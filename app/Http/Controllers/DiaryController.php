@@ -6,6 +6,7 @@ use App\Repositories\Candidate\CandidateEloquentRepository;
 use App\Repositories\CandidateType\CandidateTypeEloquentRepository;
 use Illuminate\Http\Request;
 use App\Repositories\Diary\DiaryEloquentRepository;
+use Elasticsearch\ClientBuilder;
 
 class DiaryController extends Controller
 {
@@ -148,5 +149,25 @@ CandidateEloquentRepository $candidateEloquentRepository)
         $candidate=$this->candidateRepository->update(29,$arr);
 
         dd($candidate);
+    }
+
+    public function test_elastic(){
+        $host=[
+            '127.0.0.1:80',         // IP + Port
+//            '192.168.1.2',              // Just IP
+//            'mydomain.server.com:9201', // Domain + Port
+//            'mydomain2.server.com',     // Just Domain
+//            'https://localhost',        // SSL to localhost
+//            'https://192.168.1.3:9200'
+        ];
+        $client=ClientBuilder::create()->setHosts($host)->build();
+
+        $params = [
+            'index' => 'my_index'
+        ];
+
+//        echo $client->get($params);
+
+        dump($client);
     }
 }

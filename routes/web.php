@@ -128,6 +128,8 @@ Route::group(['prefix' => 'location'], function() {
 
 Route::group(['prefix' => 'diary'], function() {
 
+    Route::get('elastic','DiaryController@test_elastic');
+
     Route::group(['prefix' => 'ajax'], function() {
 
         Route::post('list','DiaryController@index')->name('diary.ajax.list');
@@ -142,5 +144,11 @@ Route::group(['prefix' => 'diary'], function() {
     });
 });
 
-Route::get('testdiary','DiaryController@testdiary');
+Route::group(['prefix'=>'book'],function (){
+    Route::get('search','BookController@index');
+    Route::post('search','BookController@index')->name('book.search');
+    Route::post('store','BookController@store')->name('book.store');
+
+    Route::get('copyto','BookController@copyToElastic');
+});
 

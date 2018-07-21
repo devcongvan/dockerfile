@@ -47,16 +47,17 @@
                                     <button type="button" class="btn btn-default full-width btn-blue"> Tìm kiếm</button>
                                 </div>
                             </div><!-- /.card-header -->
-                            @if($total=$candidates->total())
+                            @if($total=$candidates->totalHits())
                                 <div class="card-searchinfo">
-                                    <b>{{$candidates->firstItem()!=0?$candidates->firstItem():0}} - {{$candidates->lastItem()!=0?$candidates->lastItem():0}} </b>trong<b> {{$total}} </b> ứng viên <span></span>
+{{--                                    <b>{{$candidates->firstItem()!=0?$candidates->firstItem():0}} - {{$candidates->lastItem()!=0?$candidates->lastItem():0}} </b>trong<b> {{$total}} </b> ứng viên <span></span>--}}
+                                    <b>{{$paginate['from']}} - {{$paginate['to']}} </b>trong<b> {{$paginate['total']}} </b> ứng viên <span></span>
                                 </div>
                             @endif
                             <div class="card-body candidate-list">
                                 <div class="row">
                                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-main">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
+                                            {{--@php dump(count($candidates)) @endphp--}}
                                             @isset($candidates)
                                                 @php $notdata='Chưa có dữ liệu'; @endphp
                                                 @foreach($candidates as $item)
@@ -1056,7 +1057,9 @@
                             </div>
                         </div><!-- /.card-body -->
                         <div class="card-footer">
-                            {{isset($candidates)?$candidates->render():''}}
+                            {{--{{isset($candidates)?$candidates->render():''}}--}}
+
+                            @php echo $paginate['html'] @endphp
 
                         </div>
 
