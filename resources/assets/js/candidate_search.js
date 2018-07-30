@@ -9,18 +9,22 @@ var CandidateSearch = {
         var $this = this;
 
         $('.candidate-sidebar').find('input[type="radio"]').off('change').change(function () {
+            $this.resetPaginate();
             $(this).closest('form').submit();
         });
 
         $('.candidate-sidebar').find('input[type="checkbox"]').off('change').change(function () {
+            $this.resetPaginate();
             $(this).closest('form').submit();
         });
 
         $('.candidate-sidebar').find('.datepicker').off('change').change(function () {
+            $this.resetPaginate();
             $(this).closest('form').submit();
         });
 
         $('.candidate-sidebar').find('select').off('change').change(function () {
+            $this.resetPaginate();
             $(this).closest('form').submit();
         });
 
@@ -38,6 +42,10 @@ var CandidateSearch = {
         });
 
         $('.candidate').find('#candidate-form-search').submit();
+
+    },
+
+    resetPaginate:function(){
 
     },
 
