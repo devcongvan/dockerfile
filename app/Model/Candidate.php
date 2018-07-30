@@ -31,24 +31,89 @@ class Candidate extends Model
     ];
 
     protected $mappingProperties = array(
-        'can_year'       => ['type' => 'integer'],
-        'created_at'     => ['type' => 'date','format'=> 'yyyy-MM-dd'],
-        'updated_at'     => ['type' => 'date', 'format' => 'yyyy-MM-dd'],
-        'updated_at'     => ['type' => 'date', 'format' => 'yyyy-MM-dd'],
-        'candidate_info' => [
-            'type'=>'nested',
-            'properties' => [
-                'created_at' => ['type' => 'date', 'format' => 'yyyy-MM-dd'],
-                'updated_at' => ['type' => 'date', 'format' => 'yyyy-MM-dd']
+        "entity"          => [
+            "properties" => [
+                "name" => [
+                    "type" => "text"
+                ]
             ]
         ],
-        'first_diary'          => [
-            'type'=>'nested',
-            'properties' => [
-                'created_at'=> ['type' => 'date', 'format' => 'yyyy-MM-dd'],
-                'updated_at'=> ['type' => 'date', 'format' => 'yyyy-MM-dd']
+        "aggs_facets"     => [
+            "type"       => "nested",
+            "properties" => [
+                "facet_name"  => [
+                    "type" => "keyword"
+                ],
+                "facet_value" => [
+                    "type" => "long"
+                ]
             ]
         ],
+        "text_facets"     => [
+            "type"       => "nested",
+            "properties" => [
+                "facet_name"  => [
+                    "type" => "keyword"
+                ],
+                "facet_value" => [
+                    "type"   => "text",
+                    "fields" => [
+                        "keyword" => [
+                            "type"         => "keyword",
+                            "ignore_above" => 256
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        "keyword_facets"  => [
+            "type"       => "nested",
+            "properties" => [
+                "facet_name"  => [
+                    "type" => "keyword"
+                ],
+                "facet_value" => [
+                    "type" => "keyword"
+                ]
+            ]
+        ],
+        "long_facets"     => [
+            "type"       => "nested",
+            "properties" => [
+                "facet_name"  => [
+                    "type" => "keyword"
+                ],
+                "facet_value" => [
+                    "type" => "long"
+                ]
+            ]
+        ],
+        "date_facets"     => [
+            "type"       => "nested",
+            "properties" => [
+                "facet_name"  => [
+                    "type" => "keyword"
+                ],
+                "facet_value" => [
+                    "type" => "date"
+                ]
+            ]
+        ],
+        "datetime_facets" => [
+            "type"       => "nested",
+            "properties" => [
+                "facet_name"  => [
+                    "type" => "keyword"
+                ],
+                "facet_value" => [
+                    "type"   => "date",
+                    "format" => "yyyy-MM-dd HH:mm:ss"
+                ]
+            ]
+        ],
+        "data"            => [
+            "type" => "object"
+        ]
     );
 
     function getIndexName()
@@ -85,10 +150,10 @@ class Candidate extends Model
     {
         return $this->belongsToMany(Skill::class, 'candidates_skills', 'cs_candidates_id', 'cs_skills_id');
     }
-    
+
     public function source()
     {
-        return $this->belongsTo(Source::class, 'can_source_id', 'id');
+        return $this->belongsTo(Source::class, 'can_source_id','id');
     }
 
     public function diary()
@@ -96,15 +161,14 @@ class Candidate extends Model
         return $this->hasMany(Diary::class, 'd_can_id', 'id');
     }
 
-    public function first_diary(){
-        return $this->hasOne(Diary::class,'d_can_id','id')->orderBy('id','desc');
+    public function latest_diary()
+    {
+        return $this->hasOne(Diary::class, 'd_can_id', 'id')->orderBy('id', 'desc');
     }
 
     public function candidateType()
     {
         return $this->belongsToMany(CandidateType::class, 'diarys', 'd_can_id', 'd_cantype_id');
     }
-
-
 
 }

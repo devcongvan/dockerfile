@@ -10506,7 +10506,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(6);
-module.exports = __webpack_require__(26);
+module.exports = __webpack_require__(27);
 
 
 /***/ }),
@@ -10523,7 +10523,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__jqueryautocomplete_jquery_ui_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__jqueryautocomplete_jquery_ui_min__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_bootstrap_datepicker_dist_js_bootstrap_datepicker_min__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_bootstrap_datepicker_dist_js_bootstrap_datepicker_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_bootstrap_datepicker_dist_js_bootstrap_datepicker_min__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ericjgagnon_wickedpicker_0_4_1_26_g2a8950a_ericjgagnon_wickedpicker_2a8950a_src_wickedpicker__ = __webpack_require__(49);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ericjgagnon_wickedpicker_0_4_1_26_g2a8950a_ericjgagnon_wickedpicker_2a8950a_src_wickedpicker__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ericjgagnon_wickedpicker_0_4_1_26_g2a8950a_ericjgagnon_wickedpicker_2a8950a_src_wickedpicker___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ericjgagnon_wickedpicker_0_4_1_26_g2a8950a_ericjgagnon_wickedpicker_2a8950a_src_wickedpicker__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_bootstrap_slider_dist_bootstrap_slider_min__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_bootstrap_slider_dist_bootstrap_slider_min___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_bootstrap_slider_dist_bootstrap_slider_min__);
@@ -10541,8 +10541,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__js_careerjs_career__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__js_source__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__js_skill__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__js_candidate__ = __webpack_require__(21);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__js_candidate_diary__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__js_candidate_search__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__js_candidate__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__js_candidate_diary__ = __webpack_require__(26);
+
+
 
 
 
@@ -11373,7 +11376,635 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 contTemplate:'<tbody><tr><td colspan="7"></td></tr></tbody>',footTemplate:'<tfoot><tr><th colspan="7" class="today"></th></tr><tr><th colspan="7" class="clear"></th></tr></tfoot>'};r.template='<div class="datepicker"><div class="datepicker-days"><table class="table-condensed">'+r.headTemplate+"<tbody></tbody>"+r.footTemplate+'</table></div><div class="datepicker-months"><table class="table-condensed">'+r.headTemplate+r.contTemplate+r.footTemplate+'</table></div><div class="datepicker-years"><table class="table-condensed">'+r.headTemplate+r.contTemplate+r.footTemplate+'</table></div><div class="datepicker-decades"><table class="table-condensed">'+r.headTemplate+r.contTemplate+r.footTemplate+'</table></div><div class="datepicker-centuries"><table class="table-condensed">'+r.headTemplate+r.contTemplate+r.footTemplate+"</table></div></div>",a.fn.datepicker.DPGlobal=r,a.fn.datepicker.noConflict=function(){return a.fn.datepicker=m,this},a.fn.datepicker.version="1.8.0",a.fn.datepicker.deprecated=function(a){var b=window.console;b&&b.warn&&b.warn("DEPRECATED: "+a)},a(document).on("focus.datepicker.data-api click.datepicker.data-api",'[data-provide="datepicker"]',function(b){var c=a(this);c.data("datepicker")||(b.preventDefault(),n.call(c,"show"))}),a(function(){n.call(a('[data-provide="datepicker-inline"]'))})});
 
 /***/ }),
-/* 10 */,
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
+ * wickedpicker v0.4.1 - A simple jQuery timepicker.
+ * Copyright (c) 2015-2016 Eric Gagnon - http://github.com/wickedRidge/wickedpicker
+ * License: MIT
+ */
+
+(function ($, window, document) {
+
+    "use strict";
+
+    if (typeof String.prototype.endsWith != 'function') {
+        /*
+         * Checks if this string end ends with another string
+         *
+         * @param {string} the string to be checked
+         *
+         * @return {bool}
+         */
+        String.prototype.endsWith = function (string) {
+            return string.length > 0 && this.substring(this.length - string.length, this.length) === string;
+        };
+    }
+
+    /*
+     * Returns if the user agent is mobile
+     *
+     * @return {bool}
+     */
+    var isMobile = function isMobile() {
+        return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        );
+    };
+
+    var today = new Date();
+
+    var pluginName = "wickedpicker",
+        defaults = {
+        now: today.getHours() + ':' + today.getMinutes(),
+        twentyFour: false,
+        upArrow: 'wickedpicker__controls__control-up',
+        downArrow: 'wickedpicker__controls__control-down',
+        close: 'wickedpicker__close',
+        hoverState: 'hover-state',
+        title: 'Chọn giơ',
+        showSeconds: false,
+        timeSeparator: ' : ',
+        secondsInterval: 1,
+        minutesInterval: 1,
+        beforeShow: null,
+        afterShow: null,
+        show: null,
+        clearable: false,
+        closeOnClickOutside: true,
+        onClickOutside: function onClickOutside() {}
+    };
+
+    /*
+     * @param {object} The input object the timepicker is attached to.
+     * @param {object} The object containing options
+     */
+    function Wickedpicker(element, options) {
+        this.element = $(element);
+        this.options = $.extend({}, defaults, options);
+
+        this.element.addClass('hasWickedpicker');
+        this.element.attr('onkeypress', 'return false;');
+        this.element.attr('aria-showingpicker', 'false');
+        this.createPicker();
+        this.timepicker = $('.wickedpicker');
+        this.up = $('.' + this.options.upArrow.split(/\s+/).join('.'));
+        this.down = $('.' + this.options.downArrow.split(/\s+/).join('.'));
+        this.separator = $('.wickedpicker__controls__control--separator');
+        this.hoursElem = $('.wickedpicker__controls__control--hours');
+        this.minutesElem = $('.wickedpicker__controls__control--minutes');
+        this.secondsElem = $('.wickedpicker__controls__control--seconds');
+        this.meridiemElem = $('.wickedpicker__controls__control--meridiem');
+        this.close = $('.' + this.options.close.split(/\s+/).join('.'));
+
+        //Create a new Date object based on the default or passing in now value
+        var time = this.timeArrayFromString(this.options.now);
+        this.options.now = new Date(today.getFullYear(), today.getMonth(), today.getDate(), time[0], time[1], time[2]);
+        this.selectedHour = this.parseHours(this.options.now.getHours());
+        this.selectedMin = this.parseSecMin(this.options.now.getMinutes());
+        this.selectedSec = this.parseSecMin(this.options.now.getSeconds());
+        this.selectedMeridiem = this.parseMeridiem(this.options.now.getHours());
+        this.setHoverState();
+        this.attach(element);
+        this.setText(element);
+    }
+
+    $.extend(Wickedpicker.prototype, {
+
+        /*
+         * Show given input's timepicker
+         *
+         * @param {object} The input being clicked
+         */
+        showPicker: function showPicker(element) {
+            //If there is a beforeShow function, then call it with the input calling the timepicker and the
+            // timepicker itself
+            if (typeof this.options.beforeShow === 'function') {
+                this.options.beforeShow(element, this.timepicker);
+            }
+            var timepickerPos = $(element).offset();
+
+            $(element).attr({ 'aria-showingpicker': 'true', 'tabindex': -1 });
+            this.setText(element);
+            this.showHideMeridiemControl();
+            if (this.getText(element) !== this.getTime()) {
+
+                // Check meridiem 
+                var text = this.getText(element);
+                var re = /\s[ap]m$/i;
+                var meridiem = re.test(text) ? text.substr(-2, 2) : null;
+                var inputTime = text.replace(re, '').split(this.options.timeSeparator);
+                var newTime = {};
+                newTime.hours = inputTime[0];
+                newTime.minutes = inputTime[1];
+                newTime.meridiem = meridiem;
+                if (this.options.showSeconds) {
+                    newTime.seconds = inputTime[2];
+                }
+                this.setTime(newTime);
+            }
+            this.timepicker.css({
+                'z-index': this.element.css('z-index') + 1,
+                position: 'absolute',
+                left: timepickerPos.left,
+                top: timepickerPos.top + $(element)[0].offsetHeight
+            }).show();
+            //If there is a show function, then call it with the input calling the timepicker and the
+            // timepicker itself
+            if (typeof this.options.show === 'function') {
+                this.options.show(element, this.timepicker);
+            }
+
+            this.handleTimeAdjustments(element);
+        },
+
+        /*
+         * Hides the timepicker that is currently shown if it is not part of the timepicker
+         *
+         * @param {Object} The DOM object being clicked on the page
+         * 
+         * BeinnLora: added trigger function to call on closing/hiding timepicker. 
+         */
+        hideTimepicker: function hideTimepicker(element) {
+            this.timepicker.hide();
+            if (typeof this.options.afterShow === 'function') {
+                this.options.afterShow(element, this.timepicker);
+            }
+            var pickerHidden = {
+                start: function start() {
+                    var setShowPickerFalse = $.Deferred();
+                    $('[aria-showingpicker="true"]').attr('aria-showingpicker', 'false');
+                    return setShowPickerFalse.promise();
+                }
+            };
+
+            function setTabIndex(index) {
+                setTimeout(function () {
+                    $('[aria-showingpicker="false"]').attr('tabindex', index);
+                }, 400);
+            }
+
+            pickerHidden.start().then(setTabIndex(0));
+        },
+
+        /*
+         * Create a new timepicker. A single timepicker per page
+         */
+        createPicker: function createPicker() {
+            if ($('.wickedpicker').length === 0) {
+                var picker = '<div class="wickedpicker"><p class="wickedpicker__title">' + this.options.title + '<span class="wickedpicker__close"></span></p><ul class="wickedpicker__controls"><li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--hours" tabindex="-1">00</span><span class="' + this.options.downArrow + '"></span></li><li class="wickedpicker__controls__control--separator"><span class="wickedpicker__controls__control--separator-inner">:</span></li><li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--minutes" tabindex="-1">00</span><span class="' + this.options.downArrow + '"></span></li>';
+                if (this.options.showSeconds) {
+                    picker += '<li class="wickedpicker__controls__control--separator"><span class="wickedpicker__controls__control--separator-inner">:</span></li><li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--seconds" tabindex="-1">00</span><span class="' + this.options.downArrow + '"></span> </li>';
+                }
+                picker += '<li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--meridiem" tabindex="-1">AM</span><span class="' + this.options.downArrow + '"></span></li></ul></div>';
+                $('body').append(picker);
+                this.attachKeyboardEvents();
+            }
+        },
+
+        /*
+         * Hides the meridiem control if this timepicker is a 24 hour clock
+         */
+        showHideMeridiemControl: function showHideMeridiemControl() {
+            if (this.options.twentyFour === false) {
+                $(this.meridiemElem).parent().show();
+            } else {
+                $(this.meridiemElem).parent().hide();
+            }
+        },
+
+        /*
+         * Hides the seconds control if this timepicker has showSeconds set to true
+         */
+        showHideSecondsControl: function showHideSecondsControl() {
+            if (this.options.showSeconds) {
+                $(this.secondsElem).parent().show();
+            } else {
+                $(this.secondsElem).parent().hide();
+            }
+        },
+
+        /*
+         * Bind the click events to the input
+         *
+         * @param {object} The input element
+         */
+        attach: function attach(element) {
+            var self = this;
+
+            if (this.options.clearable) {
+                self.makePickerInputClearable(element);
+            }
+
+            $(element).attr('tabindex', 0);
+            $(element).on('click focus', function (event) {
+                //Prevent multiple firings
+                if ($(self.timepicker).is(':hidden')) {
+                    self.showPicker($(this));
+                    window.lastTimePickerControl = $(this); //Put the reference on this timepicker into global scope for unsing that in afterShow function
+                    $(self.hoursElem).focus();
+                }
+            });
+
+            //Handle click events for closing Wickedpicker
+            var clickHandler = function clickHandler(event) {
+                //TODO: Fix double firing
+                //Only fire the hide event when you have to
+                if ($(self.timepicker).is(':visible')) {
+                    //Clicking the X
+                    if ($(event.target).is(self.close)) {
+                        self.hideTimepicker(window.lastTimePickerControl);
+                    } else if ($(event.target).closest(self.timepicker).length || $(event.target).closest($('.hasWickedpicker')).length) {
+                        //Clicking the Wickedpicker or one of it's inputs
+                        event.stopPropagation();
+                    } else {
+                        //Everything else
+                        if (typeof self.options.onClickOutside === 'function') {
+                            self.options.onClickOutside();
+                        } else {
+                            console.warn("Type of onClickOutside must be a function");
+                        }
+
+                        if (!self.options.closeOnClickOutside) {
+                            return;
+                        }
+                        self.hideTimepicker(window.lastTimePickerControl);
+                    }
+                    window.lastTimePickerControl = null;
+                }
+            };
+            $(document).off('click', clickHandler).on('click', clickHandler);
+        },
+
+        /**
+         * Added keyboard functionality to improve usabil
+         */
+        attachKeyboardEvents: function attachKeyboardEvents() {
+            $(document).on('keydown', $.proxy(function (event) {
+                switch (event.keyCode) {
+                    case 9:
+                        if (event.target.className !== 'hasWickedpicker') {
+                            $(this.close).trigger('click');
+                        }
+                        break;
+                    case 27:
+                        $(this.close).trigger('click');
+                        break;
+                    case 37:
+                        //Left arrow
+                        if (event.target.className !== this.hoursElem[0].className) {
+                            $(event.target).parent().prevAll('li').not(this.separator.selector).first().children()[1].focus();
+                        } else {
+                            $(event.target).parent().siblings(':last').children()[1].focus();
+                        }
+                        break;
+                    case 39:
+                        //Right arrow
+                        if (event.target.className !== this.meridiemElem[0].className) {
+                            $(event.target).parent().nextAll('li').not(this.separator.selector).first().children()[1].focus();
+                        } else {
+                            $(event.target).parent().siblings(':first').children()[1].focus();
+                        }
+                        break;
+                    case 38:
+                        //Up arrow
+                        $(':focus').prev().trigger('click');
+                        break;
+                    case 40:
+                        //Down arrow
+                        $(':focus').next().trigger('click');
+                        break;
+                    default:
+                        break;
+                }
+            }, this));
+        },
+
+        /*
+         * Set the time on the timepicker
+         *
+         * @param {object} The date being set
+         */
+        setTime: function setTime(time) {
+            this.setHours(time.hours);
+            this.setMinutes(time.minutes);
+            this.setMeridiem(time.meridiem);
+            if (this.options.showSeconds) {
+                this.setSeconds(time.seconds);
+            }
+        },
+
+        /*
+         * Get the time from the timepicker
+         */
+        getTime: function getTime() {
+            return [this.formatTime(this.getHours(), this.getMinutes(), this.getMeridiem(), this.getSeconds())];
+        },
+
+        /*
+         * Set the timpicker's hour(s) value
+         *
+         * @param {string} hours
+         */
+        setHours: function setHours(hours) {
+            var hour = new Date();
+            hour.setHours(hours);
+            var hoursText = this.parseHours(hour.getHours());
+            this.hoursElem.text(hoursText);
+            this.selectedHour = hoursText;
+        },
+
+        /*
+         * Get the hour(s) value from the timepicker
+         *
+         * @return {integer}
+         */
+        getHours: function getHours() {
+            var hours = new Date();
+            hours.setHours(this.hoursElem.text());
+            return hours.getHours();
+        },
+
+        /*
+         * Returns the correct hour value based on the type of clock, 12 or 24 hour
+         *
+         * @param {integer} The hours value before parsing
+         *
+         * @return {string|integer}
+         */
+        parseHours: function parseHours(hours) {
+            return this.options.twentyFour === false ? (hours + 11) % 12 + 1 : hours < 10 ? '0' + hours : hours;
+        },
+
+        /*
+         * Sets the timpicker's minutes value
+         *
+         * @param {string} minutes
+         */
+        setMinutes: function setMinutes(minutes) {
+            var minute = new Date();
+            minute.setMinutes(minutes);
+            var minutesText = minute.getMinutes();
+            var min = this.parseSecMin(minutesText);
+            this.minutesElem.text(min);
+            this.selectedMin = min;
+        },
+
+        /*
+         * Get the minutes value from the timepicker
+         *
+         * @return {integer}
+         */
+        getMinutes: function getMinutes() {
+            var minutes = new Date();
+            minutes.setMinutes(this.minutesElem.text());
+            return minutes.getMinutes();
+        },
+
+        /*
+         * Return a human-readable minutes/seconds value
+         *
+         * @param {string} value seconds or minutes
+         *
+         * @return {string|integer}
+         */
+        parseSecMin: function parseSecMin(value) {
+            return (value < 10 ? '0' : '') + value;
+        },
+
+        /*
+         * Set the timepicker's meridiem value, AM or PM
+         *
+         * @param {string} The new meridiem
+         */
+        setMeridiem: function setMeridiem(inputMeridiem) {
+            var newMeridiem = '';
+            if (inputMeridiem === undefined) {
+                var meridiem = this.getMeridiem();
+                newMeridiem = meridiem === 'PM' ? 'AM' : 'PM';
+            } else {
+                newMeridiem = inputMeridiem;
+            }
+            this.meridiemElem.text(newMeridiem);
+            this.selectedMeridiem = newMeridiem;
+        },
+
+        /*
+         * Get the timepicker's meridiem value, AM or PM
+         *
+         * @return {string}
+         */
+        getMeridiem: function getMeridiem() {
+            return this.meridiemElem.text();
+        },
+
+        /*
+         * Set the timepicker's seconds value
+         *
+         * @param {string} seconds
+         */
+        setSeconds: function setSeconds(seconds) {
+            var second = new Date();
+            second.setSeconds(seconds);
+            var secondsText = second.getSeconds();
+            var sec = this.parseSecMin(secondsText);
+            this.secondsElem.text(sec);
+            this.selectedSec = sec;
+        },
+
+        /*
+         * Get the timepicker's seconds value
+         *
+         * return {string}
+         */
+        getSeconds: function getSeconds() {
+            var seconds = new Date();
+            seconds.setSeconds(this.secondsElem.text());
+            return seconds.getSeconds();
+        },
+
+        /*
+         * Get the correct meridiem based on the hours given
+         *
+         * @param {string|integer} hours
+         *
+         * @return {string}
+         */
+        parseMeridiem: function parseMeridiem(hours) {
+            return hours > 11 ? 'PM' : 'AM';
+        },
+
+        /*
+         * Handles time incrementing and decrementing and passes
+         * the operator, '+' or '-', the input to be set after the change
+         * and the current arrow clicked, to decipher if hours, ninutes, or meridiem.
+         *
+         * @param {object} The input element
+         */
+        handleTimeAdjustments: function handleTimeAdjustments(element) {
+            var timeOut = 0;
+            //Click and click and hold timepicker incrementer and decrementer
+            $(this.up).add(this.down).off('mousedown click touchstart').on('mousedown click', {
+                'Wickedpicker': this,
+                'input': element
+            }, function (event) {
+                if (event.which != 1) return false;
+                var operator = this.className.indexOf('up') > -1 ? '+' : '-';
+                var passedData = event.data;
+                if (event.type == 'mousedown') {
+                    timeOut = setInterval($.proxy(function (args) {
+                        args.Wickedpicker.changeValue(operator, args.input, this);
+                    }, this, { 'Wickedpicker': passedData.Wickedpicker, 'input': passedData.input }), 1000);
+                } else {
+                    passedData.Wickedpicker.changeValue(operator, passedData.input, this);
+                }
+            }).bind('mouseup touchend', function () {
+                clearInterval(timeOut);
+            });
+        },
+
+        /*
+         * Change the timepicker's time base on what is clicked
+         *
+         * @param {string} The + or - operator
+         * @param {object} The timepicker's associated input to be set post change
+         * @param {object} The DOM arrow object clicked, determines if it is hours,
+         * minutes, or meridiem base on the operator and its siblings
+         */
+        changeValue: function changeValue(operator, input, clicked) {
+            var target = operator === '+' ? clicked.nextSibling : clicked.previousSibling;
+            var targetClass = $(target).attr('class');
+            if (targetClass.endsWith('hours')) {
+                this.setHours(eval(this.getHours() + operator + 1));
+            } else if (targetClass.endsWith('minutes')) {
+                this.setMinutes(eval(this.getMinutes() + operator + this.options.minutesInterval));
+            } else if (targetClass.endsWith('seconds')) {
+                this.setSeconds(eval(this.getSeconds() + operator + this.options.secondsInterval));
+            } else {
+                this.setMeridiem();
+            }
+            this.setText(input);
+        },
+
+        /*
+         * Sets the give input's text to the current timepicker's time
+         *
+         * @param {object} The input element
+         */
+        setText: function setText(input) {
+            $(input).val(this.formatTime(this.selectedHour, this.selectedMin, this.selectedMeridiem, this.selectedSec)).change();
+        },
+
+        /*
+         * Get the given input's value
+         *
+         * @param {object} The input element
+         *
+         * @return {string}
+         */
+        getText: function getText(input) {
+            return $(input).val();
+        },
+
+        /*
+         * Returns the correct time format as a string
+         *
+         * @param {string} hour
+         * @param {string} minutes
+         * @param {string} meridiem
+         *
+         * @return {string}
+         */
+        formatTime: function formatTime(hour, min, meridiem, seconds) {
+            var formattedTime = hour + this.options.timeSeparator + min;
+            if (this.options.showSeconds) {
+                formattedTime += this.options.timeSeparator + seconds;
+            }
+            if (this.options.twentyFour === false) {
+                formattedTime += ' ' + meridiem;
+            }
+            return formattedTime;
+        },
+
+        /**
+         *  Apply the hover class to the arrows and close icon fonts
+         */
+        setHoverState: function setHoverState() {
+            var self = this;
+            if (!isMobile()) {
+                $(this.up).add(this.down).add(this.close).hover(function () {
+                    $(this).toggleClass(self.options.hoverState);
+                });
+            }
+        },
+
+        /**
+         * Wrapping the given input field with the clearable container
+         * , add a span that will contain the x, and bind the clear
+         * input event to the span
+         *
+         * @param input
+         */
+        makePickerInputClearable: function makePickerInputClearable(input) {
+            $(input).wrap('<div class="clearable-picker"></div>').after('<span data-clear-picker>&times;</span>');
+
+            //When the x is clicked, clear its sibling input field
+            $('[data-clear-picker]').on('click', function (event) {
+                $(this).siblings('.hasWickedpicker').val('');
+            });
+        },
+
+        /**
+         * Convert the options time string format
+         * to an array
+         *
+         * returns => [hours, minutes, seconds]
+         *
+         * @param stringTime
+         * @returns {*}
+         */
+        timeArrayFromString: function timeArrayFromString(stringTime) {
+            if (stringTime.length) {
+                var time = stringTime.split(':');
+                time[2] = time.length < 3 ? '00' : time[2];
+                return time;
+            }
+            return false;
+        },
+
+        //public functions
+        /*
+         * Returns the requested input element's value
+         */
+        _time: function _time() {
+            var inputValue = $(this.element).val();
+            return inputValue === '' ? this.formatTime(this.selectedHour, this.selectedMin, this.selectedMeridiem, this.selectedSec) : inputValue;
+        },
+        _hide: function _hide() {
+            this.hideTimepicker(this.element);
+        }
+    });
+
+    //optional index if multiple inputs share the same class
+    $.fn[pluginName] = function (options, index) {
+        if (!$.isFunction(Wickedpicker.prototype['_' + options])) {
+            return this.each(function () {
+                if (!$.data(this, "plugin_" + pluginName)) {
+                    $.data(this, "plugin_" + pluginName, new Wickedpicker(this, options));
+                }
+            });
+        } else if ($(this).hasClass('hasWickedpicker')) {
+            if (index !== undefined) {
+                return $.data($(this)[index], 'plugin_' + pluginName)['_' + options]();
+            } else {
+                return $.data($(this)[0], 'plugin_' + pluginName)['_' + options]();
+            }
+        }
+    };
+})(jQuery, window, document);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18076,7 +18707,7 @@ var Candidate = {
         }
 
         $(window).scroll(function () {
-            console.log(candidate_info_top);
+
             if ($('.selected').find('.candidate-item-main-name').attr('toggle') == 'true') {
 
                 var candidate_item_width = $('.candidate-main').outerWidth();
@@ -18121,7 +18752,6 @@ var Candidate = {
     },
 
     renderCV: function renderCV(data) {
-        console.log(data);
 
         var notify = 'Chưa có dữ liệu';
         var arrNotice = [];
@@ -18261,7 +18891,6 @@ var Candidate = {
 
         if (candidate.candidate_info.ci_qualification !== null) {
             $.getJSON('json/qualification.json', function (data) {
-                console.log(candidate.candidate_info.ci_qualification);
                 $('#ci_qualification').html(data.qualification[candidate.candidate_info.ci_qualification].name);
             });
         } else {
@@ -18577,8 +19206,14 @@ var Candidate = {
     },
 
     configBootstrapSlider: function configBootstrapSlider() {
-        $('#age').slider({
-            id: "slider12c", min: 0, max: 100, range: true, value: [3, 7],
+        var ageFrom = $('#range_age').data('from') !== null ? $('#range_age').data('from') : 0;
+        var ageTo = $('#range_age').data('to') !== null ? $('#range_age').data('to') : 70;
+
+        var salaryFrom = $('#salary').data('from') !== null ? $('#salary').data('from') : 0;
+        var salaryTo = $('#salary').data('to') !== null ? $('#salary').data('to') : 99;
+
+        $('#range_age').slider({
+            id: "slider12c", min: 0, max: 100, range: true, value: [ageFrom, ageTo],
             formatter: function formatter(val) {
                 if (val !== '') {
                     return "Từ " + val[0] + " đến " + val[1] + " tuổi";
@@ -18586,10 +19221,13 @@ var Candidate = {
                     return val;
                 }
             }
+        }).on('slideStop', function (ev) {
+            var age = $('#range_age').val();
+            $('#range_age').closest('form').submit();
         });
 
         $('#salary').slider({
-            id: "slider12c", min: 0, max: 100, range: true, value: [3, 7],
+            id: "slider12c", min: 0, max: 100, range: true, value: [salaryFrom, salaryTo],
             formatter: function formatter(val) {
                 if (val !== '') {
                     return "Từ " + val[0] + " đến " + val[1] + " triệu";
@@ -18597,6 +19235,9 @@ var Candidate = {
                     return val;
                 }
             }
+        }).on('slideStop', function (ev) {
+            var age = $('#salary').val();
+            $('#salary').closest('form').submit();
         });
     },
 
@@ -19069,6 +19710,7 @@ var Candidate = {
             $('.overlay').show();
         });
     }
+
 };
 
 $(function () {
@@ -19588,6 +20230,239 @@ module.exports = __webpack_amd_options__;
 
 /***/ }),
 /* 25 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jquery_plugin_serializeObject__ = __webpack_require__(50);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__jquery_plugin_serializeObject___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__jquery_plugin_serializeObject__);
+
+
+var CandidateSearch = {
+    init: function init() {
+        this.actionQuery();
+    },
+
+    actionQuery: function actionQuery() {
+        var $this = this;
+
+        $('.candidate-sidebar').find('input[type="radio"]').off('change').change(function () {
+            $(this).closest('form').submit();
+        });
+
+        $('.candidate-sidebar').find('input[type="checkbox"]').off('change').change(function () {
+            $(this).closest('form').submit();
+        });
+
+        $('.candidate-sidebar').find('.datepicker').off('change').change(function () {
+            $(this).closest('form').submit();
+        });
+
+        $('.candidate-sidebar').find('select').off('change').change(function () {
+            $(this).closest('form').submit();
+        });
+
+        $('.candidate').find('#candidate-form-search').on('submit', function (e) {
+            e.preventDefault();
+
+            var url = $(this).data('url');
+
+            var formData = $(this).serializeObject();
+
+            console.log(formData.candidate_type);
+
+            $this.getDataByAjax(url, formData);
+        });
+
+        $('.candidate').find('#candidate-form-search').submit();
+    },
+
+    getDataByAjax: function getDataByAjax(url, data) {
+        var $this = this;
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: url,
+            type: 'POST',
+            dataType: 'JSON',
+            data: data
+        }).done(function (reponse) {
+            $this.renderReponse(reponse);
+        }).fail(function (error) {
+            // console.log(error);
+        });
+    },
+
+    renderReponse: function renderReponse(data) {
+        var $this = this;
+
+        $this.renderAggerations(data.aggerations);
+        var editUrl = $('.candidate-list').data('edit-url');
+
+        console.log(editUrl);
+        // render list candidate
+        var html = '';
+        $.each(data.candidates, function (key, value) {
+            var item = '<div class="candidate-item row" style="overflow: hidden">\n                                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">\n                                                            <div class="candidate-item-left">\n                                                                <div class="image">\n                                                                    <img class="img-responsive" src="' + value.data.can_avatar + '" alt="">\n                                                                </div>\n                                                                <div class="option">\n\n                                                                    <div class="text-center time">\n                                                                        <i class="fa fa-calendar" aria-hidden="true"></i> ' + value.data.created_at + '\n                                                                    </div>\n                                                                </div>\n                                                            </div> <!-- /. candidate item left -->\n                                                        </div>\n                                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">\n                                                            <div class="candidate-item-main">\n                                                                <div class="candidate-item-main-row">\n                                                                    <h5 class="pull-left candidate-item-main-name" data-id="' + value.data.id + '" toggle="false">' + value.data.can_name + '</h5>\n                                                                    <div class="dropdown pull-right">\n                                                                        <button class="btn " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n                                                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>\n                                                                        </button>\n                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">\n                                                                            <a class="dropdown-item" href="' + (editUrl + '/' + value.data.id) + '" data-id="' + value.data.id + '">S\u1EEDa</a>\n                                                                            <a class="dropdown-item" href="#" data-id="' + value.data.id + '" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">X\xF3a</a>\n                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="' + value.data.id + '" data-name="' + value.data.can_name + '" data-avatar="' + value.data.can_avatar + '" data-age="' + value.data.can_year + '" data-title="' + value.data.can_title + '" data-delete-url="{{route(\'diary.ajax.delete\')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">\u0110\xE1nh gi\xE1</a>\n                                                                        </div>\n                                                                    </div>\n                                                                    <div class="clearfix"></div>\n                                                                </div>\n\n                                                                <div class="candidate-item-main-row row">\n                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-globe" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="">\n                                                                                <h6>' + value.data.source.so_name + ' - ' + value.data.can_title + '</h6>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n                                                                    </div>\n                                                                </div>\n                                                                <div class="candidate-item-main-row row special-box">\n                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-map-marker" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + value.data.can_address + '</div>\n                                                                        </div> <!-- /. box -->\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-birthday-cake" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + value.data.can_year + '</div>\n                                                                        </div> <!-- /. box -->\n\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-mobile" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + value.data.can_phone + '</div>\n                                                                        </div> <!-- /. box -->\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-envelope-o" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + value.data.can_email + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                    </div>\n                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-skype" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + value.data.can_skype + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-facebook-square" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + value.data.can_facebook + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + value.data.can_linkedin + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-github" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + value.data.can_github + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                    </div>';
+            if (value.data.can_diary) {
+                item += '\n\n                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">\n                                                                        <div class="row">\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                <span>' + value.data.can_diary.created_at + '</span>\n                                                                                <span class="bg-green c-white" style="background: ' + value.data.can_diary.canty_color + '!important;">' + value.data.can_diary.canty_name + '</span>\n                                                                            </div>\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                @if(!empty($diary->d_evaluate))\n                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> ' + value.data.can_diary.d_evaluate + '</span>\n                                                                                    @else\n                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i> ' + value.data.can_diary.d_set_time + ', ' + value.data.can_diary.d_set_calendar + ', ' + value.data.can_diary.d_notice_before + ' </span>\n                                                                                @endif\n                                                                            </div>\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                <span>' + value.data.can_diary.d_note + '</span>\n                                                                            </div>\n                                                                        </div>\n                                                                    </div>';
+            }
+
+            item += '\n                                                                </div>\n                                                            </div>\n                                                        </div>\n                                                    </div> <!-- /. candidate item -->';
+
+            html += item;
+        });
+
+        $('.candidate-list').find('#result').html(html);
+
+        $this.renderPaginate(data.paginate);
+    },
+
+    renderPaginate: function renderPaginate(paginateData) {
+
+        var searchInfo = '<b>' + paginateData.first + ' - ' + paginateData.last + ' </b>trong<b> ' + paginateData.total + ' </b> \u1EE9ng vi\xEAn <span></span>';
+
+        $('.card-searchinfo').html(searchInfo);
+
+        var totalPage = paginateData.totalPage;
+        var page = parseInt($('#candidate-form-search').find('input[name="page"]').val());
+        var limit = parseInt($('#candidate-form-search').find('input[name="limit"]').val());
+
+        if (totalPage !== limit) {
+            var numberOfShow = 2;
+            var start = page - numberOfShow > 0 ? page - numberOfShow : 1;
+            var end = page + numberOfShow < totalPage ? page + numberOfShow : totalPage;
+
+            var html = '<ul class="pagination"><li class="page-item"><button  class="page-link"  data-page="' + (page <= 1 ? 1 : page - 1) + '" >Prev</button></li>';
+
+            if (start > 1) {
+                html += '<li class="page-item"><button class="page-link" data-page="1">1</button></li>';
+                html += '<li class="disabled"><span class="page-link">...</span></li>';
+            }
+
+            for (var i = start; i <= end; i++) {
+                if (page == i) {
+                    html += '<li class="page-item active"><button data-page="' + i + '" class="page-link">' + i + '</button></li>';
+                } else {
+                    html += '<li class="page-item"><button class="page-link" data-page="' + i + '">' + i + '</button></li>';
+                }
+            }
+
+            if (end < totalPage) {
+                html += '<li class="disabled"><span class="page-link">...</span></li>';
+                html += '<li class="page-item"><button class="page-link" data-page="' + totalPage + '" >' + totalPage + '</button></li>';
+            }
+
+            html += '<li class="page-item"><button data-page="' + (page >= totalPage ? totalPage : page + 1) + '" class="page-link" >Next</button></li></ul>';
+
+            html += '</ul>';
+
+            $('.candidate').find('.card-footer').html(html);
+        }
+
+        $('.candidate .pagination button').on('click', function () {
+            var page = $(this).data('page');
+
+            $('#candidate-form-search').find('input[name="page"]').val(page);
+
+            $('#candidate-form-search').submit();
+        });
+    },
+
+    renderAggerations: function renderAggerations(aggData) {
+
+        var latest_diary_d_cantype_id = aggData.latest_diary_d_cantype_id;
+        var can_source_id = aggData.can_source_id;
+        var latest_diary_d_evaluate = aggData.latest_diary_d_evaluate;
+        var candidate_info_ci_type_of_work = aggData.candidate_info_ci_type_of_work;
+
+        $('#latest_diary_d_cantype_id li').each(function () {
+            var index = $(this).index();
+            var item = $(this).find('.badge');
+            var flag = true;
+
+            $.each(latest_diary_d_cantype_id, function (i, val) {
+                if (index + 1 == val.key) {
+
+                    $('#latest_diary_d_cantype_id li').eq(index).find('.badge').html(val.doc_count);
+                    flag = false;
+                }
+            });
+
+            if (flag == true) {
+                item.html(0);
+            }
+        });
+
+        var start = 3;
+
+        $('#can_source_id li').each(function () {
+            var index = $(this).index();
+            var item = $(this).find('.badge');
+            var flag = true;
+
+            $.each(can_source_id, function (i, val) {
+                if (start == val.key) {
+
+                    $('#can_source_id li').eq(index).find('.badge').html(val.doc_count);
+                    flag = false;
+                }
+            });
+
+            if (flag == true) {
+                item.html(0);
+            }
+
+            start++;
+        });
+
+        $('#latest_diary_d_evaluate li').each(function () {
+            var index = $(this).index();
+            var item = $(this).find('.badge');
+            var flag = true;
+
+            $.each(latest_diary_d_evaluate, function (i, val) {
+                if (index + 1 == val.key) {
+
+                    $('#latest_diary_d_evaluate li').eq(index).find('.badge').html(val.doc_count);
+                    flag = false;
+                }
+            });
+
+            if (flag == true) {
+                item.html(0);
+            }
+        });
+
+        $('#candidate_info_ci_type_of_work li').each(function () {
+            var index = $(this).index();
+            var item = $(this).find('.badge');
+            var flag = true;
+
+            $.each(candidate_info_ci_type_of_work, function (i, val) {
+                if (index == val.key) {
+
+                    $('#candidate_info_ci_type_of_work li').eq(index).find('.badge').html(val.doc_count);
+                    flag = false;
+                }
+            });
+
+            if (flag == true) {
+                item.html(0);
+            }
+        });
+    }
+
+};
+
+$(function () {
+    CandidateSearch.init();
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
+
+/***/ }),
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20211,13 +21086,12 @@ $(function () {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 27 */,
 /* 28 */,
 /* 29 */,
 /* 30 */,
@@ -20239,632 +21113,75 @@ $(function () {
 /* 46 */,
 /* 47 */,
 /* 48 */,
-/* 49 */
+/* 49 */,
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(jQuery) {/**
- * wickedpicker v0.4.1 - A simple jQuery timepicker.
- * Copyright (c) 2015-2016 Eric Gagnon - http://github.com/wickedRidge/wickedpicker
- * License: MIT
- */
+/* WEBPACK VAR INJECTION */(function(jQuery) {(function ($) {
+    $.fn.serializeObject = function () {
 
-(function ($, window, document) {
-
-    "use strict";
-
-    if (typeof String.prototype.endsWith != 'function') {
-        /*
-         * Checks if this string end ends with another string
-         *
-         * @param {string} the string to be checked
-         *
-         * @return {bool}
-         */
-        String.prototype.endsWith = function (string) {
-            return string.length > 0 && this.substring(this.length - string.length, this.length) === string;
+        var self = this,
+            json = {},
+            push_counters = {},
+            patterns = {
+            "validate": /^[a-zA-Z][a-zA-Z0-9_]*(?:\[(?:\d*|[a-zA-Z0-9_]+)\])*$/,
+            "key": /[a-zA-Z0-9_]+|(?=\[\])/g,
+            "push": /^$/,
+            "fixed": /^\d+$/,
+            "named": /^[a-zA-Z0-9_]+$/
         };
-    }
 
-    /*
-     * Returns if the user agent is mobile
-     *
-     * @return {bool}
-     */
-    var isMobile = function isMobile() {
-        return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-        );
-    };
+        this.build = function (base, key, value) {
+            base[key] = value;
+            return base;
+        };
 
-    var today = new Date();
-
-    var pluginName = "wickedpicker",
-        defaults = {
-        now: today.getHours() + ':' + today.getMinutes(),
-        twentyFour: false,
-        upArrow: 'wickedpicker__controls__control-up',
-        downArrow: 'wickedpicker__controls__control-down',
-        close: 'wickedpicker__close',
-        hoverState: 'hover-state',
-        title: 'Chọn giơ',
-        showSeconds: false,
-        timeSeparator: ' : ',
-        secondsInterval: 1,
-        minutesInterval: 1,
-        beforeShow: null,
-        afterShow: null,
-        show: null,
-        clearable: false,
-        closeOnClickOutside: true,
-        onClickOutside: function onClickOutside() {}
-    };
-
-    /*
-     * @param {object} The input object the timepicker is attached to.
-     * @param {object} The object containing options
-     */
-    function Wickedpicker(element, options) {
-        this.element = $(element);
-        this.options = $.extend({}, defaults, options);
-
-        this.element.addClass('hasWickedpicker');
-        this.element.attr('onkeypress', 'return false;');
-        this.element.attr('aria-showingpicker', 'false');
-        this.createPicker();
-        this.timepicker = $('.wickedpicker');
-        this.up = $('.' + this.options.upArrow.split(/\s+/).join('.'));
-        this.down = $('.' + this.options.downArrow.split(/\s+/).join('.'));
-        this.separator = $('.wickedpicker__controls__control--separator');
-        this.hoursElem = $('.wickedpicker__controls__control--hours');
-        this.minutesElem = $('.wickedpicker__controls__control--minutes');
-        this.secondsElem = $('.wickedpicker__controls__control--seconds');
-        this.meridiemElem = $('.wickedpicker__controls__control--meridiem');
-        this.close = $('.' + this.options.close.split(/\s+/).join('.'));
-
-        //Create a new Date object based on the default or passing in now value
-        var time = this.timeArrayFromString(this.options.now);
-        this.options.now = new Date(today.getFullYear(), today.getMonth(), today.getDate(), time[0], time[1], time[2]);
-        this.selectedHour = this.parseHours(this.options.now.getHours());
-        this.selectedMin = this.parseSecMin(this.options.now.getMinutes());
-        this.selectedSec = this.parseSecMin(this.options.now.getSeconds());
-        this.selectedMeridiem = this.parseMeridiem(this.options.now.getHours());
-        this.setHoverState();
-        this.attach(element);
-        this.setText(element);
-    }
-
-    $.extend(Wickedpicker.prototype, {
-
-        /*
-         * Show given input's timepicker
-         *
-         * @param {object} The input being clicked
-         */
-        showPicker: function showPicker(element) {
-            //If there is a beforeShow function, then call it with the input calling the timepicker and the
-            // timepicker itself
-            if (typeof this.options.beforeShow === 'function') {
-                this.options.beforeShow(element, this.timepicker);
+        this.push_counter = function (key) {
+            if (push_counters[key] === undefined) {
+                push_counters[key] = 0;
             }
-            var timepickerPos = $(element).offset();
+            return push_counters[key]++;
+        };
 
-            $(element).attr({ 'aria-showingpicker': 'true', 'tabindex': -1 });
-            this.setText(element);
-            this.showHideMeridiemControl();
-            if (this.getText(element) !== this.getTime()) {
+        $.each($(this).serializeArray(), function () {
 
-                // Check meridiem 
-                var text = this.getText(element);
-                var re = /\s[ap]m$/i;
-                var meridiem = re.test(text) ? text.substr(-2, 2) : null;
-                var inputTime = text.replace(re, '').split(this.options.timeSeparator);
-                var newTime = {};
-                newTime.hours = inputTime[0];
-                newTime.minutes = inputTime[1];
-                newTime.meridiem = meridiem;
-                if (this.options.showSeconds) {
-                    newTime.seconds = inputTime[2];
+            // skip invalid keys
+            if (!patterns.validate.test(this.name)) {
+                return;
+            }
+
+            var k,
+                keys = this.name.match(patterns.key),
+                merge = this.value,
+                reverse_key = this.name;
+
+            while ((k = keys.pop()) !== undefined) {
+
+                // adjust reverse_key
+                reverse_key = reverse_key.replace(new RegExp("\\[" + k + "\\]$"), '');
+
+                // push
+                if (k.match(patterns.push)) {
+                    merge = self.build([], self.push_counter(reverse_key), merge);
                 }
-                this.setTime(newTime);
-            }
-            this.timepicker.css({
-                'z-index': this.element.css('z-index') + 1,
-                position: 'absolute',
-                left: timepickerPos.left,
-                top: timepickerPos.top + $(element)[0].offsetHeight
-            }).show();
-            //If there is a show function, then call it with the input calling the timepicker and the
-            // timepicker itself
-            if (typeof this.options.show === 'function') {
-                this.options.show(element, this.timepicker);
-            }
 
-            this.handleTimeAdjustments(element);
-        },
-
-        /*
-         * Hides the timepicker that is currently shown if it is not part of the timepicker
-         *
-         * @param {Object} The DOM object being clicked on the page
-         * 
-         * BeinnLora: added trigger function to call on closing/hiding timepicker. 
-         */
-        hideTimepicker: function hideTimepicker(element) {
-            this.timepicker.hide();
-            if (typeof this.options.afterShow === 'function') {
-                this.options.afterShow(element, this.timepicker);
-            }
-            var pickerHidden = {
-                start: function start() {
-                    var setShowPickerFalse = $.Deferred();
-                    $('[aria-showingpicker="true"]').attr('aria-showingpicker', 'false');
-                    return setShowPickerFalse.promise();
-                }
-            };
-
-            function setTabIndex(index) {
-                setTimeout(function () {
-                    $('[aria-showingpicker="false"]').attr('tabindex', index);
-                }, 400);
-            }
-
-            pickerHidden.start().then(setTabIndex(0));
-        },
-
-        /*
-         * Create a new timepicker. A single timepicker per page
-         */
-        createPicker: function createPicker() {
-            if ($('.wickedpicker').length === 0) {
-                var picker = '<div class="wickedpicker"><p class="wickedpicker__title">' + this.options.title + '<span class="wickedpicker__close"></span></p><ul class="wickedpicker__controls"><li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--hours" tabindex="-1">00</span><span class="' + this.options.downArrow + '"></span></li><li class="wickedpicker__controls__control--separator"><span class="wickedpicker__controls__control--separator-inner">:</span></li><li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--minutes" tabindex="-1">00</span><span class="' + this.options.downArrow + '"></span></li>';
-                if (this.options.showSeconds) {
-                    picker += '<li class="wickedpicker__controls__control--separator"><span class="wickedpicker__controls__control--separator-inner">:</span></li><li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--seconds" tabindex="-1">00</span><span class="' + this.options.downArrow + '"></span> </li>';
-                }
-                picker += '<li class="wickedpicker__controls__control"><span class="' + this.options.upArrow + '"></span><span class="wickedpicker__controls__control--meridiem" tabindex="-1">AM</span><span class="' + this.options.downArrow + '"></span></li></ul></div>';
-                $('body').append(picker);
-                this.attachKeyboardEvents();
-            }
-        },
-
-        /*
-         * Hides the meridiem control if this timepicker is a 24 hour clock
-         */
-        showHideMeridiemControl: function showHideMeridiemControl() {
-            if (this.options.twentyFour === false) {
-                $(this.meridiemElem).parent().show();
-            } else {
-                $(this.meridiemElem).parent().hide();
-            }
-        },
-
-        /*
-         * Hides the seconds control if this timepicker has showSeconds set to true
-         */
-        showHideSecondsControl: function showHideSecondsControl() {
-            if (this.options.showSeconds) {
-                $(this.secondsElem).parent().show();
-            } else {
-                $(this.secondsElem).parent().hide();
-            }
-        },
-
-        /*
-         * Bind the click events to the input
-         *
-         * @param {object} The input element
-         */
-        attach: function attach(element) {
-            var self = this;
-
-            if (this.options.clearable) {
-                self.makePickerInputClearable(element);
-            }
-
-            $(element).attr('tabindex', 0);
-            $(element).on('click focus', function (event) {
-                //Prevent multiple firings
-                if ($(self.timepicker).is(':hidden')) {
-                    self.showPicker($(this));
-                    window.lastTimePickerControl = $(this); //Put the reference on this timepicker into global scope for unsing that in afterShow function
-                    $(self.hoursElem).focus();
-                }
-            });
-
-            //Handle click events for closing Wickedpicker
-            var clickHandler = function clickHandler(event) {
-                //TODO: Fix double firing
-                //Only fire the hide event when you have to
-                if ($(self.timepicker).is(':visible')) {
-                    //Clicking the X
-                    if ($(event.target).is(self.close)) {
-                        self.hideTimepicker(window.lastTimePickerControl);
-                    } else if ($(event.target).closest(self.timepicker).length || $(event.target).closest($('.hasWickedpicker')).length) {
-                        //Clicking the Wickedpicker or one of it's inputs
-                        event.stopPropagation();
-                    } else {
-                        //Everything else
-                        if (typeof self.options.onClickOutside === 'function') {
-                            self.options.onClickOutside();
-                        } else {
-                            console.warn("Type of onClickOutside must be a function");
-                        }
-
-                        if (!self.options.closeOnClickOutside) {
-                            return;
-                        }
-                        self.hideTimepicker(window.lastTimePickerControl);
+                // fixed
+                else if (k.match(patterns.fixed)) {
+                        merge = self.build([], k, merge);
                     }
-                    window.lastTimePickerControl = null;
-                }
-            };
-            $(document).off('click', clickHandler).on('click', clickHandler);
-        },
 
-        /**
-         * Added keyboard functionality to improve usabil
-         */
-        attachKeyboardEvents: function attachKeyboardEvents() {
-            $(document).on('keydown', $.proxy(function (event) {
-                switch (event.keyCode) {
-                    case 9:
-                        if (event.target.className !== 'hasWickedpicker') {
-                            $(this.close).trigger('click');
+                    // named
+                    else if (k.match(patterns.named)) {
+                            merge = self.build({}, k, merge);
                         }
-                        break;
-                    case 27:
-                        $(this.close).trigger('click');
-                        break;
-                    case 37:
-                        //Left arrow
-                        if (event.target.className !== this.hoursElem[0].className) {
-                            $(event.target).parent().prevAll('li').not(this.separator.selector).first().children()[1].focus();
-                        } else {
-                            $(event.target).parent().siblings(':last').children()[1].focus();
-                        }
-                        break;
-                    case 39:
-                        //Right arrow
-                        if (event.target.className !== this.meridiemElem[0].className) {
-                            $(event.target).parent().nextAll('li').not(this.separator.selector).first().children()[1].focus();
-                        } else {
-                            $(event.target).parent().siblings(':first').children()[1].focus();
-                        }
-                        break;
-                    case 38:
-                        //Up arrow
-                        $(':focus').prev().trigger('click');
-                        break;
-                    case 40:
-                        //Down arrow
-                        $(':focus').next().trigger('click');
-                        break;
-                    default:
-                        break;
-                }
-            }, this));
-        },
-
-        /*
-         * Set the time on the timepicker
-         *
-         * @param {object} The date being set
-         */
-        setTime: function setTime(time) {
-            this.setHours(time.hours);
-            this.setMinutes(time.minutes);
-            this.setMeridiem(time.meridiem);
-            if (this.options.showSeconds) {
-                this.setSeconds(time.seconds);
             }
-        },
 
-        /*
-         * Get the time from the timepicker
-         */
-        getTime: function getTime() {
-            return [this.formatTime(this.getHours(), this.getMinutes(), this.getMeridiem(), this.getSeconds())];
-        },
+            json = $.extend(true, json, merge);
+        });
 
-        /*
-         * Set the timpicker's hour(s) value
-         *
-         * @param {string} hours
-         */
-        setHours: function setHours(hours) {
-            var hour = new Date();
-            hour.setHours(hours);
-            var hoursText = this.parseHours(hour.getHours());
-            this.hoursElem.text(hoursText);
-            this.selectedHour = hoursText;
-        },
-
-        /*
-         * Get the hour(s) value from the timepicker
-         *
-         * @return {integer}
-         */
-        getHours: function getHours() {
-            var hours = new Date();
-            hours.setHours(this.hoursElem.text());
-            return hours.getHours();
-        },
-
-        /*
-         * Returns the correct hour value based on the type of clock, 12 or 24 hour
-         *
-         * @param {integer} The hours value before parsing
-         *
-         * @return {string|integer}
-         */
-        parseHours: function parseHours(hours) {
-            return this.options.twentyFour === false ? (hours + 11) % 12 + 1 : hours < 10 ? '0' + hours : hours;
-        },
-
-        /*
-         * Sets the timpicker's minutes value
-         *
-         * @param {string} minutes
-         */
-        setMinutes: function setMinutes(minutes) {
-            var minute = new Date();
-            minute.setMinutes(minutes);
-            var minutesText = minute.getMinutes();
-            var min = this.parseSecMin(minutesText);
-            this.minutesElem.text(min);
-            this.selectedMin = min;
-        },
-
-        /*
-         * Get the minutes value from the timepicker
-         *
-         * @return {integer}
-         */
-        getMinutes: function getMinutes() {
-            var minutes = new Date();
-            minutes.setMinutes(this.minutesElem.text());
-            return minutes.getMinutes();
-        },
-
-        /*
-         * Return a human-readable minutes/seconds value
-         *
-         * @param {string} value seconds or minutes
-         *
-         * @return {string|integer}
-         */
-        parseSecMin: function parseSecMin(value) {
-            return (value < 10 ? '0' : '') + value;
-        },
-
-        /*
-         * Set the timepicker's meridiem value, AM or PM
-         *
-         * @param {string} The new meridiem
-         */
-        setMeridiem: function setMeridiem(inputMeridiem) {
-            var newMeridiem = '';
-            if (inputMeridiem === undefined) {
-                var meridiem = this.getMeridiem();
-                newMeridiem = meridiem === 'PM' ? 'AM' : 'PM';
-            } else {
-                newMeridiem = inputMeridiem;
-            }
-            this.meridiemElem.text(newMeridiem);
-            this.selectedMeridiem = newMeridiem;
-        },
-
-        /*
-         * Get the timepicker's meridiem value, AM or PM
-         *
-         * @return {string}
-         */
-        getMeridiem: function getMeridiem() {
-            return this.meridiemElem.text();
-        },
-
-        /*
-         * Set the timepicker's seconds value
-         *
-         * @param {string} seconds
-         */
-        setSeconds: function setSeconds(seconds) {
-            var second = new Date();
-            second.setSeconds(seconds);
-            var secondsText = second.getSeconds();
-            var sec = this.parseSecMin(secondsText);
-            this.secondsElem.text(sec);
-            this.selectedSec = sec;
-        },
-
-        /*
-         * Get the timepicker's seconds value
-         *
-         * return {string}
-         */
-        getSeconds: function getSeconds() {
-            var seconds = new Date();
-            seconds.setSeconds(this.secondsElem.text());
-            return seconds.getSeconds();
-        },
-
-        /*
-         * Get the correct meridiem based on the hours given
-         *
-         * @param {string|integer} hours
-         *
-         * @return {string}
-         */
-        parseMeridiem: function parseMeridiem(hours) {
-            return hours > 11 ? 'PM' : 'AM';
-        },
-
-        /*
-         * Handles time incrementing and decrementing and passes
-         * the operator, '+' or '-', the input to be set after the change
-         * and the current arrow clicked, to decipher if hours, ninutes, or meridiem.
-         *
-         * @param {object} The input element
-         */
-        handleTimeAdjustments: function handleTimeAdjustments(element) {
-            var timeOut = 0;
-            //Click and click and hold timepicker incrementer and decrementer
-            $(this.up).add(this.down).off('mousedown click touchstart').on('mousedown click', {
-                'Wickedpicker': this,
-                'input': element
-            }, function (event) {
-                if (event.which != 1) return false;
-                var operator = this.className.indexOf('up') > -1 ? '+' : '-';
-                var passedData = event.data;
-                if (event.type == 'mousedown') {
-                    timeOut = setInterval($.proxy(function (args) {
-                        args.Wickedpicker.changeValue(operator, args.input, this);
-                    }, this, { 'Wickedpicker': passedData.Wickedpicker, 'input': passedData.input }), 1000);
-                } else {
-                    passedData.Wickedpicker.changeValue(operator, passedData.input, this);
-                }
-            }).bind('mouseup touchend', function () {
-                clearInterval(timeOut);
-            });
-        },
-
-        /*
-         * Change the timepicker's time base on what is clicked
-         *
-         * @param {string} The + or - operator
-         * @param {object} The timepicker's associated input to be set post change
-         * @param {object} The DOM arrow object clicked, determines if it is hours,
-         * minutes, or meridiem base on the operator and its siblings
-         */
-        changeValue: function changeValue(operator, input, clicked) {
-            var target = operator === '+' ? clicked.nextSibling : clicked.previousSibling;
-            var targetClass = $(target).attr('class');
-            if (targetClass.endsWith('hours')) {
-                this.setHours(eval(this.getHours() + operator + 1));
-            } else if (targetClass.endsWith('minutes')) {
-                this.setMinutes(eval(this.getMinutes() + operator + this.options.minutesInterval));
-            } else if (targetClass.endsWith('seconds')) {
-                this.setSeconds(eval(this.getSeconds() + operator + this.options.secondsInterval));
-            } else {
-                this.setMeridiem();
-            }
-            this.setText(input);
-        },
-
-        /*
-         * Sets the give input's text to the current timepicker's time
-         *
-         * @param {object} The input element
-         */
-        setText: function setText(input) {
-            $(input).val(this.formatTime(this.selectedHour, this.selectedMin, this.selectedMeridiem, this.selectedSec)).change();
-        },
-
-        /*
-         * Get the given input's value
-         *
-         * @param {object} The input element
-         *
-         * @return {string}
-         */
-        getText: function getText(input) {
-            return $(input).val();
-        },
-
-        /*
-         * Returns the correct time format as a string
-         *
-         * @param {string} hour
-         * @param {string} minutes
-         * @param {string} meridiem
-         *
-         * @return {string}
-         */
-        formatTime: function formatTime(hour, min, meridiem, seconds) {
-            var formattedTime = hour + this.options.timeSeparator + min;
-            if (this.options.showSeconds) {
-                formattedTime += this.options.timeSeparator + seconds;
-            }
-            if (this.options.twentyFour === false) {
-                formattedTime += ' ' + meridiem;
-            }
-            return formattedTime;
-        },
-
-        /**
-         *  Apply the hover class to the arrows and close icon fonts
-         */
-        setHoverState: function setHoverState() {
-            var self = this;
-            if (!isMobile()) {
-                $(this.up).add(this.down).add(this.close).hover(function () {
-                    $(this).toggleClass(self.options.hoverState);
-                });
-            }
-        },
-
-        /**
-         * Wrapping the given input field with the clearable container
-         * , add a span that will contain the x, and bind the clear
-         * input event to the span
-         *
-         * @param input
-         */
-        makePickerInputClearable: function makePickerInputClearable(input) {
-            $(input).wrap('<div class="clearable-picker"></div>').after('<span data-clear-picker>&times;</span>');
-
-            //When the x is clicked, clear its sibling input field
-            $('[data-clear-picker]').on('click', function (event) {
-                $(this).siblings('.hasWickedpicker').val('');
-            });
-        },
-
-        /**
-         * Convert the options time string format
-         * to an array
-         *
-         * returns => [hours, minutes, seconds]
-         *
-         * @param stringTime
-         * @returns {*}
-         */
-        timeArrayFromString: function timeArrayFromString(stringTime) {
-            if (stringTime.length) {
-                var time = stringTime.split(':');
-                time[2] = time.length < 3 ? '00' : time[2];
-                return time;
-            }
-            return false;
-        },
-
-        //public functions
-        /*
-         * Returns the requested input element's value
-         */
-        _time: function _time() {
-            var inputValue = $(this.element).val();
-            return inputValue === '' ? this.formatTime(this.selectedHour, this.selectedMin, this.selectedMeridiem, this.selectedSec) : inputValue;
-        },
-        _hide: function _hide() {
-            this.hideTimepicker(this.element);
-        }
-    });
-
-    //optional index if multiple inputs share the same class
-    $.fn[pluginName] = function (options, index) {
-        if (!$.isFunction(Wickedpicker.prototype['_' + options])) {
-            return this.each(function () {
-                if (!$.data(this, "plugin_" + pluginName)) {
-                    $.data(this, "plugin_" + pluginName, new Wickedpicker(this, options));
-                }
-            });
-        } else if ($(this).hasClass('hasWickedpicker')) {
-            if (index !== undefined) {
-                return $.data($(this)[index], 'plugin_' + pluginName)['_' + options]();
-            } else {
-                return $.data($(this)[0], 'plugin_' + pluginName)['_' + options]();
-            }
-        }
+        return json;
     };
-})(jQuery, window, document);
+})(jQuery);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })

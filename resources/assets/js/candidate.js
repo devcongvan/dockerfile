@@ -21,6 +21,7 @@ var Candidate = {
         this.candidateDestroy();
         this.addSourceByCandidate();
         this.chooseFileExcel();
+
     },
 
     upImage: function () {
@@ -152,7 +153,7 @@ var Candidate = {
 
 
         $(window).scroll(function () {
-            console.log(candidate_info_top);
+
             if ($('.selected').find('.candidate-item-main-name').attr('toggle') == 'true') {
 
                 var candidate_item_width = $('.candidate-main').outerWidth();
@@ -200,7 +201,6 @@ var Candidate = {
     },
 
     renderCV: function (data) {
-        console.log(data);
 
         var notify = 'Chưa có dữ liệu';
         var arrNotice = [];
@@ -340,7 +340,6 @@ var Candidate = {
 
         if (candidate.candidate_info.ci_qualification !== null) {
             $.getJSON('json/qualification.json', function (data) {
-                console.log(candidate.candidate_info.ci_qualification);
                 $('#ci_qualification').html(data.qualification[candidate.candidate_info.ci_qualification].name);
             });
         } else {
@@ -805,9 +804,16 @@ var Candidate = {
     },
 
 
-    configBootstrapSlider: function () {
-        $('#age').slider({
-            id: "slider12c", min: 0, max: 100, range: true, value: [3, 7],
+    configBootstrapSlider: function (){
+        var ageFrom=$('#range_age').data('from')!==null?$('#range_age').data('from'):0;
+        var ageTo=$('#range_age').data('to')!==null? $('#range_age').data('to'):70;
+
+        var salaryFrom=$('#salary').data('from')!==null?$('#salary').data('from'):0;
+        var salaryTo=$('#salary').data('to')!==null?$('#salary').data('to'):99;
+
+
+        $('#range_age').slider({
+            id: "slider12c", min: 0, max: 100, range: true, value: [ageFrom, ageTo],
             formatter: function formatter(val) {
                 if (val !== '') {
                     return "Từ " + val[0] + " đến " + val[1] + " tuổi";
@@ -815,10 +821,13 @@ var Candidate = {
                     return val;
                 }
             }
+        }).on('slideStop',function (ev) {
+            var age=$('#range_age').val();
+            $('#range_age').closest('form').submit();
         });
 
         $('#salary').slider({
-            id: "slider12c", min: 0, max: 100, range: true, value: [3, 7],
+            id: "slider12c", min: 0, max: 100, range: true, value: [salaryFrom, salaryTo],
             formatter: function formatter(val) {
                 if (val !== '') {
                     return "Từ " + val[0] + " đến " + val[1] + " triệu";
@@ -826,6 +835,9 @@ var Candidate = {
                     return val;
                 }
             }
+        }).on('slideStop', function (ev) {
+            var age = $('#salary').val();
+            $('#salary').closest('form').submit();
         });
     },
 
@@ -1325,6 +1337,7 @@ var Candidate = {
         })
 
     }
+
 };
 
 $(function () {

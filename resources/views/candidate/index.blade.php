@@ -6,7 +6,7 @@
 
 @section('content')
     @php $update='Đang cập nhật' @endphp
-    <div class="content-wrapper candidate">
+        <div class="content-wrapper candidate">
         <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
@@ -35,220 +35,222 @@
                     <section class="col-lg-12">
                         <!-- Custom tabs (Charts with tabs)-->
 
-                        <div class="card">
+                        <div class="card ">
+                            <form action="" method="post" id="candidate-form-search" data-url="{{route('candidate.ajax.search')}}">
+                                <input type="hidden" name="limit" value="15" >
+                                <input type="hidden" name="page" value="1" >
                             <div class=" p-0 row">
                                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                    <input type="text" name="" class="form-group" placeholder="Ghõ tên Ứng viên để tìm kiếm">
+                                    <input type="text" name="candidate_name" class="form-group" value="{{$candidate_name or ''}}" placeholder="Gõ tên Ứng viên để tìm kiếm">
                                 </div>
                                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                    <input type="text" name="" id="vitricongviec" class="form-group" placeholder="Vị trí như: Lập trình viên, ...">
+                                    <input type="text" name="candidate_title" id="vitricongviec" value="{{$candidate_title or ''}}" class="form-group" placeholder="Vị trí như: Lập trình viên, ...">
                                 </div>
                                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                    <button type="button" class="btn btn-default full-width btn-blue"> Tìm kiếm</button>
+                                    <button type="submit" id="btn-search" class="btn btn-default full-width btn-blue"> Tìm kiếm</button>
                                 </div>
+
                             </div><!-- /.card-header -->
-                            @if($total=$candidates->totalHits())
+                            {{--@if($total=$candidates->totalHits())--}}
                                 <div class="card-searchinfo">
-{{--                                    <b>{{$candidates->firstItem()!=0?$candidates->firstItem():0}} - {{$candidates->lastItem()!=0?$candidates->lastItem():0}} </b>trong<b> {{$total}} </b> ứng viên <span></span>--}}
-                                    <b>{{$paginate['from']}} - {{$paginate['to']}} </b>trong<b> {{$paginate['total']}} </b> ứng viên <span></span>
+                                    <b>{{$paginate['first']}} - {{$paginate['last']}} </b>trong<b> {{$paginate['total']}} </b> ứng viên <span></span>
                                 </div>
-                            @endif
-                            <div class="card-body candidate-list">
+                            {{--@endif--}}
+                            <div class="card-body candidate-list" data-edit-url="{{route('candidate.edit',['id'=>'/'])}}">
                                 <div class="row">
                                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-main">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            {{--@php dump(count($candidates)) @endphp--}}
-                                            @isset($candidates)
-                                                @php $notdata='Chưa có dữ liệu'; @endphp
-                                                @foreach($candidates as $item)
-                                                    <div class="candidate-item row" style="overflow: hidden">
-                                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                                            <div class="candidate-item-left">
-                                                                <div class="image">
-                                                                    <img class="img-responsive" src="{{$item->can_avatar}}" alt="">
-                                                                </div>
-                                                                <div class="option">
-                                                                    {{--<a href="{{route('candidate.edit', ['id' => $item->id])}}" style="background: #808080;color: #fff;" class="btn btn-default candidate-item-edit" data-id="{{$item->id}}"><i class="fa fa-pencil" aria-hidden="true"></i> Sửa</a>--}}
-                                                                    {{--<button type="button" style="background: #AB1D1D;color: #fff;" class="btn btn-default candidate-item-destroy" data-id="{{$item->id}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm" ><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa</button>--}}
-                                                                    <div class="text-center time">
-                                                                        <i class="fa fa-calendar" aria-hidden="true"></i> {{date("d-m-Y", strtotime($item->updated_at))}}
-                                                                    </div>
-                                                                </div>
-                                                            </div> <!-- /. candidate item left -->
-                                                        </div>
-                                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                                                            <div class="candidate-item-main">
-                                                                <div class="candidate-item-main-row">
-                                                                    <h5 class="pull-left candidate-item-main-name" data-id="{{$item->id}}" toggle="false">{{$item->can_name}}</h5>
-                                                                    <div class="dropdown pull-right">
-                                                                        <button class="btn " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                                                                        </button>
-                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <a class="dropdown-item" href="{{route('candidate.edit', ['id' => $item->id])}}" data-id="{{$item->id}}">Sửa</a>
-                                                                            <a class="dropdown-item" href="#" data-id="{{$item->id}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">Xóa</a>
-                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="{{$item->id}}" data-name="{{$item->can_name}}" data-avatar="{{$item->can_avatar}}" data-age="{{!empty($item->can_year)?(date('Y')-$item->can_year).' tuổi':(!empty($item->can_birthday)?floor((time() - strtotime($item->can_birthday)) / (60*60*24*365)).' tuổi':$notdata)}}" data-title="{{!empty($item->can_title)?$item->can_title:$notdata}}" data-delete-url="{{route('diary.ajax.delete')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">Đánh giá</a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="clearfix"></div>
-                                                                </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="result">
+                                            {{--@isset($candidates)--}}
+                                                {{--@php $notdata='Chưa có dữ liệu'; @endphp--}}
+                                                {{--@foreach($candidates as $test)--}}
 
-                                                                <div class="candidate-item-main-row row">
-                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                        <div class="box ">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-globe" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="">
-                                                                                <h6>{{!empty($item->source->so_name)?$item->source->so_name:$notdata}} - {{!empty($item->can_title)?$item->can_title:$notdata}}</h6>
-                                                                            </div>
-                                                                        </div> <!-- /. box -->
-                                                                    </div>
-                                                                </div>
-                                                                <div class="candidate-item-main-row row special-box">
-                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                                                        <div class="box ">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">{{empty($item->can_address)?$notdata:$item->can_address}}</div>
-                                                                        </div> <!-- /. box -->
-                                                                        <div class="box ">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-birthday-cake" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">{{!empty($item->can_year)?(date('Y')-$item->can_year).' tuổi':(!empty($item->can_birthday)?floor((time() - strtotime($item->can_birthday)) / (60*60*24*365)).' tuổi':$notdata)}} </div>
-                                                                        </div> <!-- /. box -->
+                                                    {{--@php $item=$test->data @endphp--}}
+                                                    {{--<div class="candidate-item row" style="overflow: hidden">--}}
+                                                        {{--<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">--}}
+                                                            {{--<div class="candidate-item-left">--}}
+                                                                {{--<div class="image">--}}
+                                                                    {{--<img class="img-responsive" src="{{$item['can_avatar'] or ''}}" alt="">--}}
+                                                                {{--</div>--}}
+                                                                {{--<div class="option">--}}
+                                                                    {{--<a href="" style="background: #808080;color: #fff;" class="btn btn-default candidate-item-edit" data-id=""><i class="fa fa-pencil" aria-hidden="true"></i> Sửa</a>--}}
+                                                                    {{--<button type="button" style="background: #AB1D1D;color: #fff;" class="btn btn-default candidate-item-destroy" data-id="" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm" ><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa</button>--}}
+                                                                    {{--<div class="text-center time">--}}
+                                                                        {{--<i class="fa fa-calendar" aria-hidden="true"></i> {{date("d-m-Y", strtotime($item['updated_at']))}}--}}
+                                                                    {{--</div>--}}
+                                                                {{--</div>--}}
+                                                            {{--</div> <!-- /. candidate item left -->--}}
+                                                        {{--</div>--}}
+                                                        {{--<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">--}}
+                                                            {{--<div class="candidate-item-main">--}}
+                                                                {{--<div class="candidate-item-main-row">--}}
+                                                                    {{--<h5 class="pull-left candidate-item-main-name" data-id="{{$item['id']}}" toggle="false">{{$item['can_name']}}</h5>--}}
+                                                                    {{--<div class="dropdown pull-right">--}}
+                                                                        {{--<button class="btn " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                                                                            {{--<i class="fa fa-ellipsis-h" aria-hidden="true"></i>--}}
+                                                                        {{--</button>--}}
+                                                                        {{--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">--}}
+                                                                            {{--<a class="dropdown-item" href="{{route('candidate.edit',['id'=>$item['id']])}}" data-id="{{$item['id']}}">Sửa</a>--}}
+                                                                            {{--<a class="dropdown-item" href="#" data-id="{{$item['id']}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">Xóa</a>--}}
+                                                                            {{--<a class="dropdown-item" href="#candidate-evaluate" data-id="{{$item['id']}}" data-name="{{$item['can_name']}}" data-avatar="{{$item['can_avatar']}}" data-age="{{!empty($item['can_year'])?(date('Y')-$item['can_year']).' tuổi':(!empty($item['can_birthday'])?floor((time() - strtotime($item['can_birthday'])) / (60*60*24*365)).' tuổi':$notdata)}}" data-title="{{!empty($item['can_title'])?$item['can_title']:$notdata}}" data-delete-url="{{route('diary.ajax.delete')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">Đánh giá</a>--}}
+                                                                        {{--</div>--}}
+                                                                    {{--</div>--}}
+                                                                    {{--<div class="clearfix"></div>--}}
+                                                                {{--</div>--}}
 
-                                                                        <div class="box ">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-mobile" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">{{empty($item->can_phone)?$notdata: (stripos($item->can_phone,'0')!=false?'0'.$item->can_phone:$item->can_phone)}}</div>
-                                                                        </div> <!-- /. box -->
-                                                                        <div class="box">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">
-                                                                                <a href="#">{{empty($item->can_email)?$notdata:$item->can_email}}</a>
-                                                                            </div>
-                                                                        </div> <!-- /. box -->
+                                                                {{--<div class="candidate-item-main-row row">--}}
+                                                                    {{--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">--}}
+                                                                        {{--<div class="box ">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-globe" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="">--}}
+                                                                                {{--<h6>{{!empty($item['source']['so_name'])?$item['source']['so_name']:$notdata}} - {{!empty($item['can_title'])?$item['can_title']:$notdata}}</h6>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
+                                                                    {{--</div>--}}
+                                                                {{--</div>--}}
+                                                                {{--<div class="candidate-item-main-row row special-box">--}}
+                                                                    {{--<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">--}}
+                                                                        {{--<div class="box ">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-map-marker" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">{{empty($item['can_address'])?$notdata:$item['can_address']}}</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
+                                                                        {{--<div class="box ">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-birthday-cake" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">{{!empty($item['can_year'])?(date('Y')-$item['can_year']).' tuổi':(!empty($item['can_birthday'])?floor((time() - strtotime($item['can_birthday'])) / (60*60*24*365)).' tuổi':$notdata)}} </div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
 
-                                                                    </div>
-                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                                                        <div class="box">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-skype" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">
-                                                                                <a href="#">{{!empty($item->can_skype)?$item->can_skype:$notdata}}</a>
-                                                                            </div>
-                                                                        </div> <!-- /. box -->
+                                                                        {{--<div class="box ">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-mobile" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">{{empty($item['can_phone'])?$notdata: (stripos($item['can_phone'],'0')!=false?'0'.$item['can_phone']:$item['can_phone'])}}</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
+                                                                        {{--<div class="box">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-envelope-o" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">--}}
+                                                                                {{--<a href="#">{{empty($item['can_email'])?$notdata:$item['can_email']}}</a>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
 
-
-                                                                        <div class="box">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">
-                                                                                <a href="#">{{!empty($item->can_facebook)?$item->can_facebook:$notdata}}</a>
-                                                                            </div>
-                                                                        </div> <!-- /. box -->
+                                                                    {{--</div>--}}
+                                                                    {{--<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">--}}
+                                                                        {{--<div class="box">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-skype" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">--}}
+                                                                                {{--<a href="#">{{!empty($item['can_skype'])?$item['can_skype']:$notdata}}</a>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
 
 
-                                                                        <div class="box">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">
-                                                                                <a href="#">{{!empty($item->can_linkedin)?$item->can_linkedin:$notdata}}</a>
-                                                                            </div>
-                                                                        </div> <!-- /. box -->
-
-                                                                        <div class="box">
-                                                                            <div class="box-icon">
-                                                                                <i class="fa fa-github" aria-hidden="true"></i>
-                                                                            </div>
-                                                                            <div class="box-text">
-                                                                                <a href="#">{{!empty($item->can_github)?$item->can_github:$notdata}}</a>
-                                                                            </div>
-                                                                        </div> <!-- /. box -->
-
-                                                                    </div>
-
-                                                                    @if(!empty($item->can_diary))
-
-                                                                        @php
-                                                                            $can_diary=json_decode($item->can_diary);
-                                                                                $diary=json_decode($can_diary->diary);
-                                                                                $candidateType=json_decode($can_diary->candidateType);
-                                                                        @endphp
-
-                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">
-                                                                        <div class="row">
-                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span>{{$diary->created_at}}</span>
-                                                                                <span class="bg-green c-white" style="background: {{$candidateType->canty_color}}!important;">{{$candidateType->canty_name}}</span>
-                                                                            </div>
-                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                @if(!empty($diary->d_evaluate))
-                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> {{$diary->d_evaluate}}</span>
-                                                                                    @else
-                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i>  {{$diary->d_set_time}}, {{$diary->d_set_calendar}}, {{$diary->d_notice_before}} </span>
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span>{{$diary->d_note}}</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                        @endif
+                                                                        {{--<div class="box">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-facebook-square" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">--}}
+                                                                                {{--<a href="#">{{!empty($item['can_facebook'])?$item['can_facebook']:$notdata}}</a>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
 
 
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div> <!-- /. candidate item -->
-                                                @endforeach
-                                            @endif
+                                                                        {{--<div class="box">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-linkedin-square" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">--}}
+                                                                                {{--<a href="#">{{!empty($item['can_linkedin'])?$item['can_linkedin']:$notdata}}</a>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
+
+                                                                        {{--<div class="box">--}}
+                                                                            {{--<div class="box-icon">--}}
+                                                                                {{--<i class="fa fa-github" aria-hidden="true"></i>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="box-text">--}}
+                                                                                {{--<a href="#">{{!empty($item['can_github'])?$item['can_github']:$notdata}}</a>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div> <!-- /. box -->--}}
+
+                                                                    {{--</div>--}}
+
+                                                                    {{--@if(!empty($item['can_diary']))--}}
+
+                                                                        {{--@php--}}
+                                                                            {{--$can_diary=json_decode($item['can_diary']);--}}
+                                                                                {{--$diary=json_decode($can_diary->diary);--}}
+                                                                                {{--$candidateType=json_decode($can_diary->candidateType);--}}
+                                                                        {{--@endphp--}}
+
+                                                                    {{--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">--}}
+                                                                        {{--<div class="row">--}}
+                                                                            {{--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">--}}
+                                                                                {{--<span>{{$diary->created_at}}</span>--}}
+                                                                                {{--<span class="bg-green c-white" style="background: {{$candidateType->canty_color}}!important;">{{$candidateType->canty_name}}</span>--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">--}}
+                                                                                {{--@if(!empty($diary->d_evaluate))--}}
+                                                                                    {{--<span><i class="fa fa-star" aria-hidden="true"></i></span><span> {{$diary->d_evaluate}}</span>--}}
+                                                                                    {{--@else--}}
+                                                                                    {{--<span class="time-expired"><i class="fa fa-clock-o"></i>  {{$diary->d_set_time}}, {{$diary->d_set_calendar}}, {{$diary->d_notice_before}} </span>--}}
+                                                                                {{--@endif--}}
+                                                                            {{--</div>--}}
+                                                                            {{--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">--}}
+                                                                                {{--<span>{{$diary->d_note}}</span>--}}
+                                                                            {{--</div>--}}
+                                                                        {{--</div>--}}
+                                                                    {{--</div>--}}
+                                                                        {{--@endif--}}
+
+
+                                                                {{--</div>--}}
+                                                            {{--</div>--}}
+                                                        {{--</div>--}}
+                                                    {{--</div> <!-- /. candidate item -->--}}
+                                                {{--@endforeach--}}
+                                            {{--@endif--}}
                                         </div>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 candidate-sidebar">
                                         <h5 class="pull-left">Tìm kiếm nâng cao</h5>
                                         <div class="clearfix"></div>
-
                                         <div class="candidate-sidebar-item radiobox d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Thứ tự sắp xếp</div>
+
                                                 <ul>
                                                     <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status" > Ứng viên mới
-                                                            <span class="badge pull-right">151</span></label></li>
+                                                        <label class="full-width"><input type="radio" name="candidate_status" value="ung_vien_moi" {{isset($candidate_status)&&$candidate_status=='ung_vien_moi'?'checked':''}} > Ứng viên mới
+                                                            </li>
                                                     <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên mới cập nhật
-                                                            <span class="badge pull-right">240</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên tiềm năng
-                                                            <span class="badge pull-right">360</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên bận
-                                                            <span class="badge pull-right">100</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên có nhu cầu
-                                                            <span class="badge pull-right">100</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên chưa có nhu cầu
-                                                            <span class="badge pull-right">100</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên hẹn phỏng vấn
-                                                            <span class="badge pull-right">100</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên sắp nghỉ
-                                                            <span class="badge pull-right">100</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> Ứng viên là sinh viên
-                                                            <span class="badge pull-right">100</span></label></li>
+                                                        <label class="full-width"><input type="radio" name="candidate_status" value="ung_vien_moi_cap_nhat" {{isset($candidate_status)&&$candidate_status=='ung_vien_moi_cap_nhat'?'checked':''}}  > Ứng viên mới cập nhật
+                                                            </label></li>
+                                                </ul>
+                                            </div>
+                                        </div> <!-- /. candidate sidebar item -->
+
+                                        <div class="candidate-sidebar-item radiobox d-flex" style="">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div>Loại ứng viên</div>
+
+                                                <ul id="latest_diary_d_cantype_id">
+                                                    @if(!empty($candidateTypes))
+                                                    @foreach($candidateTypes as $key => $item)
+                                                            <li>
+                                                                <label class="full-width"><input type="checkbox" {{isset($candidate_type)&&in_array($item->id,$candidate_type)?'checked':''}} name="candidate_type[]" value="{{$item->id}}"> {{$item->canty_name}}
+                                                                    <span class="badge pull-right">{{isset($aggerations['latest_diary_d_cantype_id'][$key])?$aggerations['latest_diary_d_cantype_id'][$key]['doc_count']:''}}</span></label>
+                                                            </li>
+                                                    @endforeach
+                                                    @else
+                                                        <div>Lọc loại ứng viên đang không có dữ liệu</div>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -257,19 +259,8 @@
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Thời gian viết nhật ký</div>
                                                 <div class="row">
-                                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                                        Ngày
-                                                    </div>
-                                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                                                        <input type="text" placeholder="20/10/2018" name="" class="form-group">
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                                        Giờ
-                                                    </div>
-                                                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                                                        <input type="text" placeholder="20:30" name="" class="form-group">
+                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                        <input type="text" placeholder="20/10/2018" value="{{isset($diary_wrote)?$diary_wrote:''}}" data-flag="false" name="diary_wrote" class="form-group datepicker">
                                                     </div>
                                                 </div>
                                             </div>
@@ -280,13 +271,13 @@
                                                 <div>Khoảng thời gian viết nhật ký</div>
                                                 <div class="row">
                                                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                                        <input type="text" name="" placeholder="20/10/2018" class="form-group">
+                                                        <input type="text" name="diary_wrote_from" autocomplete="off" value="{{isset($diary_wrote_from)?$diary_wrote_from:''}}" placeholder="20/10/2018" class="form-group datepicker">
                                                     </div>
                                                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                                                         đến
                                                     </div>
                                                     <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                                                        <input type="text" name="" placeholder="20/10/2018" class="form-group">
+                                                        <input type="text" name="diary_wrote_to" value="{{isset($diary_wrote_to)?$diary_wrote_to:''}}" placeholder="20/10/2018" class="form-group datepicker">
                                                     </div>
                                                 </div>
                                             </div>
@@ -295,22 +286,16 @@
                                         <div class="candidate-sidebar-item radiobox d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Nguồn ứng viên</div>
-                                                <ul>
+                                                <ul id="can_source_id">
+                                                    @if(!empty($sources))
+                                                    @foreach($sources as $key => $item)
                                                     <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> 123job
-                                                            <span class="badge pull-right">151</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> vietnamwork
-                                                            <span class="badge pull-right">240</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> itviec
-                                                            <span class="badge pull-right">360</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> vieclam24h
-                                                            <span class="badge pull-right">100</span></label></li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status"> careerbuilder
-                                                            <span class="badge pull-right">100</span></label></li>
+                                                        <label class="full-width"><input type="checkbox" name="candidate_source[]" {{isset($candidate_source)&&in_array($item->id,$candidate_source)?'checked':''}} value="{{$item->id}}"> {{$item->so_name}}
+                                                            <span class="badge pull-right">{{isset($aggerations['can_source_id'][$key])&&$aggerations['can_source_id'][$key]['key']==$item->id?$aggerations['can_source_id'][$key]['doc_count']:''}}</span></label></li>
+                                                    @endforeach
+                                                        @else
+                                                        <div>Lọc nguồn đang không có dữ liệu</div>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -318,60 +303,55 @@
                                         <div class="candidate-sidebar-item radiobox d-flex evaluate" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Đánh giá</div>
-                                                <ul>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-half-o" aria-hidden="true"></i><span class="badge pull-right">151</span></label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">240</span></label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">360</span></label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
-                                                            <i class="fa fa-star" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">100</span></label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="full-width"><input type="checkbox" name="candidate_status">
-                                                            <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                            <i class="fa fa-star-o" aria-hidden="true"></i><span class="badge pull-right">100</span></label>
-                                                    </li>
+
+                                                <ul id="latest_diary_d_evaluate">
+                                                    @for($i=1;$i<=5;$i++)
+                                                        <li>
+                                                            <label class="full-width"><input type="checkbox" value="{{$i}}" {{isset($candidate_rate)&&in_array($i,$candidate_rate)?'checked':''}} name="candidate_rate[]">
+                                                                <i class="fa fa-star {{$i<1?'-o':''}}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{{$i<2?'-o':''}}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{{$i<3?'-o':''}}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{{$i<4?'-o':''}}" aria-hidden="true"></i>
+                                                                <i class="fa fa-star{{$i<5?'-o':''}}" aria-hidden="true"></i><span class="badge pull-right">{{isset($aggerations['latest_diary_d_evaluate'][$i-1])?$aggerations['latest_diary_d_evaluate'][$i-1]['doc_count']:''}}</span></label>
+                                                        </li>
+                                                        @endfor
                                                 </ul>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
 
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <div>Địa điểm</div>
-                                                <select class="select3" name="workplace[]" multiple="multiple">
-                                                    <option value="hanoi">Hà Nội</option>
-                                                    <option value="hochiminh">Hải Phòng</option>
-                                                    <option value="dannag">Đà Nẵng</option>
-                                                    <option value="haiphong">Hồ Chí Minh</option>
-                                                    <option value="haiduong">Huế</option>
+                                                <div>Thành phố</div>
+                                                <select class="select3" id="city_want_to_work" data-url="{{route('ajax.location.search')}}" name="city">
+                                                    <option value="">Chọn thành phố nơi bạn muốn làm việc</option>
+
+                                                    @if(isset($city))
+                                                        @foreach($city as $item)
+                                                            <option value="{{ $item->id }}" {{old('city',isset($candidate)?(!empty($candidate->location->first()->wp_locations_id)?$candidate->location->first()->wp_locations_id:''):'')==$item->id?'selected':''}}
+                                                            >{{ $item->loc_name  }}</option>
+
+                                                            @if(isset($candidate->location)&&!empty($candidate->location))  unset($candidate->location[0]) @endif
+                                                            {{--<option value="{{ $item->id }}" >{{ $item->loc_name  }}</option>--}}
+                                                        @endforeach
+                                                    @endif
+
+                                                </select>
+                                            </div>
+                                        </div> <!-- /. candidate sidebar item -->
+
+                                        <div class="candidate-sidebar-item age d-flex" style="">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div>Quận huyện</div>
+
+                                                <select class="select3 select4" id="district_want_to_work" data-url="{{route('ajax.location.search')}}" data-parent-id=""
+                                                        name="district[]" multiple="multiple">
+                                                    @foreach (old('district',isset($candidate->location)?$candidate->location->toArray():[]) as $item)
+                                                        @if(!empty(old('district')))
+                                                            <option value="{{$item}}" selected="selected">{{preg_replace('/(\d+\|)/','', $item)}}</option>
+                                                        @elseif(!empty($candidate->location->toArray()))
+                                                            <option value="{{ $item['wp_locations_id'] }}|{{ $item['loc_name']}}" selected="selected">{{ $item['loc_name'] }}</option>
+                                                        @endif
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -407,7 +387,7 @@
                                                 Mức lương
                                                 <div class="range">
                                                     <div class="range-slider">
-                                                        <input id="salary" type="text" data-slider-tooltip="always" /><br />
+                                                        <input id="salary" type="text" name="salary" data-from="{{isset($range_salary[0])?$range_salary[0]:0}}" data-to="{{isset($range_salary[1])?$range_salary[1]:99}}" data-slider-tooltip="always" /><br />
                                                     </div>
                                                 </div>
                                             </div>
@@ -416,10 +396,10 @@
                                         <div class="candidate-sidebar-item age d-flex">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 Giới tính
-                                                <select name="" id="input" class="form-control form-group" required="required">
+                                                <select name="gender" id="input" class="form-control form-group" >
                                                     <option value="">Chọn một giới tính</option>
-                                                    <option value="">Nam</option>
-                                                    <option value="">Nữ</option>
+                                                    <option value="1" {{isset($candidate_gender)&&$candidate_gender==1?'selected':''}}>Nam</option>
+                                                    <option value="0" {{isset($candidate_gender)&&$candidate_gender==0?'selected':''}}>Nữ</option>
                                                     <option value="">Không xác định</option>
                                                 </select>
                                             </div>
@@ -428,14 +408,14 @@
                                         <div class="candidate-sidebar-item age d-flex">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 Kinh nghiệm
-                                                <select name="" id="input" class="form-control form-group" required="required">
+
+                                                <select name="time_experience" id="input" class="form-control form-group" >
                                                     <option value="">Chọn thời gian kinh nghiệm</option>
-                                                    <option value="">1 năm</option>
-                                                    <option value="">2 năm</option>
-                                                    <option value="">3 năm</option>
-                                                    <option value="">4 năm</option>
-                                                    <option value="">5 năm</option>
-                                                    <option value="">Trên 5 năm</option>
+                                                    @if(isset($timeExperience))
+                                                        @foreach($timeExperience as $item)
+                                                            <option value="{{$item->id}}" {{isset($time_experience)&&$time_experience==$item->id?'selected':''}}>{{$item->name}}</option>
+                                                            @endforeach
+                                                        @endif
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -443,15 +423,14 @@
                                         <div class="candidate-sidebar-item age d-flex">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 Trình độ chuyên môn
-                                                <select name="" id="input" class="form-control form-group" required="required">
-                                                    <option value="">Chọn trình độ chuyên môn</option>
-                                                    <option value="">Sinh viên</option>
-                                                    <option value="">Mới ra trường</option>
-                                                    <option value="">Có kinh nghiệm</option>
-                                                    <option value="">Trưởng nhóm</option>
-                                                    <option value="">Quản lý/ Giám sát</option>
-                                                    <option value="">Chuyên gia</option>
-                                                    <option value="">Giám đốc</option>
+
+                                                <select name="qualification" id="input" class="form-control form-group" >
+                                                    @if(isset($qualification))
+                                                        <option value="">Chọn trình độ chuyên môn</option>
+                                                        @foreach($qualification as $item)
+                                                            <option value="{{$item->id}}" {{isset($ci_qualification)&&$ci_qualification==$item->id?'selected':''}}>{{$item->name}}</option>
+                                                            @endforeach
+                                                        @endif
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -459,56 +438,34 @@
                                         <div class="candidate-sidebar-item age d-flex">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 Trình độ ngoại ngữ
-                                                <select name="" id="input" class="form-control form-group" required="required">
+                                                <select name="english_level" id="input" class="form-control form-group" >
                                                     <option value="">Chọn trình độ ngoại ngữ</option>
-                                                    <option value="">Không biết</option>
-                                                    <option value="">Đọc hiểu cơ bản</option>
-                                                    <option value="">Đọc/ viết tốt tài liệu chuyên môn</option>
-                                                    <option value="">Giao tiếp tốt</option>
-                                                    <option value="">Thành thục mọi kỹ năng</option>
+                                                    @if(isset($englishLevel))
+                                                        @foreach($englishLevel as $key => $item)
+                                                            <option value="{{$item->id}}" {{!empty($english_level)&&$english_level==$item->id?'selected':''}}>{{$item->name}}</option>
+                                                            @endforeach
+                                                        @endif
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
 
-                                        <div class="candidate-sidebar-item workform d-flex">
+                                        <div class="candidate-sidebar-item workform radiobox d-flex">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 Loại hình công việc
-                                                <div class="candidate-checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="">
-                                                        Toàn thời gian
-                                                    </label>
-                                                </div>
-                                                <div class="candidate-checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="">
-                                                        Bán thời gian
-                                                    </label>
-                                                </div>
-                                                <div class="candidate-checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="">
-                                                        Thực tập
-                                                    </label>
-                                                </div>
-                                                <div class="candidate-checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="">
-                                                        Thực tập
-                                                    </label>
-                                                </div>
-                                                <div class="candidate-checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="">
-                                                        Thực tập
-                                                    </label>
-                                                </div>
-                                                <div class="candidate-checkbox">
-                                                    <label>
-                                                        <input type="checkbox" value="">
-                                                        Thực tập
-                                                    </label>
-                                                </div>
+                                                @if(isset($typeOfWork))
+                                                    <ul id="candidate_info_ci_type_of_work">
+                                                        @foreach($typeOfWork as $key => $item)
+                                                        <li>
+                                                            <label>
+                                                                <input type="checkbox" {{isset($type_of_work)&&in_array($item->id,$type_of_work)?'checked':''}} name="type_of_work[]" value="{{$item->id}}">
+                                                                {{$item->name}}
+
+                                                            </label>
+                                                            <span class="badge pull-right">{{isset($aggerations['candidate_info_ci_type_of_work'][$key])&&$aggerations['candidate_info_ci_type_of_work'][$key]['key']==$item->id?$aggerations['candidate_info_ci_type_of_work'][$key]['doc_count']:''}}</span>
+                                                        </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
 
@@ -517,7 +474,7 @@
                                                 Tuổi
                                                 <div class="range">
                                                     <div class="range-slider">
-                                                        <input id="age" type="text" data-slider-tooltip="always" /><br />
+                                                        <input id="range_age" type="text" name="range_age" data-from="{{isset($range_age[0])?$range_age[0]:0}}" data-to="{{isset($range_age[1])?$range_age[1]:70}}" data-slider-tooltip="always" /><br />
                                                     </div>
                                                 </div>
                                             </div>
@@ -526,7 +483,7 @@
                                         <div class="candidate-sidebar-item age d-flex">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 Chứng chỉ
-                                                <select name="" id="input" class="form-control form-group" required="required">
+                                                <select name="" id="input" class="form-control form-group" >
                                                     <option value="">Chọn một loại chứng chỉ</option>
                                                     <option value="">Toeic</option>
                                                     <option value="">IELF</option>
@@ -1055,11 +1012,12 @@
                                     </div> <!-- /. candidate-cv -->
                                 </div>
                             </div>
+                            </form>
                         </div><!-- /.card-body -->
                         <div class="card-footer">
                             {{--{{isset($candidates)?$candidates->render():''}}--}}
 
-                            @php echo $paginate['html'] @endphp
+                            {{--@php echo $paginate['html']; @endphp--}}
 
                         </div>
 
@@ -1120,8 +1078,8 @@
                         <li class="candidate-evaluate-header-control-item">
                             <a title="Tùy chọn" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-ellipsis-v" aria-hidden="true"></i></a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#" data-id="{{$item->id}}">Xuất nhật ký</a>
-                                <a class="dropdown-item" href="#" data-id="{{$item->id}}">Chi tiết ứng viên</a>
+                                {{--<a class="dropdown-item" href="#" data-id="{{$item->id}}">Xuất nhật ký</a>--}}
+                                {{--<a class="dropdown-item" href="#" data-id="{{$item->id}}">Chi tiết ứng viên</a>--}}
                             </div>
                         </li>
                         <li class="candidate-evaluate-header-control-item">

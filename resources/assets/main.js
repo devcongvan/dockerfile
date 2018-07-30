@@ -32,7 +32,10 @@ import './js/source';
 
 import './js/skill';
 
+import './js/candidate_search';
+
 import './js/candidate';
 
 import './js/candidate_diary';
+
 

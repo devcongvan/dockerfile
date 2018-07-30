@@ -151,6 +151,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Elasticquent\ElasticquentServiceProvider::class,
+        Cviebrock\LaravelElasticsearch\ServiceProvider::class,
 
         /*
          * Package Service Providers...

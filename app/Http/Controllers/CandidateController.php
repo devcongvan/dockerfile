@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CandidateRequest2;
 use App\Model\Candidate;
+use App\Repositories\CandidateType\CandidateTypeEloquentRepository;
 use App\Repositories\Career\CareerEloquentRepository;
 use App\Repositories\Location\LocationEloquentRepository;
 use App\Repositories\Source\SourceEloquentRepository;
 use function Couchbase\defaultDecoder;
+use Faker\Factory;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 
@@ -16,6 +18,8 @@ use App\Repositories\CandidateSkill\CandidateSkillEloquentRepository;
 use App\Repositories\Workplace\WorkplaceEloquentRepository;
 use App\Repositories\CandiateInfo\CandidateInfoEloquentRepository;
 use App\Repositories\Candidate\CandidateEloquentRepository;
+
+use Elasticsearch\Client;
 
 use App\Model\Location;
 use App\Http\Requests\CandidateRequest;
@@ -32,8 +36,11 @@ class CandidateController extends Controller
     protected $candidateinfoRepository;
     protected $sourceRepository;
     protected $locationRepository;
+    protected $candidateTypeRepository;
 
     protected $careerRepository;
+
+    protected $elasticsearch;
 
     public function __construct(CandidateEloquentRepository $candidateEloquentRepository,
                                 CandidateInfoEloquentRepository $candidateInfoEloquentRepository,
@@ -42,7 +49,9 @@ class CandidateController extends Controller
                                 WorkplaceEloquentRepository $workplaceEloquentRepository,
                                 CareerEloquentRepository $careerEloquentRepository,
                                 SourceEloquentRepository $sourceEloquentRepository,
-                                LocationEloquentRepository $locationEloquentRepository)
+                                LocationEloquentRepository $locationEloquentRepository,
+                                CandidateTypeEloquentRepository $candidateTypeEloquentRepository,
+                                Client $client)
     {
         $this->locationRepository = $locationEloquentRepository;
         $this->candidateSkillRepository = $candidateSkillEloquentRepository;
@@ -54,6 +63,9 @@ class CandidateController extends Controller
 
         $this->sourceRepository = $sourceEloquentRepository;
 
+        $this->candidateTypeRepository = $candidateTypeEloquentRepository;
+
+        $this->elasticsearch = $client;
     }
 
     /**
@@ -62,37 +74,1250 @@ class CandidateController extends Controller
      */
     public function index(Request $request)
     {
+//        if (!empty($request->all()))
+//        {
+//            return response([]);
+//        }
+
+//        Candidate::createIndex();
+//        dd([]);
+
+//        $can=new Candidate;
+
+//        $candidate = Candidate::with(['candidateInfo', 'career:ca_name,ca_slug', 'skill:sk_name,sk_slug', 'latest_diary', 'source:id,so_name,so_slug', 'location:loc_name,loc_slug','candidateType'=>function($query){
+//            $query->orderBy('id','desc');
+//        }])->get();;
 
 
-        $candidate = Candidate::with(['candidateInfo', 'career:ca_name,ca_slug', 'skill:sk_name,sk_slug', 'first_diary', 'source:so_name,so_slug', 'location:loc_name,loc_slug'])->get();
-        $candidate->addToIndex();
-        dd([]);
+//        dd($candidate[84]);
 
-        $total_doc = Candidate::searchByQuery([], [], [], 0)->totalHits();
+//        foreach ($candidate as $key => $item){
+//
+//            $param = [
+//                "entity"          => ["name" => "candidates"],
+//                "text_facets"     => [
+//                    [
+//                        "facet_name"  => "can_name",
+//                        "facet_value" => $item->can_name
+//                    ],
+//                    [
+//                        "facet_name"  => "can_title",
+//                        "facet_value" => $item->can_title
+//                    ]
+//                ],
+//                "keyword_facets"  => [
+//                    [
+//                        "facet_name"  => "can_email",
+//                        "facet_value" => $item->can_email
+//                    ]
+//                ],
+//                "long_facets"     => [
+//                    [
+//                        "facet_name"  => "can_source_id",
+//                        "facet_value" => $item->can_source_id
+//                    ],
+//                    [
+//                        "facet_name"  => "can_year",
+//                        "facet_value" => $item->can_year
+//                    ],
+//                    [
+//                        "facet_name"  => "can_gender",
+//                        "facet_value" => $item->can_gender
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_type_of_work",
+//                        "facet_value" => $item->candidateInfo['ci_type_of_work']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_english_level",
+//                        "facet_value" => $item->candidateInfo['ci_english_level']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_qualification",
+//                        "facet_value" => $item->candidateInfo['ci_qualification']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_time_experience",
+//                        "facet_value" => $item->candidateInfo['ci_time_experience']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_salary_from",
+//                        "facet_value" => $item->candidateInfo['ci_salary_from']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_salary_to",
+//                        "facet_value" => $item->candidateInfo['ci_salary_to']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info.ci_salary_to",
+//                        "facet_value" => $item->candidateInfo['ci_salary_to']
+//                    ],
+//                    [
+//                        "facet_name"  => "latest_diary.d_evaluate",
+//                        "facet_value" => $item->latest_diary['d_evaluate']
+//                    ],
+//                    [
+//                        "facet_name"  => "latest_diary.d_cantype_id",
+//                        "facet_value" => $item->latest_diary['d_cantype_id']
+//                    ]
+//                ],
+//                "date_facets" => [
+//                    [
+//                        "facet_name"  => "can_birthday",
+//                        "facet_value" => $item->can_birthday
+//                    ]
+//                ],
+//                "datetime_facets" => [
+//                    [
+//                        "facet_name"  => "created_at",
+//                        "facet_value" => $item->created_at->format('Y-m-d H:m:s')
+//                    ],
+//                    [
+//                        "facet_name"  => "updated_at",
+//                        "facet_value" => $item->updated_at->format('Y-m-d H:m:s')
+//                    ],
+//                    [
+//                        "facet_name"  => "latest_diary.created_at",
+//                        "facet_value" => $item->latest_diary['created_at']->format('Y-m-d H:m:s')
+//                    ]
+//                ],
+//                "aggs_facets"=>[
+//                    [
+//                        "facet_name"  => "latest_diary_d_cantype_id",
+//                        "facet_value" => $item->latest_diary['d_cantype_id']
+//                    ],
+//                    [
+//                        "facet_name"  => "can_source_id",
+//                        "facet_value" => $item->can_source_id
+//                    ],
+//                    [
+//                        "facet_name"  => "latest_diary_d_evaluate",
+//                        "facet_value" => $item->latest_diary['d_evaluate']
+//                    ],
+//                    [
+//                        "facet_name"  => "candidate_info_ci_type_of_work",
+//                        "facet_value" => $item->candidateInfo['ci_type_of_work']
+//                    ]
+//                ],
+//                "data" => $item
+//
+//            ];
+////
+//            $can->addDocToIndex($item->id,$param);
+////
+//        }
 
-        $limit = 2;
+//        dd($candidate);
+
+        $candidateTypes = $this->candidateTypeRepository->getAll();
+        $sources = $this->sourceRepository->getAll();
+
+        $query = [];
+
+        if (!empty($request->all()))
+        {
+            $query['bool']['filter'] = [];
+        }
+
+        // search name
+        if (!empty($request->candidate_name))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "text_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "text_facets.facet_name" => [
+                                            "value" => "can_name"
+                                        ]
+                                    ]],
+                                [
+                                    "match_phrase_prefix" => [
+                                        "text_facets.facet_value" => $request->get('candidate_name')
+                                    ]]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+        }
+
+        // search title
+        if (!empty($request->candidate_title))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "text_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "text_facets.facet_name" => [
+                                            "value" => "can_title"
+                                        ]
+                                    ]],
+                                [
+                                    "match_phrase_prefix" => [
+                                        "text_facets.facet_value" => $request->get('candidate_title')
+                                    ]]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        $sort = [];
+
+        if ((isset($request->candidate_status) && $request->candidate_status == 'ung_vien_moi'))
+        {
+            $sort = [
+                "long_facets.facet_value" => [
+                    "order"         => "desc",
+                    "nested_path"   => "long_facets",
+                    "nested_filter" => [
+                        "term" => [
+                            "long_facets.facet_name" => "can_id"]
+                    ]
+                ]
+            ];
+        }
+
+        // search ứng viên mới cập nhật
+        if ((isset($request->candidate_status) && $request->candidate_status == 'ung_vien_moi_cap_nhat'))
+        {
+            $sort = [
+                "datetime_facets.facet_value" => [
+                    "order"         => "desc",
+                    "nested_path"   => "datetime_facets",
+                    "nested_filter" => [
+                        "term" => [
+                            "datetime_facets.facet_name" => "updated_at"]
+                    ]
+                ]
+            ];
+        }
+
+        // search loại ứng viên
+        if (isset($request->candidate_type))
+        {
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "latest_diary.d_cantype_id"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('candidate_type')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+
+        };
+
+        // search ứng viên theo thời gian viết nhật ký
+        if (isset($request->diary_wrote))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "datetime_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "datetime_facets.facet_name" => [
+                                            "value" => "latest_diary.created_at"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "datetime_facets.facet_value" => [
+                                            "from"   => $request->get('diary_wrote'),
+                                            "to"     => $request->get('diary_wrote'),
+                                            "format" => "dd-MM-YYYY"
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+        }
+        else if (isset($request->diary_wrote_from) || isset($request->diary_wrote_to))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "datetime_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "datetime_facets.facet_name" => [
+                                            "value" => "latest_diary.created_at"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "datetime_facets.facet_value" => [
+                                            "from"   => isset($request->diary_wrote_from) ? $request->diary_wrote_from : 'now-20y/y',
+                                            "to"     => isset($request->diary_wrote_to) ? $request->diary_wrote_to : 'now',
+                                            "format" => "dd-MM-YYYY"
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+        }
+
+        // search ứng viên theo nguồn
+        if (isset($request->candidate_source))
+        {
+
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "can_source_id"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('candidate_source')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+        }
+
+        // search ứng viên theo giới tính
+        if (isset($request->gender))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "can_gender"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('gender')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+        }
+
+        // search range age
+        if (isset($request->range_age) && $request->get('range_age') !== '0,70')
+        {
+            $ages = explode(',', $request->get('range_age'));
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "date_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "date_facets.facet_name" => [
+                                            "value" => "can_birthday"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "date_facets.facet_value" => [
+                                            "gte" => !empty($ages[1]) ? (date('Y') - $ages[1]) . "-01-01" : "1930-01-01",
+                                            "lte" => !empty($ages[0]) ? (date('Y') - $ages[0]) . "-12-30" : date('Y') . "-12-30"
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search loại hình công việc
+        if (isset($request->type_of_work))
+        {
+
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "candidate_info.ci_type_of_work"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('type_of_work')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+        }
+
+        // search theo tình độ ngọi ngữ
+        if (isset($request->english_level))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_english_level"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('english_level')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search trình độ chuyên môn
+        if (isset($request->qualification))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_qualification"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('qualification')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search thời gian làm việc
+        if (isset($request->time_experience))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_time_experience"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('time_experience')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search theo mức lương
+        if (isset($request->salary))
+        {
+            $arrSalary = explode(',', $request->get('salary'));
+
+            $query['bool']['filter'][] = [
+                ["nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_salary_from"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "long_facets.facet_value" => [
+                                            "gte" => $arrSalary[0]
+                                        ]]
+                                ]
+                            ]
+                        ]]]],
+                ["nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_salary_to"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "long_facets.facet_value" => [
+                                            "lte" => $arrSalary[1]
+                                        ]]
+                                ]
+                            ]
+                        ]]]]
+            ];
+
+        }
+
+        // search theo đánh giá
+        if (isset($request->candidate_rate))
+        {
+
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "latest_diary.d_evaluate"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('candidate_rate')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+
+        }
+
+        $limit = 15;
+
+        $total_doc = Candidate::searchByQuery($query, [], [], 0)->totalHits();
 
         $paginate = paginate($total_doc, $limit);
 
         $offset = $paginate['offset'];
 
-        $html = $paginate['html'];
-
-        $sort=['id'=>'desc'];
+        // aggregations
+        $aggregations = [
+            "aggs_facets" => [
+                "nested" => [
+                    "path" => "aggs_facets"
+                ],
+                "aggs"   => [
+                    "facet_name" => [
+                        "terms" => [
+                            "field" => "aggs_facets.facet_name",
+                            "size"  => "20"
+                        ],
+                        "aggs"  => [
+                            "facet_value" => [
+                                "terms" => [
+                                    "field" => "aggs_facets.facet_value",
+                                    "order" => ["_key" => "asc"],
+                                    "size"  => "20"
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
         // all candidates on Elasticsearch
-        $candidates = Candidate::searchByQuery([], [], [], $limit, $offset,$sort);
+        $candidates = Candidate::searchByQuery($query, $aggregations, [], $limit, $offset, $sort);
+
+//        dd($candidates[5]->id);
+
+        // aggregation
+        $arrAggregations = $candidates->getAggregations()['aggs_facets']['facet_name']['buckets'];
+        $arrAggregationsPluck = array_pluck($arrAggregations, 'key');
+        $newArrAggregations = [];
+        foreach ($arrAggregationsPluck as $key => $item)
+        {
+            $newArrAggregations[$item] = $arrAggregations[$key]['facet_value']['buckets'];
+        }
+
+        $cityCondition = [
+            'select' => ['id', 'loc_name'],
+            'where'  => ['loc_parent_id' => 0]
+        ];
+
+        $path = '../public/json/type_of_work.json';
+        $typeOfWork = json_decode(file_get_contents($path));
+
+        $englishLevel = json_decode(file_get_contents('../public/json/english_level.json'));
+
+        $qualification = json_decode(file_get_contents('../public/json/qualification.json'));
+
+        $time_experience = json_decode(file_get_contents('../public/json/time_experience.json'));
 
         $data = [
-            'paginate'   => [
-                'html'  => $html,
-                'from'  => $offset + 1,
-                'to'    => ($offset + count($candidates)),
-                'total' => $total_doc
+            'candidateTypes'   => $candidateTypes,
+            'sources'          => $sources,
+            'city'             => $this->locationRepository->getAll($cityCondition),
+            'candidates'       => $candidates,
+            'paginate'         => [
+                'html'  => $paginate['html'],
+                'total' => $total_doc,
+                'first' => $offset + 1,
+                'last'  => ($offset + $limit) > $total_doc ? $total_doc : $offset + $limit
             ],
-            'candidates' => $candidates
+            'aggerations'      => $newArrAggregations,
+            'candidate_status' => $request->get('candidate_status'),
+            'candidate_type'   => $request->get('candidate_type'),
+            'candidate_name'   => $request->get('candidate_name'),
+            'candidate_title'  => $request->get('candidate_title'),
+            'diary_wrote'      => $request->get('diary_wrote'),
+            'diary_wrote_from' => $request->get('diary_wrote_from'),
+            'diary_wrote_to'   => $request->get('diary_wrote_to'),
+            'candidate_source' => $request->get('candidate_source'),
+            'district'         => $request->get('district'),
+            'range_age'        => isset($ages) ? $ages : [],
+            'typeOfWork'       => $typeOfWork->type_of_work,
+            'type_of_work'     => $request->get('type_of_work'),
+            'englishLevel'     => $englishLevel->english,
+            'english_level'    => $request->get('english_level'),
+            'qualification'    => $qualification->qualification,
+            'ci_qualification' => $request->get('qualification'),
+            'timeExperience'   => $time_experience->experience,
+            'time_experience'  => $request->time_experience,
+            'range_salary'     => isset($arrSalary) ? $arrSalary : [],
+            'candidate_rate'   => isset($request->candidate_rate) ? $request->candidate_rate : [],
+            'candidate_gender' => isset($request->gender) ? $request->get('gender') : []
         ];
 
         return view('candidate.index')->with($data);
+    }
+
+    public function searchAjax(Request $request)
+    {
+
+        $candidateTypes = $this->candidateTypeRepository->getAll();
+        $sources = $this->sourceRepository->getAll();
+
+        $query = [];
+
+        if (!empty($request->all()))
+        {
+            $query['bool']['filter'] = [];
+        }
+
+        // search name
+        if (!empty($request->candidate_name))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "text_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "text_facets.facet_name" => [
+                                            "value" => "can_name"
+                                        ]
+                                    ]],
+                                [
+                                    "match_phrase_prefix" => [
+                                        "text_facets.facet_value" => $request->get('candidate_name')
+                                    ]]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+
+        }
+
+        // search title
+        if (!empty($request->candidate_title))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "text_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "text_facets.facet_name" => [
+                                            "value" => "can_title"
+                                        ]
+                                    ]],
+                                [
+                                    "match_phrase_prefix" => [
+                                        "text_facets.facet_value" => $request->get('candidate_title')
+                                    ]]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        $sort = [];
+
+        if ((isset($request->candidate_status) && $request->candidate_status == 'ung_vien_moi'))
+        {
+            $sort = [
+                "long_facets.facet_value" => [
+                    "order"         => "desc",
+                    "nested_path"   => "long_facets",
+                    "nested_filter" => [
+                        "term" => [
+                            "long_facets.facet_name" => "can_id"]
+                    ]
+                ]
+            ];
+        }
+
+        // search ứng viên mới cập nhật
+        if ((isset($request->candidate_status) && $request->candidate_status == 'ung_vien_moi_cap_nhat'))
+        {
+            $sort = [
+                "datetime_facets.facet_value" => [
+                    "order"         => "desc",
+                    "nested_path"   => "datetime_facets",
+                    "nested_filter" => [
+                        "term" => [
+                            "datetime_facets.facet_name" => "updated_at"]
+                    ]
+                ]
+            ];
+        }
+
+        // search loại ứng viên
+        if (isset($request->candidate_type))
+        {
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "latest_diary.d_cantype_id"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('candidate_type')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+
+        };
+
+        // search ứng viên theo thời gian viết nhật ký
+        if (isset($request->diary_wrote))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "datetime_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "datetime_facets.facet_name" => [
+                                            "value" => "latest_diary.created_at"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "datetime_facets.facet_value" => [
+                                            "from"   => $request->get('diary_wrote'),
+                                            "to"     => $request->get('diary_wrote'),
+                                            "format" => "dd-MM-YYYY"
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+        }
+        else if (isset($request->diary_wrote_from) || isset($request->diary_wrote_to))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "datetime_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "datetime_facets.facet_name" => [
+                                            "value" => "latest_diary.created_at"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "datetime_facets.facet_value" => [
+                                            "from"   => isset($request->diary_wrote_from) ? $request->diary_wrote_from : 'now-20y/y',
+                                            "to"     => isset($request->diary_wrote_to) ? $request->diary_wrote_to : 'now',
+                                            "format" => "dd-MM-YYYY"
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+        }
+
+        // search ứng viên theo nguồn
+        if (isset($request->candidate_source))
+        {
+
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "can_source_id"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('candidate_source')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+        }
+
+        // search ứng viên theo giới tính
+        if (isset($request->gender))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "can_gender"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('gender')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+        }
+
+        // search range age
+        if (isset($request->range_age) && $request->get('range_age') !== '0,70')
+        {
+            $ages = explode(',', $request->get('range_age'));
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "date_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "date_facets.facet_name" => [
+                                            "value" => "can_birthday"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "date_facets.facet_value" => [
+                                            "gte" => !empty($ages[1]) ? (date('Y') - $ages[1]) . "-01-01" : "1930-01-01",
+                                            "lte" => !empty($ages[0]) ? (date('Y') - $ages[0]) . "-12-30" : date('Y') . "-12-30"
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search loại hình công việc
+        if (isset($request->type_of_work))
+        {
+
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "candidate_info.ci_type_of_work"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('type_of_work')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+        }
+
+        // search theo tình độ ngọi ngữ
+        if (isset($request->english_level))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_english_level"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('english_level')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search trình độ chuyên môn
+        if (isset($request->qualification))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_qualification"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('qualification')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search thời gian làm việc
+        if (isset($request->time_experience))
+        {
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_time_experience"
+                                        ]
+                                    ]],
+                                [
+                                    "term" => [
+                                        "long_facets.facet_value" => [
+                                            "value" => $request->get('time_experience')
+                                        ]]
+                                ]
+                            ]
+                        ]]]
+            ];
+
+        }
+
+        // search theo mức lương
+        if (isset($request->salary))
+        {
+            $arrSalary = explode(',', $request->get('salary'));
+
+            $query['bool']['filter'][] = [
+                ["nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_salary_from"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "long_facets.facet_value" => [
+                                            "gte" => $arrSalary[0]
+                                        ]]
+                                ]
+                            ]
+                        ]]]],
+                ["nested" => [
+                    "path"  => "long_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "long_facets.facet_name" => [
+                                            "value" => "candidate_info.ci_salary_to"
+                                        ]
+                                    ]],
+                                [
+                                    "range" => [
+                                        "long_facets.facet_value" => [
+                                            "lte" => $arrSalary[1]
+                                        ]]
+                                ]
+                            ]
+                        ]]]]
+            ];
+
+        }
+
+        // search theo đánh giá
+        if (isset($request->candidate_rate))
+        {
+
+            $query['bool']['filter'][] = [
+                "bool" => [
+                    "should" => [
+                        [
+                            "nested" => [
+                                "path"  => "long_facets",
+                                "query" => [
+                                    "bool" => [
+                                        "filter" => [
+                                            [
+                                                "term" => [
+                                                    "long_facets.facet_name" => [
+                                                        "value" => "latest_diary.d_evaluate"
+                                                    ]
+                                                ]],
+                                            [
+                                                "terms" => [
+                                                    "long_facets.facet_value" => $request->get('candidate_rate')
+                                                ]]
+                                        ]
+                                    ]
+                                ]
+                            ]]
+                    ]
+                ]
+            ];
+
+        }
+
+        $total_doc = Candidate::searchByQuery($query, [], [], 0)->totalHits();
+
+        $limit = !empty($request->limit) ? $request->get('limit') : 15;
+
+        $totalPage = ceil($total_doc / $limit);
+
+        $page = !empty($request->page) ? $request->get('page') : 0;
+
+        $offset = ($page - 1) * $limit;
+
+        // aggregations
+        $aggregations = [
+            "aggs_facets" => [
+                "nested" => [
+                    "path" => "aggs_facets"
+                ],
+                "aggs"   => [
+                    "facet_name" => [
+                        "terms" => [
+                            "field" => "aggs_facets.facet_name",
+                            "size"  => "20"
+                        ],
+                        "aggs"  => [
+                            "facet_value" => [
+                                "terms" => [
+                                    "field" => "aggs_facets.facet_value",
+                                    "order" => ["_key" => "asc"],
+                                    "size"  => "20"
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        // all candidates on Elasticsearch
+        $candidates = Candidate::searchByQuery($query, $aggregations, [], $limit, $offset, $sort);
+
+        // aggregation
+        $arrAggregations = $candidates->getAggregations()['aggs_facets']['facet_name']['buckets'];
+        $arrAggregationsPluck = array_pluck($arrAggregations, 'key');
+        $newArrAggregations = [];
+        foreach ($arrAggregationsPluck as $key => $item)
+        {
+            $newArrAggregations[$item] = $arrAggregations[$key]['facet_value']['buckets'];
+        }
+
+        $cityCondition = [
+            'select' => ['id', 'loc_name'],
+            'where'  => ['loc_parent_id' => 0]
+        ];
+
+        $path = '../public/json/type_of_work.json';
+        $typeOfWork = json_decode(file_get_contents($path));
+
+        $englishLevel = json_decode(file_get_contents('../public/json/english_level.json'));
+
+        $qualification = json_decode(file_get_contents('../public/json/qualification.json'));
+
+        $time_experience = json_decode(file_get_contents('../public/json/time_experience.json'));
+
+        $data = [
+            'candidates'  => $candidates,
+            'paginate'    => [
+                'total'     => $total_doc,
+                'first'     => $offset + 1,
+                'last'      => ($offset + $limit) > $total_doc ? $total_doc : $offset + $limit,
+                'totalPage' => $totalPage
+            ],
+            'aggerations' => $newArrAggregations,
+        ];
+
+        return response($data);
     }
 
     public function store()
@@ -111,8 +1336,7 @@ class CandidateController extends Controller
             'qualification'   => json_decode(file_get_contents('../public/json/qualification.json'), true)['qualification'],
             'english_level'   => json_decode(file_get_contents('../public/json/english_level.json'), true)['english'],
             'type_of_work'    => json_decode(file_get_contents('../public/json/type_of_work.json'), true)['type_of_work'],
-            'salary'          => json_decode(file_get_contents('../public/json/salary.json'), true)['salary'],
-
+            'salary'          => json_decode(file_get_contents('../public/json/salary.json'), true)['salary']
         ];
 
         return view('candidate.add')->with($data);
@@ -562,6 +1786,7 @@ class CandidateController extends Controller
 
     public function update($id)
     {
+
         $cityCondition = [
             'select' => ['id', 'loc_name'],
             'where'  => ['loc_parent_id' => 0]

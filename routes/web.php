@@ -32,6 +32,8 @@ Route::group(['prefix' => 'candidate'], function() {
     Route::group(['prefix' => 'ajax'], function() {
         Route::post('show', 'CandidateController@showAjax')->name('candidate.ajax.show');
 
+        Route::post('search','CandidateController@searchAjax')->name('candidate.ajax.search');
+
         Route::post('delete', 'CandidateController@destroyAjax')->name('candidate.ajax.delete');
     });
 });

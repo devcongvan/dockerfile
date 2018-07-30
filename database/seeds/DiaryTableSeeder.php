@@ -11,18 +11,29 @@ class DiaryTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0;$i<50;$i++){
-            DB::table('diarys')->insert([
-                'd_cantype_id' => rand(1,6),
-                'd_can_id' => 31,
-                'd_set_calendar' => rand(1,100000000),
-                'd_set_calendar' => rand(1,100000000),
-                'd_set_time' => rand(1,100000000),
-                'd_notice_before' => rand(1,100000000),
-                'd_note' => str_random('100'),
-                'created_at' => now()->format('Y-m-d H:i:s')
-            ]);
+        $faker=Faker\Factory::create();
+
+        $limit=1000;
+
+        $arr=[null,1,2,3,4,5];
+
+        for ($i=1;$i<=$limit;$i++){
+            $randomKey=array_rand($arr);
+            for ($j = 1; $j <= 2; $j++)
+            {
+                DB::table('diarys')->insert([
+                    'd_cantype_id'    => rand(1, 6),
+                    'd_can_id'        => $i,
+                    'd_evaluate'=> $arr[$randomKey],
+                    'd_set_calendar'  => $faker->date(),
+                    'd_set_time'      => $faker->time(),
+                    'd_notice_before' => $faker->text,
+                    'd_note'          => $faker->realText(),
+                    'created_at'      => now()->format('Y-m-d H:i:s')
+                ]);
+            }
         }
+
 
     }
 }
