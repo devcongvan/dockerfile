@@ -3,29 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SkillRequest;
-use App\Repositories\Skill\SkillEloquentRepository;
 use Illuminate\Http\Request;
+use App\Repositories\Eloquents\SkillRepository;
 
 class SkillController extends Controller
 {
     protected $skillRepository;
 
-    public function __construct(SkillEloquentRepository $skillEloquentRepository)
+    public function __construct(SkillRepository $skillRepository)
     {
-        $this->skillRepository=$skillEloquentRepository;
+        $this->skillRepository=$skillRepository;
     }
 
     public function index(Request $request){
 
-//        dd($request->all());
+        $condition = [];
+        $name = strip_tags($request->get('name'));
+        if (!empty($name))
+        {
+            $condition['wheres'] = [['ca_name', 'like', '%' . $name . '%']];
+//            dd($condition);
+        }
 
-        $condition['orderById']='Desc';
+        $option = strip_tags($request->get('option'));
+        if (!empty($option) && $option == 'new')
+        {
+            $condition['orderby'] = ['created_at', 'desc'];
+        }
 
-        $condition['name']=$request->get('name');
+        $condition['paginate'] = 10;
 
-        $condition['searchOption']=$request->get('option');
-
-        $skills=$this->skillRepository->getAll($condition,3);
+        $skills=$this->skillRepository->getAll($condition);
 
         return view('skill.index',compact('skills'));
     }
@@ -38,7 +46,11 @@ class SkillController extends Controller
 
         $searchText=$request->get('q');
 
-        $result=$this->skillRepository->search($searchText);
+        $condition['wheres']=[
+            ['sk_name', 'like', '%' . $searchText . '%']
+        ];
+
+        $result=$this->skillRepository->getAll($condition);
 
         $formatted_tags = [];
 

@@ -3,34 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repositories\Location\LocationEloquentRepository;
+use App\Repositories\Eloquents\LocationRepository;
 
 class LocationController extends Controller
 {
     protected $locationRepository;
 
-    public function __construct(LocationEloquentRepository $locationEloquentRepository)
+    public function __construct(LocationRepository $locationRepository)
     {
-        $this->locationRepository=$locationEloquentRepository;
+        $this->locationRepository=$locationRepository;
     }
 
     public function searchAjaxSelect2(Request $request){
         
         $term = trim($request->loc_name);
 
-
-
-        $searchArray=[];
+        $condition['wheres']=[];
 
         if ($request->has('loc_name')){
-            $searchArray['loc_name']=$request->get('loc_name');
+            $condition['wheres'][]=['loc_name','like','%'.$term.'%'];
         }
-
         if ($request->has('loc_parent_id')){
-            $searchArray['loc_parent_id']=$request->get('loc_parent_id');
+            $condition['wheres'][] = ['loc_parent_id', '=', $request->get('loc_parent_id')];
         }
 
-        $result=$this->locationRepository->search($searchArray);
+        $result=$this->locationRepository->getAll($condition);
 
         $formatted_tags = [];
 

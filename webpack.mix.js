@@ -15,17 +15,13 @@ mix.js('resources/assets/main.js', 'public/js/main2.js')
     .autoload({
         jquery: ['$', 'window.jQuery', 'jQuery'],
     })
-    .sass('resources/assets/main.scss', 'public/css/main2.css');
+    .sass('resources/assets/main.scss', 'public/css/main2.css').copy('node_modules/line-awesome/dist/fonts', 'public/fonts');;
 
 mix.webpackConfig({
     module: {
         rules: [
             // your rules may go here
             // next rules are just example, you can modify them according to your needs
-            {
-                test: /\.(woff|woff2|eot|ttf|svg)(\?.*$|$)/,
-                loader: 'file-loader?name=[name].[ext]?[hash]'
-            },
             {
                 test: /\.(jpe?g|png|gif|svg)$/i,
                 loader: "file-loader?name=/resources/assets/jqueryautocomplete/images/[name].[ext]"

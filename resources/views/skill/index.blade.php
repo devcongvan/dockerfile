@@ -17,7 +17,7 @@
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
                                 <button type="button" data-toggle="modal" data-backdrop="static" data-target="#candidate-popup"
-                                        class="btn btn-default btn-blue"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm kỹ năng</button>
+                                        class="btn btn-default btn-common"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm kỹ năng</button>
                             </li>
                         </ol>
                     </div><!-- /.col -->
@@ -54,7 +54,7 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    <button type="submit" class="btn btn-default full-width btn-blue"><i class="nav-icon fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                                    <button type="submit" class="btn btn-default full-width btn-common"><i class="nav-icon fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
                                 </div>
                             </div><!-- /.card-header -->
                             </form>
@@ -81,11 +81,11 @@
                                                     <td class="result-index">{{$n++}}</td>
                                                     <td class="result-name">{{$item->sk_name}}</td>
                                                     <td>124</td>
-                                                    <td><button type="button" data-id="{{$item->id}}" class="btn btn-default
+                                                    <td><button type="button" data-id="{{$item->id}}" class="btn btn-common btn-default
                                                     skill-list-edit" style=""><i class="fa fa-pencil" aria-hidden="true"></i></button>
                                                         <button type="button" data-id="{{$item->id}}"
                                                                 data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm"
-                                                                class="btn btn-default skill-list-delete" style=""><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                                                class="btn btn-default btn-common skill-list-delete" style=""><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                                 </tr>
                                                 @endforeach
                                                 </tbody>
@@ -128,8 +128,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Đóng</button><button type="button" class="btn btn-blue btn-default candidate-popup-button-add"><i class="fa fa-plus" aria-hidden="true"></i> Thêm</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-edit hide"><i class="fa fa-wrench" aria-hidden="true"></i> Sửa</button>
+                        <button type="button" class="btn btn-secondary btn-common btn-close" data-dismiss="modal"> Đóng</button><button data-create-url="{{route('skill.ajax.create')}}" type="button" class="btn btn-common btn-default candidate-popup-button-add"><i class="fa fa-plus" aria-hidden="true"></i> Thêm</button>
+                        <button data-edit-url="{{route('skill.ajax.update')}}" type="button" class="btn btn-common btn-default candidate-popup-button-edit hide"><i class="fa fa-wrench" aria-hidden="true"></i> Sửa</button>
                     </div>
                 </div>
 
@@ -156,8 +156,8 @@
                         {{--</div>--}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Không</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-trash"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+                        <button type="button" class="btn btn-secondary btn-common btn-close" data-dismiss="modal"> Không</button>
+                        <button data-delete-url="{{route('skill.ajax.delete')}}" type="button" class="btn btn-common btn-default candidate-popup-button-trash"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
                     </div>
                 </div>
 

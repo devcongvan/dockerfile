@@ -8,9 +8,10 @@ class Location extends Model
 {
     protected $table='locations';
 
-    public function workplace()
-    {
-        return $this->hasMany(Workplace::class, 'wp_locations_id');
-    }
+    protected $fillable=[
+        'loc_name','loc_slug'
+    ];
+
+
 
 }

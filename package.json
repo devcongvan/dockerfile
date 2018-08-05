@@ -28,11 +28,15 @@
     "popper.js": "^1.12",
     "postcss": "^6.0.23",
     "postcss-loader": "^2.1.5",
+    "quill": "^1.3.6",
     "sass-loader": "^7.0.3",
     "select2": "^4.0.6-rc.1",
     "simplebar": "^2.6.1",
     "toastr": "^2.1.4",
     "vue": "^2.5.7",
-    "webpack-cli": "^3.0.8"
+    "webpack-cli": "^4.0.0"
+  },
+  "dependencies": {
+    "ajv": "^6.5.2"
   }
 }

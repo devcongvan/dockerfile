@@ -9,10 +9,10 @@
             <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                 <div class="candidateBox-row row ml-14">
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        Họ tên <span class="important">*</span>
+                        Họ tên <span class="c-important">*</span>
                     </div>
                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                        <input type="text" name="can_name" value="{{old('can_name',isset($candidate->can_name)?$candidate->can_name:'')}}" placeholder="Nguyễn Văn A" class="form-group candidate-input datepicker">
+                        <input type="text" name="can_name" value="{{old('can_name',isset($candidate->can_name)?$candidate->can_name:'')}}" placeholder="Nguyễn Văn A" class="form-group candidate-input">
 
                         @if($errors->has('can_name'))
                             <span style="color: red;">{{$errors->first('can_name')}}</span>
@@ -21,7 +21,7 @@
                 </div> <!-- /. candidateBox row -->
                 <div class="candidateBox-row row ml-14">
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        Ngày sinh/Năm sinh <span class="important">*</span>
+                        Ngày sinh/Năm sinh <span class="c-important">*</span>
                     </div>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <input type="text" name="can_birthday" data-provide="datepicker" placeholder="10/10/2000" value="{{old('can_birthday',isset($candidate->can_birthday)?date("d-m-Y", strtotime($candidate->can_birthday)):'')}}" class="datepicker form-group candidate-input">
@@ -32,7 +32,7 @@
                 </div>
                 <div class="candidateBox-row row ml-14">
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        Giới tính <span class="important">*</span>
+                        Giới tính <span class="c-important">*</span>
                     </div>
                     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                         <label style="margin-right: 50px;">

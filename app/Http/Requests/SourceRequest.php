@@ -33,7 +33,7 @@ class SourceRequest extends FormRequest
     public function rules(Request $request)
     {
         return [
-            'so_name'=>'required|max:191|unique:sources,so_name|is_domain'.$request->get('id')
+            'so_name'=>'is_domain|required|max:191|unique:sources,so_name,'.$request->get('id')
 
         ];
     }

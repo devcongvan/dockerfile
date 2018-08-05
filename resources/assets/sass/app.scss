@@ -1,14 +1,16 @@
-
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
-// Variables
-@import "variables";
-
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
-
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+@import './helpers/variables';
+@import './helpers/mixins';
+//helpers
+@import './components/core';
+@import './components/button';
+@import './components/modal';
+@import './components/candidate_evaluate';
+@import './components/quill';
+@import './components/wickedpicker';
+// components
+@import './layouts/header';
+@import './layouts/sidebar';
+@import './layouts/footer';
+// page
+@import './pages/common';
+@import './pages/candidate';

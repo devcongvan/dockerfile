@@ -12,10 +12,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Font Awesome -->
     <!-- <link rel="stylesheet" href="plugins/font-awesome/css/font-awesome.min.css"> -->
-
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css">
+    <link rel="stylesheet" href="fonts/googlefont/fonts.css">
+    {{--<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">--}}
+    {{--<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">--}}
 
 
     <link rel="stylesheet" type="text/css" href="css/main2.css">
@@ -43,12 +42,19 @@
 
 
 {{--<script src="js/main.js"></script>--}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>--}}
 
 <script src="js/main2.js"></script>
 
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 @yield('script')
+
+@if(session('toastr'))
+    <script>
+        var TYPE_MESSAGE = "{{session('toastr.type')}}";
+        var MESSAGE = "{{session('toastr.message')}}";
+    </script>
+@endif
 
 </body>
 </html>

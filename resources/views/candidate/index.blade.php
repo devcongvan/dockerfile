@@ -17,7 +17,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
-                                <a href="{{route('candidate.new')}}" class="btn btn-default btn-blue"><i class="fa fa-plus" aria-hidden="true"></i> Thêm ứng viên</a>
+                                <a href="{{route('candidate.new')}}" class="btn btn-default btn-common "><i class="fa fa-plus" aria-hidden="true"></i> Thêm ứng viên</a>
                             </li>
                         </ol>
                     </div><!-- /.col -->
@@ -36,7 +36,11 @@
                         <!-- Custom tabs (Charts with tabs)-->
 
                         <div class="card ">
-                            <form action="" method="post" id="candidate-form-search" data-url="{{route('candidate.ajax.search')}}">
+                            <form id="exportpdf-form" action="{{route('candidate.exportt')}}" method="post">
+                                @csrf
+                                <input type="hidden" id="exportpdf-form-html" name="html" value="">
+                            </form>
+                            <form action="" method="post" id="candidate-form-search" data-url="{{route('candidate.ajax.search')}}" data-showcandidate-url="{{route('candidate.ajax.show')}}">
                                 <input type="hidden" name="limit" value="15" >
                                 <input type="hidden" name="page" value="1" >
                             <div class=" p-0 row">
@@ -47,16 +51,16 @@
                                     <input type="text" name="candidate_title" id="vitricongviec" value="{{$candidate_title or ''}}" class="form-group" placeholder="Vị trí như: Lập trình viên, ...">
                                 </div>
                                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-                                    <button type="submit" id="btn-search" class="btn btn-default full-width btn-blue"> Tìm kiếm</button>
+                                    <button type="submit" id="btn-search" class="btn btn-default full-width  btn-common"> Tìm kiếm</button>
                                 </div>
 
                             </div><!-- /.card-header -->
                             {{--@if($total=$candidates->totalHits())--}}
                                 <div class="card-searchinfo">
-                                    <b>{{$paginate['first']}} - {{$paginate['last']}} </b>trong<b> {{$paginate['total']}} </b> ứng viên <span></span>
+                                    {{--<b>{{$paginate['first']}} - {{$paginate['last']}} </b>trong<b> {{$paginate['total']}} </b> ứng viên <span></span>--}}
                                 </div>
                             {{--@endif--}}
-                            <div class="card-body candidate-list" data-edit-url="{{route('candidate.edit',['id'=>'/'])}}">
+                            <div class="card-body candidate-list" data-edit-url="{{route('candidate.edit',['id'=>'/'])}}" data-delete-url="{{route('candidate.ajax.delete')}}">
                                 <div class="row">
                                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 candidate-main">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="result">
@@ -322,13 +326,11 @@
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Thành phố</div>
-                                                <select class="select3" id="city_want_to_work" data-url="{{route('ajax.location.search')}}" name="city">
-                                                    <option value="">Chọn thành phố nơi bạn muốn làm việc</option>
-
+                                                <select class="select3" id="city_want_to_work" data-url="{{route('location.ajax.search')}}" name="city[]">
+                                                    <option></option>
                                                     @if(isset($city))
                                                         @foreach($city as $item)
-                                                            <option value="{{ $item->id }}" {{old('city',isset($candidate)?(!empty($candidate->location->first()->wp_locations_id)?$candidate->location->first()->wp_locations_id:''):'')==$item->id?'selected':''}}
-                                                            >{{ $item->loc_name  }}</option>
+                                                            <option value="{{ $item->id}}" >{{ $item->loc_name  }}</option>
 
                                                             @if(isset($candidate->location)&&!empty($candidate->location))  unset($candidate->location[0]) @endif
                                                             {{--<option value="{{ $item->id }}" >{{ $item->loc_name  }}</option>--}}
@@ -343,15 +345,9 @@
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Quận huyện</div>
 
-                                                <select class="select3 select4" id="district_want_to_work" data-url="{{route('ajax.location.search')}}" data-parent-id=""
-                                                        name="district[]" multiple="multiple">
-                                                    @foreach (old('district',isset($candidate->location)?$candidate->location->toArray():[]) as $item)
-                                                        @if(!empty(old('district')))
-                                                            <option value="{{$item}}" selected="selected">{{preg_replace('/(\d+\|)/','', $item)}}</option>
-                                                        @elseif(!empty($candidate->location->toArray()))
-                                                            <option value="{{ $item['wp_locations_id'] }}|{{ $item['loc_name']}}" selected="selected">{{ $item['loc_name'] }}</option>
-                                                        @endif
-                                                    @endforeach
+                                                <select class="select3 select4" id="district_want_to_work" data-url="{{route('location.ajax.search')}}" data-parent-id=""
+                                                        name="city[]" multiple="multiple">
+
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -359,12 +355,12 @@
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div>Ngành nghề</div>
-                                                <select class="select3" name="career[]" multiple="multiple">
-                                                    <option value="hanoi">IT phần cứng</option>
-                                                    <option value="hochiminh">IT phần mềm</option>
-                                                    <option value="dannag">Kế toán</option>
-                                                    <option value="haiphong">Saller</option>
-                                                    <option value="haiduong">Human Resource</option>
+                                                <select class="career" name="career[]" multiple="multiple" data-url="{{route('career.ajax.search')}}">
+                                                    @if(!empty($careers))
+                                                        @foreach($careers as $item)
+                                                            <option value="{{$item->id}}">{{$item->ca_name}}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -372,12 +368,8 @@
                                         <div class="candidate-sidebar-item age d-flex" style="">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div> Kỹ năng</div>
-                                                <select class="select3" name="career[]" multiple="multiple">
-                                                    <option value="hanoi">IT phần cứng</option>
-                                                    <option value="hochiminh">IT phần mềm</option>
-                                                    <option value="dannag">Kế toán</option>
-                                                    <option value="haiphong">Saller</option>
-                                                    <option value="haiduong">Human Resource</option>
+                                                <select class="skill" name="skill[]" multiple="multiple" data-url="{{route('skill.ajax.search')}}">
+
                                                 </select>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
@@ -387,7 +379,7 @@
                                                 Mức lương
                                                 <div class="range">
                                                     <div class="range-slider">
-                                                        <input id="salary" type="text" name="salary" data-from="{{isset($range_salary[0])?$range_salary[0]:0}}" data-to="{{isset($range_salary[1])?$range_salary[1]:99}}" data-slider-tooltip="always" /><br />
+                                                        <input id="salary" type="text" name="salary" data-from="{{isset($range_salary[0])?$range_salary[0]:0}}" data-to="{{isset($range_salary[1])?$range_salary[1]:100}}" data-slider-tooltip="always" /><br />
                                                     </div>
                                                 </div>
                                             </div>
@@ -413,7 +405,7 @@
                                                     <option value="">Chọn thời gian kinh nghiệm</option>
                                                     @if(isset($timeExperience))
                                                         @foreach($timeExperience as $item)
-                                                            <option value="{{$item->id}}" {{isset($time_experience)&&$time_experience==$item->id?'selected':''}}>{{$item->name}}</option>
+                                                            <option value="{{$item['id']}}" {{isset($time_experience)&&$time_experience==$item['id']?'selected':''}}>{{$item['name']}}</option>
                                                             @endforeach
                                                         @endif
                                                 </select>
@@ -428,7 +420,7 @@
                                                     @if(isset($qualification))
                                                         <option value="">Chọn trình độ chuyên môn</option>
                                                         @foreach($qualification as $item)
-                                                            <option value="{{$item->id}}" {{isset($ci_qualification)&&$ci_qualification==$item->id?'selected':''}}>{{$item->name}}</option>
+                                                            <option value="{{$item['id']}}" {{isset($ci_qualification)&&$ci_qualification==$item['id']?'selected':''}}>{{$item['name']}}</option>
                                                             @endforeach
                                                         @endif
                                                 </select>
@@ -442,7 +434,7 @@
                                                     <option value="">Chọn trình độ ngoại ngữ</option>
                                                     @if(isset($englishLevel))
                                                         @foreach($englishLevel as $key => $item)
-                                                            <option value="{{$item->id}}" {{!empty($english_level)&&$english_level==$item->id?'selected':''}}>{{$item->name}}</option>
+                                                            <option value="{{$item['id']}}" {{!empty($english_level)&&$english_level==$item['id']?'selected':''}}>{{$item['name']}}</option>
                                                             @endforeach
                                                         @endif
                                                 </select>
@@ -457,8 +449,8 @@
                                                         @foreach($typeOfWork as $key => $item)
                                                         <li>
                                                             <label>
-                                                                <input type="checkbox" {{isset($type_of_work)&&in_array($item->id,$type_of_work)?'checked':''}} name="type_of_work[]" value="{{$item->id}}">
-                                                                {{$item->name}}
+                                                                <input type="checkbox" {{isset($type_of_work)&&in_array($item['id'],$type_of_work)?'checked':''}} name="type_of_work[]" value="{{$item['id']}}">
+                                                                {{$item['name']}}
 
                                                             </label>
                                                             <span class="badge pull-right">{{isset($aggerations['candidate_info_ci_type_of_work'][$key])&&$aggerations['candidate_info_ci_type_of_work'][$key]['key']==$item->id?$aggerations['candidate_info_ci_type_of_work'][$key]['doc_count']:''}}</span>
@@ -474,26 +466,27 @@
                                                 Tuổi
                                                 <div class="range">
                                                     <div class="range-slider">
-                                                        <input id="range_age" type="text" name="range_age" data-from="{{isset($range_age[0])?$range_age[0]:0}}" data-to="{{isset($range_age[1])?$range_age[1]:70}}" data-slider-tooltip="always" /><br />
+                                                        <input id="range_age" type="text" name="range_age" data-from="{{isset($range_age[0])?$range_age[0]:0}}" data-to="{{isset($range_age[1])?$range_age[1]:100}}" data-slider-tooltip="always" /><br />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div> <!-- /. candidate sidebar item -->
 
-                                        <div class="candidate-sidebar-item age d-flex">
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                Chứng chỉ
-                                                <select name="" id="input" class="form-control form-group" >
-                                                    <option value="">Chọn một loại chứng chỉ</option>
-                                                    <option value="">Toeic</option>
-                                                    <option value="">IELF</option>
-                                                </select>
-                                            </div>
-                                        </div> <!-- /. candidate sidebar item -->
+                                        {{--<div class="candidate-sidebar-item age d-flex">--}}
+                                            {{--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">--}}
+                                                {{--Chứng chỉ--}}
+                                                {{--<select name="" id="input" class="form-control form-group" >--}}
+                                                    {{--<option value="">Chọn một loại chứng chỉ</option>--}}
+                                                    {{--<option value="">Toeic</option>--}}
+                                                    {{--<option value="">IELF</option>--}}
+                                                {{--</select>--}}
+                                            {{--</div>--}}
+                                        {{--</div> <!-- /. candidate sidebar item -->--}}
+
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 candidate-info">
-                                        <a class="close"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
-                                        <a class="download"><i class="fa fa-download" aria-hidden="true"></i></a>
+                                        <a class="close" ><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                                        <a class="download" ><i class="fa fa-download" aria-hidden="true"></i></a>
                                         <div class="candidate-cv" data-simplebar>
                                             <div class="row">
                                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -951,9 +944,7 @@
                                                                     </div>
                                                                 </div> <!-- /. candidate-cv-item -->
                                                             </div>
-
                                                         </div> <!-- /. candidate-cv-box -->
-
                                                         <div class="candidate-cv-box ci_activity">
                                                             <div class="candidate-cv-box-title">
                                                                 HOẠT ĐỘNG <span></span>
@@ -1051,8 +1042,8 @@
                         {{--</div>--}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Không</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-trash">
+                        <button type="button" class="btn btn-secondary btn-close btn-common" data-dismiss="modal"> Không</button>
+                        <button type="button" class="btn  btn-default candidate-popup-button-trash btn-common">
                             <i class="fa fa-trash" aria-hidden="true"></i> Xóa
                         </button>
                     </div>
@@ -1492,12 +1483,12 @@
                             <h5 class="c-white">Thông báo</h5>
                         </div>
                         <div class="modal-body">
-                            Bạn có muốn xóa nhật ký này?
+                            Bạn có muốn xóa nhật ký này không?
                         </div>
                         <div class="modal-footer">
                             <div class="pull-right">
-                                <button type="button" class="btn btn-secondary btn-close">Đóng</button>
-                                <button type="button" class="btn btn-default btn-delete">Xóa</button>
+                                <button type="button" class="btn btn-secondary btn-close btn-common">Đóng</button>
+                                <button type="button" data-delete-url="{{route('diary.ajax.delete')}}" class="btn btn-default btn-delete btn-common">Xóa</button>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -1511,7 +1502,7 @@
                         </div>
                         <div class="modal-footer">
                             <div class="pull-right">
-                                <button type="button" class="btn btn-secondary btn-close">Đóng</button>
+                                <button type="button" class="btn btn-secondary btn-close btn-common">Đóng</button>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -1525,80 +1516,50 @@
 @endsection
 
 @section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-        $(function () {
-            var options = {
-                placeholder: 'Soạn Mail ...',
-                modules: {
-                    toolbar: [
-                        [{ 'font': [] }],
-                        [{ 'size': ['small', false, 'large', 'huge'] }],
-                        ['bold', 'italic', 'underline'],        // toggled buttons
-                        [{ 'color': [] }, { 'background': [] }],
-      // custom button values
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-                        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-                        [{ 'direction': 'rtl' }],                         // text direction
-                        [{ 'align': [] }],
-                        ['blockquote', 'code-block', 'link'],
-                        ['clean']                                     // remove formatting button
-                    ]
-                },
-                theme: 'snow'
-            };
-
-            var quill = new Quill('#editor', options);
-
-        })
-    </script>
-
-    @if(Session::has('message'))
 
 
-        <script type="text/javascript">
+    {{--@if(Session::has('message'))--}}
 
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": true,
-                "positionClass": "toast-bottom-left",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
+        {{--<script type="text/javascript">--}}
 
-            var type = "{{ Session::get('alert-type', 'info') }}";
-            switch (type) {
-                case 'info':
-                    toastr.info("{{ Session::get('message') }}");
-                    break;
+            {{--toastr.options = {--}}
+                {{--"closeButton": true,--}}
+                {{--"debug": false,--}}
+                {{--"newestOnTop": false,--}}
+                {{--"progressBar": true,--}}
+                {{--"positionClass": "toast-bottom-left",--}}
+                {{--"preventDuplicates": false,--}}
+                {{--"onclick": null,--}}
+                {{--"showDuration": "300",--}}
+                {{--"hideDuration": "1000",--}}
+                {{--"timeOut": "5000",--}}
+                {{--"extendedTimeOut": "1000",--}}
+                {{--"showEasing": "swing",--}}
+                {{--"hideEasing": "linear",--}}
+                {{--"showMethod": "fadeIn",--}}
+                {{--"hideMethod": "fadeOut"--}}
+            {{--}--}}
 
-                case 'warning':
-                    toastr.warning("{{ Session::get('message') }}");
-                    break;
+            {{--var type = "{{ Session::get('alert-type', 'info') }}";--}}
+            {{--switch (type) {--}}
+                {{--case 'info':--}}
+                    {{--toastr.info("{{ Session::get('message') }}");--}}
+                    {{--break;--}}
 
-                case 'success':
-                    toastr.success("{{ Session::get('message') }}");
-                    break;
+                {{--case 'warning':--}}
+                    {{--toastr.warning("{{ Session::get('message') }}");--}}
+                    {{--break;--}}
 
-                case 'error':
-                    toastr.error("{{ Session::get('message') }}");
-                    break;
-            }
+                {{--case 'success':--}}
+                    {{--toastr.success("{{ Session::get('message') }}");--}}
+                    {{--break;--}}
 
-        </script>
-    @endif
+                {{--case 'error':--}}
+                    {{--toastr.error("{{ Session::get('message') }}");--}}
+                    {{--break;--}}
+            {{--}--}}
+
+        {{--</script>--}}
+    {{--@endif--}}
 @endsection
 

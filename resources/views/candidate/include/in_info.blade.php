@@ -17,7 +17,7 @@
                 <div class="row candidateBox-row">
                     Ngành nghề
 
-                    <select class=" career" name="career[]" data-placeholder="Chọn một ngành nghề" data-url="{{route('ajax.career.search')}}" multiple="multiple" placeholder="Chọn ngành nghề">
+                    <select class=" career" name="career[]" data-placeholder="Chọn một ngành nghề" data-url="{{route('career.ajax.search')}}" multiple="multiple" placeholder="Chọn ngành nghề">
                         <option value="">-- Chọn một ngành nghề --</option>
                         @if(!empty($careers))
                             @foreach($careers as $index => $item)
@@ -32,9 +32,8 @@
                 </div>
                 <div class="row candidateBox-row">
                     <div>Kỹ năng</div>
-
                     <div class="d-flex" style="width: 100%;">
-                        <select class="skill" name="skill[]" data-url="{{route('ajax.skill.search')}}" multiple="multiple">
+                        <select class="skill" name="skill[]" data-url="{{route('skill.ajax.search')}}" data-ajax--cache="true" data-placeholder="Chọn kỹ năng" multiple="multiple">
                             @foreach (old('skill',isset($candidate->skill)?$candidate->skill:[]) as $item)
                                 @if(!empty(old('skill')))
                                     <option value="{{$item}}" selected="selected">{{preg_replace('/(\d+\|)/','', $item)}}</option>
@@ -44,7 +43,7 @@
                             @endforeach
                         </select>
 
-                        <button style="height: 30px!important;" data-toggle="modal" data-backdrop="static" data-url="{{route('ajax.skill.create')}}" data-btn="skill" data-target="#candidate-popup" type="button" class="btn btn-default btn-blue">
+                        <button style="height: 30px!important;" data-toggle="modal" data-backdrop="static" data-url="{{route('skill.ajax.create')}}" data-btn="skill" data-target="#candidate-popup" type="button" class="btn btn-common btn-common">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -53,7 +52,7 @@
                 <div class="row candidateBox-row">
                     Chọn thành phố/tỉnh thành mong muốn làm việc
 
-                    <select class="select3" id="city_want_to_work" data-url="{{route('ajax.location.search')}}" name="city">
+                    <select class="select3" id="city_want_to_work" data-placeholder="Chọn thành phố muốn làm việc" data-url="{{route('location.ajax.search')}}" name="city">
                         <option value="">Chọn thành phố nơi bạn muốn làm việc</option>
 
                         @if(isset($city))
@@ -72,7 +71,7 @@
                 <div class="row candidateBox-row {{!empty($candidate)||!empty(old('district'))?'':'hide'}} ">
                     Chọn quận/huyện mong muốn làm việc
 
-                    <select class="select3" id="district_want_to_work" data-url="{{route('ajax.location.search')}}" data-parent-id=""
+                    <select class="select3" id="district_want_to_work" data-placeholder="Chọn quận huyện mong muốn làm việc" data-url="{{route('location.ajax.search')}}" data-parent-id=""
                             name="district[]" multiple="multiple">
                         @foreach (old('district',isset($candidate->location)?$candidate->location->toArray():[]) as $item)
                             @if(!empty(old('district')))
@@ -149,9 +148,10 @@
                     Mức lương
                     <select class=" select3" name="ci_salary">
                         <option value="-1">-- Chọn mức lương mong muốn --</option>
+                        @php dump(old('ci_salary')) @endphp
                         @foreach($salary as $item)
                             <option {{old('ci_salary',isset($candidate->candidateInfo->ci_salary)?$candidate->candidateInfo->ci_salary:'')==$item['id']?'selected':''}}
-                                    value="{{$item['id']}}">{{$item['name']}}
+                                    value="{{$item['id']}}|{{$item['fromto']}}">{{$item['name']}}
                             </option>
                         @endforeach
                     </select>
@@ -166,7 +166,7 @@
                                 >{{$item->so_name}}</option>
                             @endforeach
                         </select>
-                        <button style="height: 30px;" data-toggle="modal" data-backdrop="static" data-url="{{route('ajax.source.create')}}" data-btn="source" data-target="#candidate-popup" type="button" class="btn btn-default btn-blue">
+                        <button style="height: 30px;" data-toggle="modal" data-backdrop="static" data-url="{{route('source.ajax.create')}}" data-btn="source" data-target="#candidate-popup" type="button" class="btn btn-common btn-common">
                             <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -232,7 +232,7 @@
             Kinh nghiệm làm việc
 
         </h3>
-        <button type="button" class="btn btn-clone btn-default ">
+        <button type="button" class="btn btn-clone btn-common">
             <i class="fa fa-plus"></i> Thêm kinh nghiệm
         </button>
     </div><!-- /.card-header -->
@@ -276,7 +276,7 @@
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     <div class="row candidateBox-row">
-                        <input type="text" name="ci_work_experience_time[]" value="{{!empty($candidate->candidateInfo->ci_work_experience->time)?$candidate->candidateInfo->ci_work_experience->time:''}}" placeholder="10/10/2000" class="form-group">
+                        <input type="text" name="ci_work_experience_time[]" value="{{!empty($candidate->candidateInfo->ci_work_experience->time)?$candidate->candidateInfo->ci_work_experience->time:''}}" placeholder="10/10/2000" class="form-group datepicker">
                     </div>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -340,7 +340,7 @@
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     <div class="row candidateBox-row">
-                        <input type="text" name="ci_work_experience_time[]" value="{{!empty($candidate->candidateInfo->ci_work_experience->time)?$candidate->candidateInfo->ci_work_experience->time:''}}" placeholder="10/10/2000" class="form-group">
+                        <input type="text" name="ci_work_experience_time[]" value="{{!empty($candidate->candidateInfo->ci_work_experience->time)?$candidate->candidateInfo->ci_work_experience->time:''}}" placeholder="10/10/2000" class="form-group datepicker">
                     </div>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -377,7 +377,7 @@
         <h3 class="card-title ">
             Học vấn
         </h3>
-        <button type="button" class="btn btn-clone btn-default ">
+        <button type="button" class="btn btn-clone btn-common">
             <i class="fa fa-plus"></i> Thêm học vấn
         </button>
     </div><!-- /.card-header -->
@@ -502,7 +502,7 @@
         <h3 class="card-title ">
             Hoạt động
         </h3>
-        <button type="button" class="btn btn-clone btn-default ">
+        <button type="button" class="btn btn-clone btn-common ">
             <i class="fa fa-plus"></i> Thêm hoạt động
         </button>
     </div><!-- /.card-header -->
@@ -627,7 +627,7 @@
         <h3 class="card-title ">
             Chứng chỉ
         </h3>
-        <button type="button" class="btn btn-clone btn-default ">
+        <button type="button" class="btn btn-clone btn-common ">
             <i class="fa fa-plus"></i> Thêm chứng chỉ
         </button>
     </div><!-- /.card-header -->
@@ -692,7 +692,7 @@
         <h3 class="card-title ">
             Giải thưởng
         </h3>
-        <button type="button" class="btn btn-clone btn-default ">
+        <button type="button" class="btn btn-clone btn-common ">
             <i class="fa fa-plus"></i> Thêm giải thưởng
         </button>
     </div><!-- /.card-header -->
@@ -756,7 +756,7 @@
         <h3 class="card-title ">
             Kỹ năng
         </h3>
-        <button type="button" class="btn btn-clone btn-default ">
+        <button type="button" class="btn btn-clone btn-common ">
             <i class="fa fa-plus"></i> Thêm kỹ năng
         </button>
     </div><!-- /.card-header -->
@@ -801,7 +801,7 @@
                 </div>
                 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                     <div class="row candidateBox-row">
-                        <input type="text" name="ci_skill_name[]" placeholder="Nhập thời gian cấp" class="form-group">
+                        <input type="text" name="ci_skill_name[]" placeholder="Nhập tên kỹ năng" class="form-group">
                     </div>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">

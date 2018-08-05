@@ -16,7 +16,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
-                                <a href="skill_list.html" class="btn btn-default btn-blue"><i class="nav-icon fa fa-list-ul" aria-hidden="true"></i> Danh sách kỹ năng</a>
+                                <a href="skill_list.html" class="btn btn-default btn-common"><i class="nav-icon fa fa-list-ul" aria-hidden="true"></i> Danh sách kỹ năng</a>
                             </li>
                         </ol>
                     </div><!-- /.col -->
@@ -63,7 +63,7 @@
                                 </div><!-- /.card-body -->
                             </div>
                             <!-- /.card -->
-                            <button type="submit" class="btn btn-default btn-submit btn-blue"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm</button>
+                            <button type="submit" class="btn btn-default btn-submit btn-common"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm</button>
                         </section>
                     </div>
                     <!-- /.row (main row) -->

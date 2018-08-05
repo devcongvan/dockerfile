@@ -28,6 +28,8 @@ Route::group(['prefix' => 'candidate'], function() {
     Route::get('test', 'CandidateController@test');
 
     Route::post('import', 'CandidateController@importExcel')->name('candidate.excel.import');
+    
+    Route::post('export','CandidateController@exportPDF')->name('candidate.exportt');
 
     Route::group(['prefix' => 'ajax'], function() {
         Route::post('show', 'CandidateController@showAjax')->name('candidate.ajax.show');
@@ -35,6 +37,8 @@ Route::group(['prefix' => 'candidate'], function() {
         Route::post('search','CandidateController@searchAjax')->name('candidate.ajax.search');
 
         Route::post('delete', 'CandidateController@destroyAjax')->name('candidate.ajax.delete');
+
+//        Route::post('exportpdf','CandidateController@exportPDF')->name('candidate.ajax.exportpdf');
     });
 });
 
@@ -50,19 +54,15 @@ Route::group(['prefix' => 'career'], function() {
 
     Route::post('edit/{id}', 'CareerController@updatePost');
 
-
-    Route::get('test',function(){
-
-    });
-
     Route::group(['prefix' => 'ajax'], function() {
-        Route::post('new', 'CareerController@storePostAjax')->name('ajax.career.create');
+        
+        Route::post('new', 'CareerController@storePostAjax')->name('career.ajax.create');
 
-        Route::post('edit','CareerController@updatePostAjax')->name('ajax.career.update');
+        Route::post('edit','CareerController@updatePostAjax')->name('career.ajax.update');
 
-        Route::get('delete/{id}','CareerController@destroyAjax');
+        Route::get('delete/{id}','CareerController@destroyAjax')->name('career.ajax.delete');
 
-        Route::get('select2Search','CareerController@searchSelect2Ajax')->name('ajax.career.search');
+        Route::get('select2Search','CareerController@searchSelect2Ajax')->name('career.ajax.search');
 
     });
 
@@ -80,11 +80,11 @@ Route::group(['prefix' => 'source'], function() {
 
     Route::group(['prefix' => 'ajax'], function() {
 
-        Route::post('new', 'SourceController@storePostAjax')->name('ajax.source.create');
+        Route::post('new', 'SourceController@storePostAjax')->name('source.ajax.create');
 
-        Route::post('edit', 'SourceController@updatePostAjax');
+        Route::post('edit', 'SourceController@updatePostAjax')->name('source.ajax.edit');
 
-        Route::post('delete', 'SourceController@destroyAjax');
+        Route::post('delete', 'SourceController@destroyAjax')->name('source.ajax.destroy');
 
         Route::get('select2Search','SourceController@searchSelect2Ajax')->name('source.ajax.search');
 
@@ -105,13 +105,13 @@ Route::group(['prefix' => 'skill'], function() {
 
     Route::group(['prefix' => 'ajax'], function() {
 
-        Route::post('new', 'SkillController@storePostAjax')->name('ajax.skill.create');
+        Route::post('new', 'SkillController@storePostAjax')->name('skill.ajax.create');
 
-        Route::post('edit', 'SkillController@updatePostAjax');
+        Route::post('edit', 'SkillController@updatePostAjax')->name('skill.ajax.update');
 
-        Route::post('delete', 'SkillController@destroyAjax');
+        Route::post('delete', 'SkillController@destroyAjax')->name('skill.ajax.delete');
 
-        Route::get('select2Search','SkillController@searchAjaxSelect2')->name('ajax.skill.search');
+        Route::get('select2Search','SkillController@searchAjaxSelect2')->name('skill.ajax.search');
 
     });
 });
@@ -120,7 +120,7 @@ Route::group(['prefix' => 'location'], function() {
 
     Route::group(['prefix' => 'ajax'], function() {
 
-        Route::get('select2Search', 'LocationController@searchAjaxSelect2')->name('ajax.location.search');
+        Route::get('select2Search', 'LocationController@searchAjaxSelect2')->name('location.ajax.search');
         
         Route::post('test','LocationController@test');
 
@@ -146,11 +146,9 @@ Route::group(['prefix' => 'diary'], function() {
     });
 });
 
-Route::group(['prefix'=>'book'],function (){
-    Route::get('search','BookController@index');
-    Route::post('search','BookController@index')->name('book.search');
-    Route::post('store','BookController@store')->name('book.store');
-
-    Route::get('copyto','BookController@copyToElastic');
+Route::group(['prefix'=>'elastic'], function (){
+    Route::get('index','ElasticController@createIndex')->name('elastic.index');
+    
+    Route::get('movedata','ElasticController@moveDataToElastic')->name('elastic.movedata');
 });
 

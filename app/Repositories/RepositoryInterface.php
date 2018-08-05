@@ -11,15 +11,17 @@ namespace App\Repositories;
 
 interface RepositoryInterface
 {
-    public function getAll(array $condidtion,$limit);
+    public function getAll(array $condidtion);
 
     public function getById($id,$with);
+
+    public function getFirst($column);
+
+    public function getLast($column);
 
     public function create(array $attributes);
 
     public function update($id,array $attributes);
-
-    public function updateAjax(array $attributes);
 
     public function delete($id);
 }

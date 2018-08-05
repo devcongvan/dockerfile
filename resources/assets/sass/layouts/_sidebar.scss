@@ -1,0 +1,89 @@
+// main sidebar
+.main-sidebar {
+    width: 200px !important;
+    &.fixed {
+        position: fixed;
+        top: 0;
+    }
+    position: absolute;
+    top: 56px;
+    box-shadow: none !important;
+    // border-right: 1px solid $background-sidebar-item-active;
+    background: $background-sidebar;
+    .brand-link {
+        background: $background-header;
+        border: none !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    overflow: hidden !important;
+    .sidebar {
+        overflow: visible;
+        padding: 0 !important;
+        #collapse-navbar {
+            text-align: center;
+            font-size: 20px;
+            color: $text-color-sidebar;
+            .fa {
+                transition: .5s;
+                position: relative;
+                z-index: 1;
+                color: #ccc;
+            }
+            &:before {
+                content: "";
+                width: 30px;
+                height: 30px;
+                display: block;
+                border-radius: 50%;
+                border: 1px solid #ccc;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                background: $background-sidebar;
+            }
+            &:after {
+                content: "";
+                display: block;
+                width: 110%;
+                height: 1px;
+                background: #ccc;
+                position: absolute;
+                top: 50%;
+                left: -5%;
+                z-index: -1;
+            }
+        }
+    }
+    .nav-sidebar {
+        .nav-item {
+            a {
+                color: $text-color-sidebar !important;
+                border-radius: 0 !important;
+                &:hover {
+                    background: $background-sidebar-item-active !important;
+                }
+                &.active {
+                    background: $background-sidebar-item-active !important;
+                    box-shadow: none !important;
+                }
+            }
+        }
+    }
+    &:hover {
+        .rotate {
+            margin-left: 0 !important;
+            text-align: center !important;
+            &:before {
+                left: 50% !important;
+            }
+            .fa {
+                transform: rotateZ(-180deg) translateX(0);
+            }
+        }
+    }
+}
+// end main sidebar

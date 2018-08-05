@@ -88,6 +88,17 @@ class Candidate extends Model
                 ]
             ]
         ],
+        "nested_facets"=>[
+            "type"=>"nested",
+            "properties"=>[
+                "facet_name"=>[
+                    "type"=>"keyword"
+                ],
+                "facet_value"=>[
+                    "type"=>"nested"
+                ]
+            ]
+        ],
         "date_facets"     => [
             "type"       => "nested",
             "properties" => [

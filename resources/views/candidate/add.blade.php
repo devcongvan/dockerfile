@@ -19,8 +19,8 @@
                                 <form action="candidate/import" class="excelForm" method="post" enctype="multipart/form-data">
                                     @csrf
                                     <input type="file" class="excelForm-file" style="display: none;" name="file" accept=".xls,.xlsx">
-                                    <button type="button" class="btn btn-default btn-blue excelForm-btn"><i class="nav-icon fa fa-file-excel-o" aria-hidden="true"></i> Import Excel</button>
-                                    <a href="{{route('candidate.list')}}" class="btn btn-default btn-blue"><i class="nav-icon fa fa-list-ul" aria-hidden="true"></i> Danh sách</a>
+                                    <button type="button" class="btn btn-default excelForm-btn btn-common"><i class="nav-icon fa fa-file-excel-o" aria-hidden="true"></i> Import Excel</button>
+                                    <a href="{{route('candidate.list')}}" class="btn btn-default btn-common"><i class="nav-icon fa fa-list-ul" aria-hidden="true"></i> Danh sách</a>
                                 </form>
 
 
@@ -56,7 +56,7 @@
                             @include('candidate.include.in_info')
                             {{--end include--}}
 
-                            <button type="submit" id="them" class="btn btn-default btn-submit btn-blue">@if(isset($candidate)) <i class="fa fa-wrench" aria-hidden="true"></i> Sửa @else
+                            <button type="submit" id="them" class="btn btn-submit centecr btn-common">@if(isset($candidate)) <i class="fa fa-wrench" aria-hidden="true"></i> Sửa @else
                                     <i class="fa fa-plus" aria-hidden="true"></i> Thêm @endif</button>
                         </section>
                         <section class="col-lg-3 candidate-sideleft">
@@ -108,10 +108,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Đóng</button>
-                    <button type="button" class="btn btn-blue btn-default candidate-popup-button-add">
+                    <button type="button" class="btn btn-common btn-default candidate-popup-button-add">
                         <i class="fa fa-plus" aria-hidden="true"></i> Thêm
                     </button>
-                    <button type="button" class="btn btn-blue btn-default candidate-popup-button-edit hide">
+                    <button type="button" class="btn btn-common btn-default candidate-popup-button-edit hide">
                         <i class="fa fa-wrench" aria-hidden="true"></i> Sửa
                     </button>
                 </div>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Không</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-yes">
+                        <button type="button" class="btn btn-common btn-default candidate-popup-button-yes">
                              Có
                         </button>
                     </div>
@@ -154,108 +154,165 @@
 @endsection
 
 @section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script>
+    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--}}
+    {{--<script>--}}
 
-        var placeSearch, autocomplete;
+        {{--var placeSearch, autocomplete;--}}
+        {{--var componentForm = {--}}
+            {{--street_number: 'long_name',--}}
+            {{--route: 'long_name',--}}
+            {{--administrative_area_level_1: 'long_name',--}}
+            {{--country: 'long_name',--}}
+            {{--sublocality_level_1: 'long_name',--}}
+            {{--administrative_area_level_2: 'long_name'--}}
+        {{--};--}}
+
+        {{--function initAutocomplete() {--}}
+            {{--autocomplete = new google.maps.places.Autocomplete(--}}
+                {{--/** @type {!HTMLInputElement} */(document.getElementById('hometown')),--}}
+                {{--{types: ['geocode']});--}}
+            {{--autocomplete.setComponentRestrictions({'country': ['vn']});--}}
+            {{--autocomplete.addListener('place_changed', fillInAddress);--}}
+
+            {{--autocomplete2 = new google.maps.places.Autocomplete(--}}
+                {{--/** @type {!HTMLInputElement} */(document.getElementById('can_address')),--}}
+                {{--{types: ['geocode']});--}}
+            {{--autocomplete2.setComponentRestrictions({'country': ['vn']});--}}
+            {{--autocomplete2.addListener('place_changed', fillInAddress2);--}}
+        {{--}--}}
+
+        {{--function fillInAddress() {--}}
+            {{--var dataResult = {};--}}
+            {{--var place = autocomplete.getPlace();--}}
+            {{--var address_detail = "";--}}
+            {{--for (var i = 0; i < place.address_components.length; i++) {--}}
+                {{--var addressType = place.address_components[i].types[0];--}}
+                {{--if (componentForm[addressType]) {--}}
+                    {{--var val = place.address_components[i][componentForm[addressType]] || '';--}}
+                    {{--if (addressType == 'street_number') address_detail += val;--}}
+                    {{--if (addressType == 'route') address_detail += ' ' + val;--}}
+                    {{--if (addressType == 'administrative_area_level_1') dataResult.city = val;--}}
+                    {{--if (addressType == 'administrative_area_level_2') dataResult.district = val;--}}
+                    {{--if (addressType == 'sublocality_level_1') dataResult.ward = val;--}}
+                {{--}--}}
+            {{--}--}}
+            {{--dataResult.street = address_detail.trim();--}}
+            {{--dataResult.title = $("#cla_name").val();--}}
+            {{--// dataResult.title = document.getElementById('cla_name').value;--}}
+            {{--dataResult.secret = 'e8970721455a090be8429338c564efa5';--}}
+            {{--address = address_detail.trim();--}}
+            {{--if (typeof(dataResult.ward) != "undefined") address += ((address != '') ? ", " : '') + dataResult.ward;--}}
+            {{--if (typeof(dataResult.district) != "undefined") address += ((address != '') ? ", " : '') + dataResult.district;--}}
+            {{--if (typeof(dataResult.city) != "undefined") address += ((address != '') ? ", " : '') + dataResult.city;--}}
+
+            {{--document.getElementById('hometown').value=address;--}}
+            {{--dataResult.address = address;--}}
+            {{--document.getElementById('cla_lat').value= place.geometry.location.lat();--}}
+            {{--document.getElementById('cla_lng').value= place.geometry.location.lng();--}}
+
+            {{--// $("#hometown").val(address);--}}
+
+            {{--// $("#cla_lat").val(place.geometry.location.lat());--}}
+            {{--// $("#cla_lng").val(place.geometry.location.lng());--}}
+        {{--}--}}
+
+        {{--function fillInAddress2() {--}}
+            {{--var dataResult = {};--}}
+            {{--var place = autocomplete2.getPlace();--}}
+            {{--var address_detail = "";--}}
+            {{--for (var i = 0; i < place.address_components.length; i++) {--}}
+                {{--var addressType = place.address_components[i].types[0];--}}
+                {{--if (componentForm[addressType]) {--}}
+                    {{--var val = place.address_components[i][componentForm[addressType]] || '';--}}
+                    {{--if (addressType == 'street_number') address_detail += val;--}}
+                    {{--if (addressType == 'route') address_detail += ' ' + val;--}}
+                    {{--if (addressType == 'administrative_area_level_1') dataResult.city = val;--}}
+                    {{--if (addressType == 'administrative_area_level_2') dataResult.district = val;--}}
+                    {{--if (addressType == 'sublocality_level_1') dataResult.ward = val;--}}
+                {{--}--}}
+            {{--}--}}
+            {{--dataResult.street = address_detail.trim();--}}
+            {{--dataResult.title = $("#cla_name").val();--}}
+            {{--dataResult.secret = 'e8970721455a090be8429338c564efa5';--}}
+            {{--address = address_detail.trim();--}}
+            {{--if (typeof(dataResult.ward) != "undefined") address += ((address != '') ? ", " : '') + dataResult.ward;--}}
+            {{--if (typeof(dataResult.district) != "undefined") address += ((address != '') ? ", " : '') + dataResult.district;--}}
+            {{--if (typeof(dataResult.city) != "undefined") address += ((address != '') ? ", " : '') + dataResult.city;--}}
+            {{--$("#can_address").val(address);--}}
+            {{--dataResult.address = address;--}}
+            {{--$("#cla_lat").val(place.geometry.location.lat());--}}
+            {{--$("#cla_lng").val(place.geometry.location.lng());--}}
+        {{--}--}}
+
+        {{--function geolocate() {--}}
+            {{--if (navigator.geolocation) {--}}
+                {{--navigator.geolocation.getCurrentPosition(function (position) {--}}
+                    {{--var geolocation = {--}}
+                        {{--lat: position.coords.latitude,--}}
+                        {{--lng: position.coords.longitude--}}
+                    {{--};--}}
+                    {{--var circle = new google.maps.Circle({--}}
+                        {{--center: geolocation,--}}
+                        {{--radius: position.coords.accuracy--}}
+                    {{--});--}}
+                    {{--autocomplete.setBounds(circle.getBounds());--}}
+                {{--});--}}
+            {{--}--}}
+        {{--}--}}
+
+    {{--</script>--}}
+
+    <script>
+        var autocomplete1,autocomplete2;
         var componentForm = {
-            street_number: 'long_name',
+            street_number: 'short_name',
             route: 'long_name',
-            administrative_area_level_1: 'long_name',
-            country: 'long_name',
-            sublocality_level_1: 'long_name',
-            administrative_area_level_2: 'long_name'
+            locality: 'long_name',
+            administrative_area_level_1: 'short_name',
+            // country: 'long_name',
+            postal_code: 'short_name'
         };
 
-        function initAutocomplete() {
-            autocomplete = new google.maps.places.Autocomplete(
-                /** @type {!HTMLInputElement} */(document.getElementById('hometown')),
-                {types: ['geocode']});
-            autocomplete.setComponentRestrictions({'country': ['vn']});
-            autocomplete.addListener('place_changed', fillInAddress);
+        function autoCompleteMaps() {
+            var hometown = document.getElementById('hometown');
+            var can_address = document.getElementById('can_address');
+            var options = {
+                types: ['geocode'],
+                componentRestrictions: {country: 'vn'}
+            };
 
-            autocomplete2 = new google.maps.places.Autocomplete(
-                /** @type {!HTMLInputElement} */(document.getElementById('can_address')),
-                {types: ['geocode']});
-            autocomplete2.setComponentRestrictions({'country': ['vn']});
-            autocomplete2.addListener('place_changed', fillInAddress2);
+            autocomplete1 = new google.maps.places.Autocomplete(hometown,options);
+            autocomplete2 = new google.maps.places.Autocomplete(can_address,options);
+
+            // autocomplete1.addListener('place_changed',fillInAddress);
         }
 
         function fillInAddress() {
-            var dataResult = {};
-            var place = autocomplete.getPlace();
-            var address_detail = "";
+            // Get the place details from the autocomplete object.
+            var place = autocomplete1.getPlace();
+
+            for (var component in componentForm) {
+                document.getElementById(component).value = '';
+                document.getElementById(component).disabled = false;
+            }
+
+            // Get each component of the address from the place details
+            // and fill the corresponding field on the form.
             for (var i = 0; i < place.address_components.length; i++) {
                 var addressType = place.address_components[i].types[0];
                 if (componentForm[addressType]) {
-                    var val = place.address_components[i][componentForm[addressType]] || '';
-                    if (addressType == 'street_number') address_detail += val;
-                    if (addressType == 'route') address_detail += ' ' + val;
-                    if (addressType == 'administrative_area_level_1') dataResult.city = val;
-                    if (addressType == 'administrative_area_level_2') dataResult.district = val;
-                    if (addressType == 'sublocality_level_1') dataResult.ward = val;
+                    var val = place.address_components[i][componentForm[addressType]];
+                    document.getElementById(addressType).value = val;
                 }
-            }
-            dataResult.street = address_detail.trim();
-            dataResult.title = $("#cla_name").val();
-            dataResult.secret = 'e8970721455a090be8429338c564efa5';
-            address = address_detail.trim();
-            if (typeof(dataResult.ward) != "undefined") address += ((address != '') ? ", " : '') + dataResult.ward;
-            if (typeof(dataResult.district) != "undefined") address += ((address != '') ? ", " : '') + dataResult.district;
-            if (typeof(dataResult.city) != "undefined") address += ((address != '') ? ", " : '') + dataResult.city;
-            $("#hometown").val(address);
-            dataResult.address = address;
-            $("#cla_lat").val(place.geometry.location.lat());
-            $("#cla_lng").val(place.geometry.location.lng());
-        }
-
-        function fillInAddress2() {
-            var dataResult = {};
-            var place = autocomplete2.getPlace();
-            var address_detail = "";
-            for (var i = 0; i < place.address_components.length; i++) {
-                var addressType = place.address_components[i].types[0];
-                if (componentForm[addressType]) {
-                    var val = place.address_components[i][componentForm[addressType]] || '';
-                    if (addressType == 'street_number') address_detail += val;
-                    if (addressType == 'route') address_detail += ' ' + val;
-                    if (addressType == 'administrative_area_level_1') dataResult.city = val;
-                    if (addressType == 'administrative_area_level_2') dataResult.district = val;
-                    if (addressType == 'sublocality_level_1') dataResult.ward = val;
-                }
-            }
-            dataResult.street = address_detail.trim();
-            dataResult.title = $("#cla_name").val();
-            dataResult.secret = 'e8970721455a090be8429338c564efa5';
-            address = address_detail.trim();
-            if (typeof(dataResult.ward) != "undefined") address += ((address != '') ? ", " : '') + dataResult.ward;
-            if (typeof(dataResult.district) != "undefined") address += ((address != '') ? ", " : '') + dataResult.district;
-            if (typeof(dataResult.city) != "undefined") address += ((address != '') ? ", " : '') + dataResult.city;
-            $("#can_address").val(address);
-            dataResult.address = address;
-            $("#cla_lat").val(place.geometry.location.lat());
-            $("#cla_lng").val(place.geometry.location.lng());
-        }
-
-        function geolocate() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var geolocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    var circle = new google.maps.Circle({
-                        center: geolocation,
-                        radius: position.coords.accuracy
-                    });
-                    autocomplete.setBounds(circle.getBounds());
-                });
             }
         }
 
     </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiaFoZ_KqyuAk1c8woLdAgYOThsNY-EDU&libraries=places&callback=autoCompleteMaps" async defer></script>
+
     @if(!isset($candidate))
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXC6j0xiiSKbs3drx0MW-JxFS9TYuLo44&libraries=places&callback=initAutocomplete" async defer></script>
+
     @endif
 
 @endsection

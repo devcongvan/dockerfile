@@ -1,5 +1,4 @@
-{
-  "type_of_work": [
+[
     {
       "id": "0",
       "name": "Toàn thời gian"
@@ -12,5 +11,4 @@
       "id": "2",
       "name": "Thực tập"
     }
-  ]
-}
+]

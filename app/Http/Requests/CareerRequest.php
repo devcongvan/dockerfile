@@ -26,7 +26,6 @@ class CareerRequest extends FormRequest
      */
     public function rules(Request $request)
     {
-
         return [
             'ca_name'=>'required|max:191|unique:careers,ca_name,'.$request->get('id')
         ];

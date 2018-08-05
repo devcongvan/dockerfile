@@ -2,35 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Eloquents\SourceRepository;
 use Illuminate\Http\Request;
 use App\Http\Requests\SourceRequest;
 use App\Model\Source;
-use App\Repositories\Source\SourceEloquentRepository;
 
 class SourceController extends Controller
 {
     protected $sourceRepository;
 
-    public function __construct(SourceEloquentRepository $sourceEloquentRepository)
+    public function __construct(SourceRepository $sourceRepository)
     {
-        $this->sourceRepository=$sourceEloquentRepository;
+        $this->sourceRepository=$sourceRepository;
     }
 
 
     public function index(Request $request){
 
-        $searchName = $request->get('name');
+        $condition = [];
+        $name = strip_tags($request->get('name'));
+        if (!empty($name))
+        {
+            $condition['wheres'] = [['so_name', 'like', '%' . $name . '%']];
+        }
 
-        $condition  = [];
+        $option = strip_tags($request->get('option'));
+        if (!empty($option) && $option == 'new')
+        {
+            $condition['orderby'] = ['created_at', 'desc'];
+        }
 
-        $condition['name'] = $searchName;
-//        $condition['orderBySoName'] = 'Desc';
+        $condition['paginate'] = 10;
 
-        $condition['orderById']='Desc';
-
-        $condition['searchOption']=$request->get('option');
-
-        $sources=$this->sourceRepository->getAll($condition,12);
+        $sources=$this->sourceRepository->getAll($condition);
 
 
         return view('source.index',compact('sources'));
@@ -134,11 +138,15 @@ class SourceController extends Controller
     }
 
     public function destroyAjax(Request $request){
-
-        $this->sourceRepository->delete($request->get('id'));
+        $id=$request->id;
+        if ($this->sourceRepository->delete($id)){
+            return response([
+                'message' => 'Xóa thành công'
+            ]);
+        }
 
         return response([
-            'message'=>'Xóa thành công'
+            'message'=>'Xóa không thành công'
         ]);
     }
 

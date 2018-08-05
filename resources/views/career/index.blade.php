@@ -16,7 +16,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item">
-                                <button type="button" data-toggle="modal" data-backdrop="static" data-target="#candidate-popup" class="career btn btn-default btn-blue"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm ngành nghề</button>
+                                <button type="button" data-toggle="modal" data-backdrop="static" data-target="#candidate-popup" class=" btn btn-common"><i class="nav-icon fa fa-plus" aria-hidden="true"></i> Thêm ngành nghề</button>
                             </li>
                         </ol>
                     </div><!-- /.col -->
@@ -54,13 +54,13 @@
                                     </select>
                                 </div>
                                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                                    <button type="submit" class="btn btn-default full-width btn-blue"><i class="nav-icon fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
+                                    <button type="submit" class="btn btn-common full-width"><i class="nav-icon fa fa-search" aria-hidden="true"></i> Tìm kiếm</button>
                                 </div>
 
                             </div><!-- /.card-header -->
                             </form>
                             <div class="card-searchinfo">
-                                <b>{{$careers->firstItem()}} - {{$careers->lastItem()}} </b> trong <b> {{$careers->total()}} </b> ngành nghề <span></span>
+                                <b>{{isset($careers)?$careers->firstItem():''}} - {{isset($careers)?$careers->lastItem():''}} </b> trong <b> {{isset($careers)?$careers->total():''}} </b> ngành nghề <span></span>
                             </div>
                             <div class="card-body" style="border-top: none; padding: 0; padding-top: 0!important; margin-top: 0!important">
                                 <div class="row candidateBox career-list">
@@ -76,17 +76,20 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody class="result">
-                                                @php $n=$careers->firstItem() @endphp
+
+                                                @if(isset($careers))
+                                                    @php $n=$careers->firstItem() @endphp
                                                 @foreach($careers as $item)
                                                     {{--{{$n++}}--}}
                                                 <tr class="result-item">
                                                     <td class="result-index">{{$n++}}</td>
                                                     <td class="result-name">{{$item->ca_name}}</td>
                                                     <td>1523</td>
-                                                    <td><button type="button" data-id="{{$item->id}}" class="btn btn-default career-list-edit" style=""><i class="fa fa-pencil" aria-hidden="true"></i></button>
-                                                        <button type="button" data-id="{{$item->id}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm" class="btn btn-default career-list-delete" style=""><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                                    <td><button type="button" data-id="{{$item->id}}" class="btn btn-common career-list-edit" style=""><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                                        <button type="button" data-id="{{$item->id}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm" class="btn btn-common career-list-delete" style=""><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                                                 </tr>
                                                     @endforeach
+                                                    @endif
                                                 </tbody>
                                             </table>
                                         </div> <!-- /. candidateBox row -->
@@ -96,7 +99,7 @@
                                 </div> <!-- /. candidateBox -->
                             </div><!-- /.card-body -->
                             <div class="card-footer">
-                                {{$careers->appends(['name'=>Request::get('name'),'option'=>Request::get('option')])->render()}}
+                                {{isset($careers)?$careers->appends(['name'=>Request::get('name'),'option'=>Request::get('option')])->render():''}}
                             </div>
                         </div>
                         <!-- /.card -->
@@ -126,8 +129,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Đóng</button><button type="button" class="btn btn-blue btn-default candidate-popup-button-add"><i class="fa fa-plus" aria-hidden="true"></i> Thêm</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-edit hide"><i class="fa fa-wrench" aria-hidden="true"></i> Sửa</button>
+                        <button type="button" class="btn btn-secondary btn-close btn-common" data-dismiss="modal"> Đóng</button><button data-create-url="{{route('career.ajax.create')}}" type="button" class="btn btn-common candidate-popup-button-add"><i class="fa fa-plus" aria-hidden="true"></i> Thêm</button>
+                        <button type="button" class="btn candidate-popup-button-edit hide btn-common" data-edit-url="{{route('career.ajax.update')}}"><i class="fa fa-wrench" aria-hidden="true"></i> Sửa</button>
                     </div>
                 </div>
 
@@ -154,8 +157,8 @@
                         {{--</div>--}}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-close" data-dismiss="modal"> Không</button>
-                        <button type="button" class="btn btn-blue btn-default candidate-popup-button-trash"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
+                        <button type="button" class="btn btn-secondary btn-common btn-close" data-dismiss="modal"> Không</button>
+                        <button type="button" class="btn btn-common candidate-popup-button-trash" data-destroy-url="{{route('career.ajax.delete',['id'=>'/'])}}"><i class="fa fa-trash" aria-hidden="true"></i> Xóa</button>
                     </div>
                 </div>
 

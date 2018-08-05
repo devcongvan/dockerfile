@@ -12,7 +12,7 @@ class CandidateTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker=Faker\Factory::create();
+        $faker=Faker\Factory::create('vi_VN');
 
         $limit=1000;
 

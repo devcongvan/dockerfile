@@ -1,1 +1,1 @@
-module.exports = __webpack_public_path__ + "line-awesome.svg?5207295c5bccd6e7442cfb261446c1f7";
+module.exports = __webpack_public_path__ + "/resources/assets/jqueryautocomplete/images/line-awesome.svg";

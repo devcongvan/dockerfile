@@ -1,5 +1,4 @@
-{
-  "qualification": [
+[
     {
       "id": "0",
       "name": "Sinh viên"
@@ -28,5 +27,4 @@
       "id": "6",
       "name": "Giám đốc"
     }
-  ]
-}
+]

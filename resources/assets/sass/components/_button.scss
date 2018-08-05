@@ -1,0 +1,16 @@
+.btn{
+  &-common {
+    font-size: 14px;
+    border: none;
+    transition: none;
+    border-radius: 0;
+    &:hover {
+      background: $background-header;
+      color: #fff;
+    }
+  }
+  &-submit{
+    width: 150px;
+    @include transform-margin-center('horizontal');
+  }
+}

@@ -1,0 +1,22 @@
+.candidate-evaluate{
+    .wickedpicker {
+        position: fixed !important;
+        left: 649px !important;
+        top: 290px !important;
+        z-index: 99999 !important;
+    }
+    .wickedpicker__controls__control-up:before {
+        font-family: 'FontAwesome';
+        content: '\f113' !important;
+    }
+    .wickedpicker__controls__control-down {
+        &:before {
+            font-family: 'FontAwesome';
+            content: '\f110' !important;
+        }
+        &:after {
+            display: none;
+        }
+    }
+    // timepicker
+}

@@ -3,34 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Model\Career;
-use App\Repositories\Career\CareerEloquentRepository;
 use App\Http\Requests\CareerRequest;
+use App\Repositories\Eloquents\CareerRepository;
 use Illuminate\Http\Request;
 
 class CareerController extends Controller
 {
     protected $careerRepository;
 
-    public function __construct(CareerEloquentRepository $career)
+    public function __construct(CareerRepository $careerRepository)
     {
-        $this->careerRepository=$career;
+        $this->careerRepository=$careerRepository;
     }
 
     public function index(Request $request)
     {
+        $condition=[];
+        $name= strip_tags($request->get('name'));
+        if (!empty($name)){
+            $condition['wheres']= [['ca_name', 'like', '%' . $name . '%']];
+//            dd($condition);
+        }
 
-        $searchName = $request->get('name');
+        $option = strip_tags($request->get('option'));
+        if (!empty($option)&&$option=='new'){
+            $condition['orderby']= ['created_at', 'desc'];
+        }
 
-        $condition  = [];
+        $condition['paginate']=10;
 
-        $condition['name'] = $searchName;
-        $condition['orderByCaName'] = 'Desc';
-
-        $condition['orderById']='Desc';
-
-        $condition['searchOption']=$request->get('option');
-
-        $careers=$this->careerRepository->getAll($condition,12);
+        $careers=$this->careerRepository->getAll($condition);
 
         return view('career.index',compact('careers'));
 
@@ -81,14 +83,14 @@ class CareerController extends Controller
     public function storePostAjax(CareerRequest $request){
 
         $arr=[
-            'ca_name'=>$request->get('name')
+            'ca_name'=>$request->get('ca_name')
         ];
 
-        $career=$this->careerRepository->create($request->all());
+        $career=$this->careerRepository->create($arr);
 
         return response([
-            'message'=>'Thêm ngành nghề thành công',
-            'result'=>$career
+            'message' => 'Thêm ngành nghề thành công',
+            'result'  => $request->all()
         ]);
 
     }

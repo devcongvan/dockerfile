@@ -4,20 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CandidateRequest2;
 use App\Model\Candidate;
-use App\Repositories\CandidateType\CandidateTypeEloquentRepository;
-use App\Repositories\Career\CareerEloquentRepository;
-use App\Repositories\Location\LocationEloquentRepository;
-use App\Repositories\Source\SourceEloquentRepository;
-use function Couchbase\defaultDecoder;
-use Faker\Factory;
-use Faker\Provider\DateTime;
-use Illuminate\Http\Request;
+use App\Repositories\Eloquents\CandidateCareerRepository;
+use App\Repositories\Eloquents\CandidateInfoRepository;
+use App\Repositories\Eloquents\CandidateRepository;
+use App\Repositories\Eloquents\CandidateSkillRepository;
+use App\Repositories\Eloquents\CandidateTypeRepository;
+use App\Repositories\Eloquents\CareerRepository;
+use App\Repositories\Eloquents\LocationRepository;
+use App\Repositories\Eloquents\SourceRepository;
 
-use App\Repositories\CandidateCareer\CandidateCareerEloquentRepository;
-use App\Repositories\CandidateSkill\CandidateSkillEloquentRepository;
-use App\Repositories\Workplace\WorkplaceEloquentRepository;
-use App\Repositories\CandiateInfo\CandidateInfoEloquentRepository;
-use App\Repositories\Candidate\CandidateEloquentRepository;
+use App\Repositories\Eloquents\WorkplaceRepository;
+use Illuminate\Http\Request;
 
 use Elasticsearch\Client;
 
@@ -42,734 +39,59 @@ class CandidateController extends Controller
 
     protected $elasticsearch;
 
-    public function __construct(CandidateEloquentRepository $candidateEloquentRepository,
-                                CandidateInfoEloquentRepository $candidateInfoEloquentRepository,
-                                CandidateCareerEloquentRepository $candidateCareerEloquentRepository,
-                                CandidateSkillEloquentRepository $candidateSkillEloquentRepository,
-                                WorkplaceEloquentRepository $workplaceEloquentRepository,
-                                CareerEloquentRepository $careerEloquentRepository,
-                                SourceEloquentRepository $sourceEloquentRepository,
-                                LocationEloquentRepository $locationEloquentRepository,
-                                CandidateTypeEloquentRepository $candidateTypeEloquentRepository,
-                                Client $client)
+    public function __construct(CandidateRepository $candidateRepository,
+                                SourceRepository $sourceRepository,
+                                CandidateTypeRepository $candidateTypeRepository,
+                                LocationRepository $locationRepository,
+                                CareerRepository $careerRepository,
+                                CandidateCareerRepository $candidateCareerRepository,
+                                CandidateSkillRepository $candidateSkillRepository,
+                                WorkplaceRepository $workplaceRepository,
+                                CandidateInfoRepository $candidateInfoRepository)
     {
-        $this->locationRepository = $locationEloquentRepository;
-        $this->candidateSkillRepository = $candidateSkillEloquentRepository;
-        $this->workplaceRepository = $workplaceEloquentRepository;
-        $this->candidateCareerRepository = $candidateCareerEloquentRepository;
-        $this->candidateRepository = $candidateEloquentRepository;
-        $this->candidateinfoRepository = $candidateInfoEloquentRepository;
-        $this->careerRepository = $careerEloquentRepository;
-
-        $this->sourceRepository = $sourceEloquentRepository;
-
-        $this->candidateTypeRepository = $candidateTypeEloquentRepository;
-
-        $this->elasticsearch = $client;
+        $this->candidateRepository = $candidateRepository;
+        $this->sourceRepository = $sourceRepository;
+        $this->candidateTypeRepository = $candidateTypeRepository;
+        $this->locationRepository = $locationRepository;
+        $this->careerRepository = $careerRepository;
+        $this->candidateCareerRepository = $candidateCareerRepository;
+        $this->candidateSkillRepository = $candidateSkillRepository;
+        $this->workplaceRepository = $workplaceRepository;
+        $this->candidateinfoRepository = $candidateInfoRepository;
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index()
     {
-//        if (!empty($request->all()))
-//        {
-//            return response([]);
-//        }
-
-//        Candidate::createIndex();
-//        dd([]);
-
-//        $can=new Candidate;
-
-//        $candidate = Candidate::with(['candidateInfo', 'career:ca_name,ca_slug', 'skill:sk_name,sk_slug', 'latest_diary', 'source:id,so_name,so_slug', 'location:loc_name,loc_slug','candidateType'=>function($query){
-//            $query->orderBy('id','desc');
-//        }])->get();;
-
-
-//        dd($candidate[84]);
-
-//        foreach ($candidate as $key => $item){
-//
-//            $param = [
-//                "entity"          => ["name" => "candidates"],
-//                "text_facets"     => [
-//                    [
-//                        "facet_name"  => "can_name",
-//                        "facet_value" => $item->can_name
-//                    ],
-//                    [
-//                        "facet_name"  => "can_title",
-//                        "facet_value" => $item->can_title
-//                    ]
-//                ],
-//                "keyword_facets"  => [
-//                    [
-//                        "facet_name"  => "can_email",
-//                        "facet_value" => $item->can_email
-//                    ]
-//                ],
-//                "long_facets"     => [
-//                    [
-//                        "facet_name"  => "can_source_id",
-//                        "facet_value" => $item->can_source_id
-//                    ],
-//                    [
-//                        "facet_name"  => "can_year",
-//                        "facet_value" => $item->can_year
-//                    ],
-//                    [
-//                        "facet_name"  => "can_gender",
-//                        "facet_value" => $item->can_gender
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_type_of_work",
-//                        "facet_value" => $item->candidateInfo['ci_type_of_work']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_english_level",
-//                        "facet_value" => $item->candidateInfo['ci_english_level']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_qualification",
-//                        "facet_value" => $item->candidateInfo['ci_qualification']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_time_experience",
-//                        "facet_value" => $item->candidateInfo['ci_time_experience']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_salary_from",
-//                        "facet_value" => $item->candidateInfo['ci_salary_from']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_salary_to",
-//                        "facet_value" => $item->candidateInfo['ci_salary_to']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info.ci_salary_to",
-//                        "facet_value" => $item->candidateInfo['ci_salary_to']
-//                    ],
-//                    [
-//                        "facet_name"  => "latest_diary.d_evaluate",
-//                        "facet_value" => $item->latest_diary['d_evaluate']
-//                    ],
-//                    [
-//                        "facet_name"  => "latest_diary.d_cantype_id",
-//                        "facet_value" => $item->latest_diary['d_cantype_id']
-//                    ]
-//                ],
-//                "date_facets" => [
-//                    [
-//                        "facet_name"  => "can_birthday",
-//                        "facet_value" => $item->can_birthday
-//                    ]
-//                ],
-//                "datetime_facets" => [
-//                    [
-//                        "facet_name"  => "created_at",
-//                        "facet_value" => $item->created_at->format('Y-m-d H:m:s')
-//                    ],
-//                    [
-//                        "facet_name"  => "updated_at",
-//                        "facet_value" => $item->updated_at->format('Y-m-d H:m:s')
-//                    ],
-//                    [
-//                        "facet_name"  => "latest_diary.created_at",
-//                        "facet_value" => $item->latest_diary['created_at']->format('Y-m-d H:m:s')
-//                    ]
-//                ],
-//                "aggs_facets"=>[
-//                    [
-//                        "facet_name"  => "latest_diary_d_cantype_id",
-//                        "facet_value" => $item->latest_diary['d_cantype_id']
-//                    ],
-//                    [
-//                        "facet_name"  => "can_source_id",
-//                        "facet_value" => $item->can_source_id
-//                    ],
-//                    [
-//                        "facet_name"  => "latest_diary_d_evaluate",
-//                        "facet_value" => $item->latest_diary['d_evaluate']
-//                    ],
-//                    [
-//                        "facet_name"  => "candidate_info_ci_type_of_work",
-//                        "facet_value" => $item->candidateInfo['ci_type_of_work']
-//                    ]
-//                ],
-//                "data" => $item
-//
-//            ];
-////
-//            $can->addDocToIndex($item->id,$param);
-////
-//        }
-
-//        dd($candidate);
 
         $candidateTypes = $this->candidateTypeRepository->getAll();
         $sources = $this->sourceRepository->getAll();
 
-        $query = [];
-
-        if (!empty($request->all()))
-        {
-            $query['bool']['filter'] = [];
-        }
-
-        // search name
-        if (!empty($request->candidate_name))
-        {
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "text_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "text_facets.facet_name" => [
-                                            "value" => "can_name"
-                                        ]
-                                    ]],
-                                [
-                                    "match_phrase_prefix" => [
-                                        "text_facets.facet_value" => $request->get('candidate_name')
-                                    ]]
-                            ]
-                        ]
-                    ]
-                ]
-            ];
-
-        }
-
-        // search title
-        if (!empty($request->candidate_title))
-        {
-
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "text_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "text_facets.facet_name" => [
-                                            "value" => "can_title"
-                                        ]
-                                    ]],
-                                [
-                                    "match_phrase_prefix" => [
-                                        "text_facets.facet_value" => $request->get('candidate_title')
-                                    ]]
-                            ]
-                        ]
-                    ]
-                ]
-            ];
-        }
-
-        $sort = [];
-
-        if ((isset($request->candidate_status) && $request->candidate_status == 'ung_vien_moi'))
-        {
-            $sort = [
-                "long_facets.facet_value" => [
-                    "order"         => "desc",
-                    "nested_path"   => "long_facets",
-                    "nested_filter" => [
-                        "term" => [
-                            "long_facets.facet_name" => "can_id"]
-                    ]
-                ]
-            ];
-        }
-
-        // search ứng viên mới cập nhật
-        if ((isset($request->candidate_status) && $request->candidate_status == 'ung_vien_moi_cap_nhat'))
-        {
-            $sort = [
-                "datetime_facets.facet_value" => [
-                    "order"         => "desc",
-                    "nested_path"   => "datetime_facets",
-                    "nested_filter" => [
-                        "term" => [
-                            "datetime_facets.facet_name" => "updated_at"]
-                    ]
-                ]
-            ];
-        }
-
-        // search loại ứng viên
-        if (isset($request->candidate_type))
-        {
-            $query['bool']['filter'][] = [
-                "bool" => [
-                    "should" => [
-                        [
-                            "nested" => [
-                                "path"  => "long_facets",
-                                "query" => [
-                                    "bool" => [
-                                        "filter" => [
-                                            [
-                                                "term" => [
-                                                    "long_facets.facet_name" => [
-                                                        "value" => "latest_diary.d_cantype_id"
-                                                    ]
-                                                ]],
-                                            [
-                                                "terms" => [
-                                                    "long_facets.facet_value" => $request->get('candidate_type')
-                                                ]]
-                                        ]
-                                    ]
-                                ]
-                            ]]
-                    ]
-                ]
-            ];
-
-        };
-
-        // search ứng viên theo thời gian viết nhật ký
-        if (isset($request->diary_wrote))
-        {
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "datetime_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "datetime_facets.facet_name" => [
-                                            "value" => "latest_diary.created_at"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "datetime_facets.facet_value" => [
-                                            "from"   => $request->get('diary_wrote'),
-                                            "to"     => $request->get('diary_wrote'),
-                                            "format" => "dd-MM-YYYY"
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-        }
-        else if (isset($request->diary_wrote_from) || isset($request->diary_wrote_to))
-        {
-
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "datetime_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "datetime_facets.facet_name" => [
-                                            "value" => "latest_diary.created_at"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "datetime_facets.facet_value" => [
-                                            "from"   => isset($request->diary_wrote_from) ? $request->diary_wrote_from : 'now-20y/y',
-                                            "to"     => isset($request->diary_wrote_to) ? $request->diary_wrote_to : 'now',
-                                            "format" => "dd-MM-YYYY"
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-        }
-
-        // search ứng viên theo nguồn
-        if (isset($request->candidate_source))
-        {
-
-            $query['bool']['filter'][] = [
-                "bool" => [
-                    "should" => [
-                        [
-                            "nested" => [
-                                "path"  => "long_facets",
-                                "query" => [
-                                    "bool" => [
-                                        "filter" => [
-                                            [
-                                                "term" => [
-                                                    "long_facets.facet_name" => [
-                                                        "value" => "can_source_id"
-                                                    ]
-                                                ]],
-                                            [
-                                                "terms" => [
-                                                    "long_facets.facet_value" => $request->get('candidate_source')
-                                                ]]
-                                        ]
-                                    ]
-                                ]
-                            ]]
-                    ]
-                ]
-            ];
-        }
-
-        // search ứng viên theo giới tính
-        if (isset($request->gender))
-        {
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "can_gender"
-                                        ]
-                                    ]],
-                                [
-                                    "term" => [
-                                        "long_facets.facet_value" => [
-                                            "value" => $request->get('gender')
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-        }
-
-        // search range age
-        if (isset($request->range_age) && $request->get('range_age') !== '0,70')
-        {
-            $ages = explode(',', $request->get('range_age'));
-
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "date_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "date_facets.facet_name" => [
-                                            "value" => "can_birthday"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "date_facets.facet_value" => [
-                                            "gte" => !empty($ages[1]) ? (date('Y') - $ages[1]) . "-01-01" : "1930-01-01",
-                                            "lte" => !empty($ages[0]) ? (date('Y') - $ages[0]) . "-12-30" : date('Y') . "-12-30"
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-
-        }
-
-        // search loại hình công việc
-        if (isset($request->type_of_work))
-        {
-
-            $query['bool']['filter'][] = [
-                "bool" => [
-                    "should" => [
-                        [
-                            "nested" => [
-                                "path"  => "long_facets",
-                                "query" => [
-                                    "bool" => [
-                                        "filter" => [
-                                            [
-                                                "term" => [
-                                                    "long_facets.facet_name" => [
-                                                        "value" => "candidate_info.ci_type_of_work"
-                                                    ]
-                                                ]],
-                                            [
-                                                "terms" => [
-                                                    "long_facets.facet_value" => $request->get('type_of_work')
-                                                ]]
-                                        ]
-                                    ]
-                                ]
-                            ]]
-                    ]
-                ]
-            ];
-        }
-
-        // search theo tình độ ngọi ngữ
-        if (isset($request->english_level))
-        {
-
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_english_level"
-                                        ]
-                                    ]],
-                                [
-                                    "term" => [
-                                        "long_facets.facet_value" => [
-                                            "value" => $request->get('english_level')
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-
-        }
-
-        // search trình độ chuyên môn
-        if (isset($request->qualification))
-        {
-
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_qualification"
-                                        ]
-                                    ]],
-                                [
-                                    "term" => [
-                                        "long_facets.facet_value" => [
-                                            "value" => $request->get('qualification')
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-
-        }
-
-        // search thời gian làm việc
-        if (isset($request->time_experience))
-        {
-
-            $query['bool']['filter'][] = [
-                "nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_time_experience"
-                                        ]
-                                    ]],
-                                [
-                                    "term" => [
-                                        "long_facets.facet_value" => [
-                                            "value" => $request->get('time_experience')
-                                        ]]
-                                ]
-                            ]
-                        ]]]
-            ];
-
-        }
-
-        // search theo mức lương
-        if (isset($request->salary))
-        {
-            $arrSalary = explode(',', $request->get('salary'));
-
-            $query['bool']['filter'][] = [
-                ["nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_salary_from"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "long_facets.facet_value" => [
-                                            "gte" => $arrSalary[0]
-                                        ]]
-                                ]
-                            ]
-                        ]]]],
-                ["nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_salary_to"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "long_facets.facet_value" => [
-                                            "lte" => $arrSalary[1]
-                                        ]]
-                                ]
-                            ]
-                        ]]]]
-            ];
-
-        }
-
-        // search theo đánh giá
-        if (isset($request->candidate_rate))
-        {
-
-            $query['bool']['filter'][] = [
-                "bool" => [
-                    "should" => [
-                        [
-                            "nested" => [
-                                "path"  => "long_facets",
-                                "query" => [
-                                    "bool" => [
-                                        "filter" => [
-                                            [
-                                                "term" => [
-                                                    "long_facets.facet_name" => [
-                                                        "value" => "latest_diary.d_evaluate"
-                                                    ]
-                                                ]],
-                                            [
-                                                "terms" => [
-                                                    "long_facets.facet_value" => $request->get('candidate_rate')
-                                                ]]
-                                        ]
-                                    ]
-                                ]
-                            ]]
-                    ]
-                ]
-            ];
-
-        }
-
-        $limit = 15;
-
-        $total_doc = Candidate::searchByQuery($query, [], [], 0)->totalHits();
-
-        $paginate = paginate($total_doc, $limit);
-
-        $offset = $paginate['offset'];
-
-        // aggregations
-        $aggregations = [
-            "aggs_facets" => [
-                "nested" => [
-                    "path" => "aggs_facets"
-                ],
-                "aggs"   => [
-                    "facet_name" => [
-                        "terms" => [
-                            "field" => "aggs_facets.facet_name",
-                            "size"  => "20"
-                        ],
-                        "aggs"  => [
-                            "facet_value" => [
-                                "terms" => [
-                                    "field" => "aggs_facets.facet_value",
-                                    "order" => ["_key" => "asc"],
-                                    "size"  => "20"
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ];
-        // all candidates on Elasticsearch
-        $candidates = Candidate::searchByQuery($query, $aggregations, [], $limit, $offset, $sort);
-
-//        dd($candidates[5]->id);
-
-        // aggregation
-        $arrAggregations = $candidates->getAggregations()['aggs_facets']['facet_name']['buckets'];
-        $arrAggregationsPluck = array_pluck($arrAggregations, 'key');
-        $newArrAggregations = [];
-        foreach ($arrAggregationsPluck as $key => $item)
-        {
-            $newArrAggregations[$item] = $arrAggregations[$key]['facet_value']['buckets'];
-        }
-
         $cityCondition = [
-            'select' => ['id', 'loc_name'],
-            'where'  => ['loc_parent_id' => 0]
+            'columns' => ['id', 'loc_name'],
+            'wheres'  => ['loc_parent_id' => 0]
         ];
 
-        $path = '../public/json/type_of_work.json';
-        $typeOfWork = json_decode(file_get_contents($path));
+        $typeOfWork = config('candidate_options.type_of_work');
 
-        $englishLevel = json_decode(file_get_contents('../public/json/english_level.json'));
+        $englishLevel = config('candidate_options.english_level');
 
-        $qualification = json_decode(file_get_contents('../public/json/qualification.json'));
+        $qualification = config('candidate_options.qualification');
 
-        $time_experience = json_decode(file_get_contents('../public/json/time_experience.json'));
+        $time_experience = config('candidate_options.time_experiences');
 
         $data = [
-            'candidateTypes'   => $candidateTypes,
-            'sources'          => $sources,
-            'city'             => $this->locationRepository->getAll($cityCondition),
-            'candidates'       => $candidates,
-            'paginate'         => [
-                'html'  => $paginate['html'],
-                'total' => $total_doc,
-                'first' => $offset + 1,
-                'last'  => ($offset + $limit) > $total_doc ? $total_doc : $offset + $limit
-            ],
-            'aggerations'      => $newArrAggregations,
-            'candidate_status' => $request->get('candidate_status'),
-            'candidate_type'   => $request->get('candidate_type'),
-            'candidate_name'   => $request->get('candidate_name'),
-            'candidate_title'  => $request->get('candidate_title'),
-            'diary_wrote'      => $request->get('diary_wrote'),
-            'diary_wrote_from' => $request->get('diary_wrote_from'),
-            'diary_wrote_to'   => $request->get('diary_wrote_to'),
-            'candidate_source' => $request->get('candidate_source'),
-            'district'         => $request->get('district'),
-            'range_age'        => isset($ages) ? $ages : [],
-            'typeOfWork'       => $typeOfWork->type_of_work,
-            'type_of_work'     => $request->get('type_of_work'),
-            'englishLevel'     => $englishLevel->english,
-            'english_level'    => $request->get('english_level'),
-            'qualification'    => $qualification->qualification,
-            'ci_qualification' => $request->get('qualification'),
-            'timeExperience'   => $time_experience->experience,
-            'time_experience'  => $request->time_experience,
-            'range_salary'     => isset($arrSalary) ? $arrSalary : [],
-            'candidate_rate'   => isset($request->candidate_rate) ? $request->candidate_rate : [],
-            'candidate_gender' => isset($request->gender) ? $request->get('gender') : []
+            'candidateTypes' => $candidateTypes,
+            'sources'        => $sources,
+            'careers'        => $this->careerRepository->getAll(['columns' => ['id', 'ca_name']]),
+            'city'           => $this->locationRepository->getAll($cityCondition),
+            'typeOfWork'     => $typeOfWork,
+            'englishLevel'   => $englishLevel,
+            'qualification'  => $qualification,
+            'timeExperience' => $time_experience,
         ];
 
         return view('candidate.index')->with($data);
@@ -778,9 +100,6 @@ class CandidateController extends Controller
     public function searchAjax(Request $request)
     {
 
-        $candidateTypes = $this->candidateTypeRepository->getAll();
-        $sources = $this->sourceRepository->getAll();
-
         $query = [];
 
         if (!empty($request->all()))
@@ -797,16 +116,14 @@ class CandidateController extends Controller
                     "query" => [
                         "bool" => [
                             "filter" => [
-                                [
-                                    "term" => [
-                                        "text_facets.facet_name" => [
-                                            "value" => "can_name"
-                                        ]
-                                    ]],
-                                [
-                                    "match_phrase_prefix" => [
-                                        "text_facets.facet_value" => $request->get('candidate_name')
-                                    ]]
+                                ["term" => [
+                                    "text_facets.facet_name" => [
+                                        "value" => "can_name"
+                                    ]
+                                ]],
+                                ["match_phrase_prefix" => [
+                                    "text_facets.facet_value" => $request->get('candidate_name')
+                                ]]
                             ]
                         ]
                     ]
@@ -1019,7 +336,7 @@ class CandidateController extends Controller
         }
 
         // search range age
-        if (isset($request->range_age) && $request->get('range_age') !== '0,70')
+        if (isset($request->range_age) && $request->get('range_age') !== '0,100')
         {
             $ages = explode(',', $request->get('range_age'));
 
@@ -1167,48 +484,50 @@ class CandidateController extends Controller
         // search theo mức lương
         if (isset($request->salary))
         {
-            $arrSalary = explode(',', $request->get('salary'));
+            if ($request->get('salary')!=='0,100'){
+                $arrSalary = explode(',', $request->get('salary'));
 
-            $query['bool']['filter'][] = [
-                ["nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_salary_from"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "long_facets.facet_value" => [
-                                            "gte" => $arrSalary[0]
-                                        ]]
+                $query['bool']['filter'][] = [
+                    ["nested" => [
+                        "path"  => "long_facets",
+                        "query" => [
+                            "bool" => [
+                                "filter" => [
+                                    [
+                                        "term" => [
+                                            "long_facets.facet_name" => [
+                                                "value" => "candidate_info.ci_salary_from"
+                                            ]
+                                        ]],
+                                    [
+                                        "range" => [
+                                            "long_facets.facet_value" => [
+                                                "gte" => $arrSalary[0]
+                                            ]]
+                                    ]
                                 ]
-                            ]
-                        ]]]],
-                ["nested" => [
-                    "path"  => "long_facets",
-                    "query" => [
-                        "bool" => [
-                            "filter" => [
-                                [
-                                    "term" => [
-                                        "long_facets.facet_name" => [
-                                            "value" => "candidate_info.ci_salary_to"
-                                        ]
-                                    ]],
-                                [
-                                    "range" => [
-                                        "long_facets.facet_value" => [
-                                            "lte" => $arrSalary[1]
-                                        ]]
+                            ]]]],
+                    ["nested" => [
+                        "path"  => "long_facets",
+                        "query" => [
+                            "bool" => [
+                                "filter" => [
+                                    [
+                                        "term" => [
+                                            "long_facets.facet_name" => [
+                                                "value" => "candidate_info.ci_salary_to"
+                                            ]
+                                        ]],
+                                    [
+                                        "range" => [
+                                            "long_facets.facet_value" => [
+                                                "lte" => $arrSalary[1]
+                                            ]]
+                                    ]
                                 ]
-                            ]
-                        ]]]]
-            ];
+                            ]]]]
+                ];
+            }
 
         }
 
@@ -1243,6 +562,116 @@ class CandidateController extends Controller
                 ]
             ];
 
+        }
+
+        // search ứng viên theo địa điểm mong muốn làm việc
+        if (isset($request->city))
+        {
+            $citys = $request->get('city');
+            if (!empty($citys[0]))
+            {
+                $cityId = [];
+                foreach ($citys as $item)
+                {
+                    $cityId[] = preg_replace('/[^0-9]/', '', $item);
+                }
+
+                $query['bool']['filter'][] = [
+                    "nested" => [
+                        "path"  => "nested_facets",
+                        "query" => [
+                            "bool" => [
+                                "filter" => [
+                                    [
+                                        "term" => [
+                                            "nested_facets.facet_name" => [
+                                                "value" => "location"
+                                            ]
+                                        ]],
+                                    [
+                                        "nested" => [
+                                            "path"  => "nested_facets.facet_value",
+                                            "query" => [
+                                                "terms" => [
+                                                    "nested_facets.facet_value.wp_locations_id" => $cityId
+                                                ]
+                                            ]
+                                        ]]
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+            }
+        }
+
+        // search ứng viên theo ngành nghề
+        if (isset($request->career))
+        {
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "nested_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "nested_facets.facet_name" => [
+                                            "value" => "career"
+                                        ]
+                                    ]],
+                                [
+                                    "nested" => [
+                                        "path"  => "nested_facets.facet_value",
+                                        "query" => [
+                                            "terms" => [
+                                                "nested_facets.facet_value.cc_careers_id" => $request->get('career')
+                                            ]
+                                        ]
+                                    ]]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        // search ứng viên theo ngành nghề
+        if (isset($request->skill))
+        {
+            $skills = $request->get('skill');
+            $skillId = [];
+            foreach ($skills as $item)
+            {
+                $skillId[] = preg_replace('/[^0-9]/', '', $item);
+            }
+
+            $query['bool']['filter'][] = [
+                "nested" => [
+                    "path"  => "nested_facets",
+                    "query" => [
+                        "bool" => [
+                            "filter" => [
+                                [
+                                    "term" => [
+                                        "nested_facets.facet_name" => [
+                                            "value" => "skill"
+                                        ]
+                                    ]],
+                                [
+                                    "nested" => [
+                                        "path"  => "nested_facets.facet_value",
+                                        "query" => [
+                                            "terms" => [
+                                                "nested_facets.facet_value.cs_skills_id" => $skillId
+                                            ]
+                                        ]
+                                    ]]
+                            ]
+                        ]
+                    ]
+                ]
+            ];
         }
 
         $total_doc = Candidate::searchByQuery($query, [], [], 0)->totalHits();
@@ -1292,21 +721,8 @@ class CandidateController extends Controller
             $newArrAggregations[$item] = $arrAggregations[$key]['facet_value']['buckets'];
         }
 
-        $cityCondition = [
-            'select' => ['id', 'loc_name'],
-            'where'  => ['loc_parent_id' => 0]
-        ];
-
-        $path = '../public/json/type_of_work.json';
-        $typeOfWork = json_decode(file_get_contents($path));
-
-        $englishLevel = json_decode(file_get_contents('../public/json/english_level.json'));
-
-        $qualification = json_decode(file_get_contents('../public/json/qualification.json'));
-
-        $time_experience = json_decode(file_get_contents('../public/json/time_experience.json'));
-
         $data = [
+            'request'     => $request->all(),
             'candidates'  => $candidates,
             'paginate'    => [
                 'total'     => $total_doc,
@@ -1324,19 +740,19 @@ class CandidateController extends Controller
     {
 
         $cityCondition = [
-            'select' => ['id', 'loc_name'],
-            'where'  => ['loc_parent_id' => 0]
+            'columns' => ['id', 'loc_name'],
+            'wheres'  => ['loc_parent_id' => 0]
         ];
 
         $data = [
-            'careers'         => $this->careerRepository->getAll(['select' => ['id', 'ca_name']]),
-            'sources'         => $this->sourceRepository->getAll(['select' => ['id', 'so_name']]),
+            'careers'         => $this->careerRepository->getAll(['columns' => ['id', 'ca_name']]),
+            'sources'         => $this->sourceRepository->getAll(['columns' => ['id', 'so_name']]),
             'city'            => $this->locationRepository->getAll($cityCondition),
-            'time_experience' => json_decode(file_get_contents('../public/json/time_experience.json'), true)['experience'],
-            'qualification'   => json_decode(file_get_contents('../public/json/qualification.json'), true)['qualification'],
-            'english_level'   => json_decode(file_get_contents('../public/json/english_level.json'), true)['english'],
-            'type_of_work'    => json_decode(file_get_contents('../public/json/type_of_work.json'), true)['type_of_work'],
-            'salary'          => json_decode(file_get_contents('../public/json/salary.json'), true)['salary']
+            'time_experience' => config('candidate_options.time_experience'),
+            'qualification'   => config('candidate_options.qualification'),
+            'english_level'   => config('candidate_options.english_level'),
+            'type_of_work'    => config('candidate_options.type_of_work'),
+            'salary'          => config('candidate_options.salary')
         ];
 
         return view('candidate.add')->with($data);
@@ -1347,10 +763,10 @@ class CandidateController extends Controller
         if ($request->has('can_phone') && $request->has('can_email'))
         {
             $condidtion = [
-                'count' => true,
-                'where' => [
-                    'can_phone' => $request->get('can_phone'),
-                    'can_email' => $request->get('can_email')
+                'count'  => true,
+                'wheres' => [
+                    ['can_phone', '=', $request->can_phone],
+                    ['can_email', '=', $request->can_email]
                 ]
             ];
             $count = $this->candidateRepository->getAll($condidtion);
@@ -1463,6 +879,7 @@ class CandidateController extends Controller
         if (!empty($request->get('can_birthday')))
         {
             $arrCandidate['can_birthday'] = date("Y-m-d", strtotime($request->get('can_birthday')));
+
         }
         else
         {
@@ -1490,7 +907,12 @@ class CandidateController extends Controller
             $arrCandidate['can_avatar'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Missing_avatar.svg/2000px-Missing_avatar.svg.png';
         }
 
-        $lastCandidateId = $this->candidateRepository->create($arrCandidate);
+        $lastCandidateId = $this->candidateRepository->create($arrCandidate)->id;
+
+        if ($salarys = $request->get('ci_salary'))
+        {
+            $arrSalary = explode('|', $salarys);
+        }
 
         $arrCandidateInfo = [
             'ci_candidates_id'   => $lastCandidateId,
@@ -1509,6 +931,8 @@ class CandidateController extends Controller
             'ci_prize'           => json_encode($ci_prize),
             'ci_skill'           => json_encode($ci_skill),
             'ci_hobby'           => strip_tags($request->get('ci_hobby')),
+            'ci_salary_from' => isset($arrSalary) ? $arrSalary[1] : 0,
+            'ci_salary_to'   => isset($arrSalary) ? $arrSalary[2] : 0
         ];
 
         if ($careers = $request->get('career'))
@@ -1521,7 +945,7 @@ class CandidateController extends Controller
                     'cc_careers_id'    => $item
                 ];
             }
-            $this->candidateCareerRepository->create($arrCandidateCareer);
+            $this->candidateCareerRepository->insert($arrCandidateCareer);
         }
 
         if ($skills = $request->get('skill'))
@@ -1535,11 +959,12 @@ class CandidateController extends Controller
                     'cs_skills_id'     => $idSkill
                 ];
             }
-            $this->candidateSkillRepository->create($arrCandidateSkill);
+            $this->candidateSkillRepository->insert($arrCandidateSkill);
         }
 
         if ($city = $request->get('city'))
         {
+            dd($city);
             $idCity = preg_replace('/[^0-9]/', '', $city);
             $arrWorkplace[] = [
                 'wp_candidates_id' => $lastCandidateId,
@@ -1556,18 +981,145 @@ class CandidateController extends Controller
                 }
             }
 
-            $this->workplaceRepository->create($arrWorkplace);
+            $this->workplaceRepository->insert($arrWorkplace);
         }
 
         if ($this->candidateinfoRepository->create($arrCandidateInfo))
         {
+            $candidate = $this->candidateRepository->getOneByElastic($lastCandidateId);
 
-            $notification = [
-                'message'    => 'Thêm ứng viên thành công!',
-                'alert-type' => 'success'
+            $param = [
+                "entity"          => ["name" => "candidates"],
+                "text_facets"     => [
+                    [
+                        "facet_name"  => "can_name",
+                        "facet_value" => $candidate->can_name
+                    ],
+                    [
+                        "facet_name"  => "can_title",
+                        "facet_value" => $candidate->can_title
+                    ]
+                ],
+                "keyword_facets"  => [
+                    [
+                        "facet_name"  => "can_email",
+                        "facet_value" => $candidate->can_email
+                    ]
+                ],
+                "long_facets"     => [
+                    [
+                        "facet_name"  => "can_source_id",
+                        "facet_value" => $candidate->can_source_id
+                    ],
+                    [
+                        "facet_name"  => "can_year",
+                        "facet_value" => $candidate->can_year
+                    ],
+                    [
+                        "facet_name"  => "can_gender",
+                        "facet_value" => $candidate->can_gender
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_type_of_work",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_english_level",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_english_level : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_qualification",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_qualification : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_time_experience",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_time_experience : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_salary_from",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_from : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_salary_to",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_to : null
+                    ],
+                    [
+                        "facet_name"  => "latest_diary.d_evaluate",
+                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_evaluate : null
+                    ],
+                    [
+                        "facet_name"  => "latest_diary.d_cantype_id",
+                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
+                    ]
+                ],
+                "nested_facets"   => [
+                    [
+                        "facet_name"  => "location",
+                        "facet_value" => $candidate->location->toArray()
+                    ],
+                    [
+                        "facet_name"  => "career",
+                        "facet_value" => $candidate->career->toArray()
+                    ],
+                    [
+                        "facet_name"  => "skill",
+                        "facet_value" => $candidate->skill->toArray()
+                    ],
+
+                ],
+                "date_facets"     => [
+                    [
+                        "facet_name"  => "can_birthday",
+                        "facet_value" => $candidate->can_birthday
+                    ]
+                ],
+                "datetime_facets" => [
+                    [
+                        "facet_name"  => "created_at",
+                        "facet_value" => $candidate->created_at->format('Y-m-d H:m:s')
+                    ],
+                    [
+                        "facet_name"  => "updated_at",
+                        "facet_value" => $candidate->updated_at->format('Y-m-d H:m:s')
+                    ],
+                    [
+                        "facet_name"  => "latest_diary.created_at",
+                        "facet_value" => isset($candidate->latest_diary->created_at) ? $candidate->latest_diary->created_at->format('Y-m-d H:m:s') : null
+                    ]
+                ],
+                "aggs_facets"     => [
+                    [
+                        "facet_name"  => "latest_diary_d_cantype_id",
+                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
+                    ],
+                    [
+                        "facet_name"  => "can_source_id",
+                        "facet_value" => $candidate->can_source_id
+                    ],
+                    [
+                        "facet_name"  => "latest_diary_d_evaluate",
+                        "facet_value" => isset($item->latest_diary) ? $candidate->latest_diary->d_evaluate : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info_ci_type_of_work",
+                        "facet_value" => isset($item->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
+                    ]
+                ],
+                "data"            => $candidate
+
             ];
 
-            return redirect('candidate/list')->with($notification);
+            $can = new Candidate();
+            $can->addDocToIndex($lastCandidateId, $param);
+
+            $alert = [
+                'type'    => 'success',
+                'message' => 'Đã thêm ứng viên!'
+            ];
+
+            \Session::flash('toastr', $alert);
+
+            return redirect('candidate/list');
 
         }
 
@@ -1604,7 +1156,7 @@ class CandidateController extends Controller
 
     public function changeField(array $data)
     {
-        $candidate_field = config('candidate_field.candidates');
+        $candidate_field = config('candidate_options.candidate_field.candidates');
 
         $insert = [];
 
@@ -1683,7 +1235,7 @@ class CandidateController extends Controller
             }
             if (!empty($item['can_email']))
             {
-                if (count($this->candidateRepository->getAll(['select' => 'id', 'where' => ['can_name' => $item['can_name'], 'can_email' => $item['can_email']]])) > 0)
+                if (count($this->candidateRepository->getAll(['columns' => 'id', 'wheres' => ['can_name' => $item['can_name'], 'can_email' => $item['can_email']]])) > 0)
                 {
                     continue;
                 }
@@ -1704,7 +1256,7 @@ class CandidateController extends Controller
                 {
                     foreach ($item['candidates_careers'] as $candidates_careers_key => $candidates_career_item)
                     {
-                        if ($career = $this->careerRepository->getAll(['select' => ['id', 'ca_name'], 'where' => ['ca_name' => $candidates_career_item]])->first())
+                        if ($career = $this->careerRepository->getAll(['columns' => ['id', 'ca_name'], 'where' => ['ca_name' => $candidates_career_item]])->first())
                         {
 
                             $arrCandidateCareer1 = [
@@ -1777,7 +1329,7 @@ class CandidateController extends Controller
     {
         if (!is_numeric($source))
         {
-            if ($sourceID = $this->sourceRepository->getAll(['select' => 'id', 'search' => ['field' => 'so_name', 'string' => $source]]))
+            if ($sourceID = $this->sourceRepository->getAll(['columns' => 'id', 'search' => ['field' => 'so_name', 'string' => $source]]))
             {
                 dd($sourceID);
             }
@@ -1788,22 +1340,22 @@ class CandidateController extends Controller
     {
 
         $cityCondition = [
-            'select' => ['id', 'loc_name'],
-            'where'  => ['loc_parent_id' => 0]
+            'columns' => ['id', 'loc_name'],
+            'wheres'  => ['loc_parent_id' => 0]
         ];
         $data = [
-            'careers'   => $this->careerRepository->getAll(['select' => ['id', 'ca_name']]),
-            'sources'   => $this->sourceRepository->getAll(['select' => ['id', 'so_name']]),
+            'careers'   => $this->careerRepository->getAll(['columns' => ['id', 'ca_name']]),
+            'sources'   => $this->sourceRepository->getAll(['columns' => ['id', 'so_name']]),
             'candidate' => $this->candidateRepository->getById($id, ['candidateInfo', 'career:cc_careers_id,ca_name',
                 'skill:cs_skills_id,sk_name', 'location:wp_locations_id,loc_name'
             ]),
             'city'      => $this->locationRepository->getAll($cityCondition),
 
-            'time_experience' => json_decode(file_get_contents('../public/json/time_experience.json'), true)['experience'],
-            'qualification'   => json_decode(file_get_contents('../public/json/qualification.json'), true)['qualification'],
-            'english_level'   => json_decode(file_get_contents('../public/json/english_level.json'), true)['english'],
-            'type_of_work'    => json_decode(file_get_contents('../public/json/type_of_work.json'), true)['type_of_work'],
-            'salary'          => json_decode(file_get_contents('../public/json/salary.json'), true)['salary'],
+            'time_experience' => config('candidate_options.time_experience'),
+            'qualification'   => config('candidate_options.qualification'),
+            'english_level'   => config('candidate_options.english_level'),
+            'type_of_work'    => config('candidate_options.type_of_work'),
+            'salary'          => config('candidate_options.salary')
 
         ];
 
@@ -1856,10 +1408,10 @@ class CandidateController extends Controller
         if ($request->has('can_phone') && $request->has('can_email'))
         {
             $condidtion = [
-                'count' => true,
-                'where' => [
-                    'can_phone' => $request->get('can_phone'),
-                    'can_email' => $request->get('can_email'),
+                'count'  => true,
+                'wheres' => [
+                    ['can_phone', '=', $request->get('can_phone')],
+                    ['can_email', '=', $request->get('can_email')],
                     ['id', '<>', $request->get('candidate_id')]
                 ]
             ];
@@ -2000,6 +1552,10 @@ class CandidateController extends Controller
             $this->candidateSkillRepository->deleteByCandidateId($idCandidate, 'cs_candidates_id');
         }
 
+        if ($salarys=$request->get('ci_salary')){
+            $arrSalary=explode('|', $salarys);
+        }
+
         $arrCandidateInfo = [
             'ci_candidates_id'   => $idCandidate,
             'ci_work_abroad'     => strip_tags($request->get('ci_work_abroad')),
@@ -2007,7 +1563,7 @@ class CandidateController extends Controller
             'ci_qualification'   => strip_tags($request->get('ci_qualification')),
             'ci_english_level'   => strip_tags($request->get('ci_english_level')),
             'ci_type_of_work'    => strip_tags($request->get('ci_type_of_work')),
-            'ci_salary'          => strip_tags($request->get('ci_salary')),
+            'ci_salary'          => isset($arrSalary)?$arrSalary[0]:0,
             'ci_target'          => strip_tags($request->get('ci_target')),
             'ci_about'           => strip_tags($request->get('ci_about')),
             'ci_work_experience' => json_encode($ci_work_experience),
@@ -2017,6 +1573,8 @@ class CandidateController extends Controller
             'ci_prize'           => json_encode($ci_prize),
             'ci_skill'           => json_encode($ci_skill),
             'ci_hobby'           => strip_tags($request->get('ci_hobby')),
+            'ci_salary_from' => isset($arrSalary) ? $arrSalary[1] : 0,
+            'ci_salary_to'   => isset($arrSalary) ? $arrSalary[2] : 0
         ];
 
         if ($idCandidateInfo = $request->get('candidateInfo_id'))
@@ -2027,6 +1585,7 @@ class CandidateController extends Controller
         if ($careers = $request->get('career'))
         {
             $arrCandidateCareer = [];
+
             foreach ($careers as $item)
             {
                 $arrCandidateCareer[] = [
@@ -2034,7 +1593,8 @@ class CandidateController extends Controller
                     'cc_careers_id'    => $item
                 ];
             }
-            $this->candidateCareerRepository->create($arrCandidateCareer);
+            $this->candidateCareerRepository->insert($arrCandidateCareer);
+
         }
 
         if ($skills = $request->get('skill'))
@@ -2048,7 +1608,7 @@ class CandidateController extends Controller
                     'cs_skills_id'     => $idSkill
                 ];
             }
-            $this->candidateSkillRepository->create($arrCandidateSkill);
+            $this->candidateSkillRepository->insert($arrCandidateSkill);
         }
 
         if ($city = $request->get('city'))
@@ -2068,38 +1628,168 @@ class CandidateController extends Controller
                     ];
                 }
             }
-            $this->workplaceRepository->create($arrWorkplace);
+            $this->workplaceRepository->insert($arrWorkplace);
         }
 
-        $notification = [
-            'message'    => 'Sửa ứng viên thành công!',
-            'alert-type' => 'success'
-        ];
+        if ($idCandidate){
+            $candidate=$this->candidateRepository->getOneByElastic($idCandidate);
+            $param = [
+                "entity"          => ["name" => "candidates"],
+                "text_facets"     => [
+                    [
+                        "facet_name"  => "can_name",
+                        "facet_value" => $candidate->can_name
+                    ],
+                    [
+                        "facet_name"  => "can_title",
+                        "facet_value" => $candidate->can_title
+                    ]
+                ],
+                "keyword_facets"  => [
+                    [
+                        "facet_name"  => "can_email",
+                        "facet_value" => $candidate->can_email
+                    ]
+                ],
+                "long_facets"     => [
+                    [
+                        "facet_name"  => "can_source_id",
+                        "facet_value" => $candidate->can_source_id
+                    ],
+                    [
+                        "facet_name"  => "can_year",
+                        "facet_value" => $candidate->can_year
+                    ],
+                    [
+                        "facet_name"  => "can_gender",
+                        "facet_value" => $candidate->can_gender
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_type_of_work",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_english_level",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_english_level : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_qualification",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_qualification : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_time_experience",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_time_experience : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_salary_from",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_from : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info.ci_salary_to",
+                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_to : null
+                    ],
+                    [
+                        "facet_name"  => "latest_diary.d_evaluate",
+                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_evaluate : null
+                    ],
+                    [
+                        "facet_name"  => "latest_diary.d_cantype_id",
+                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
+                    ]
+                ],
+                "nested_facets"   => [
+                    [
+                        "facet_name"  => "location",
+                        "facet_value" => $candidate->location->toArray()
+                    ],
+                    [
+                        "facet_name"  => "career",
+                        "facet_value" => $candidate->career->toArray()
+                    ],
+                    [
+                        "facet_name"  => "skill",
+                        "facet_value" => $candidate->skill->toArray()
+                    ],
 
-        return redirect('candidate/list')->with($notification);
+                ],
+                "date_facets"     => [
+                    [
+                        "facet_name"  => "can_birthday",
+                        "facet_value" => $candidate->can_birthday
+                    ]
+                ],
+                "datetime_facets" => [
+                    [
+                        "facet_name"  => "created_at",
+                        "facet_value" => $candidate->created_at->format('Y-m-d H:m:s')
+                    ],
+                    [
+                        "facet_name"  => "updated_at",
+                        "facet_value" => $candidate->updated_at->format('Y-m-d H:m:s')
+                    ],
+                    [
+                        "facet_name"  => "latest_diary.created_at",
+                        "facet_value" => isset($candidate->latest_diary->created_at) ? $candidate->latest_diary->created_at->format('Y-m-d H:m:s') : null
+                    ]
+                ],
+                "aggs_facets"     => [
+                    [
+                        "facet_name"  => "latest_diary_d_cantype_id",
+                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
+                    ],
+                    [
+                        "facet_name"  => "can_source_id",
+                        "facet_value" => $candidate->can_source_id
+                    ],
+                    [
+                        "facet_name"  => "latest_diary_d_evaluate",
+                        "facet_value" => isset($item->latest_diary) ? $candidate->latest_diary->d_evaluate : null
+                    ],
+                    [
+                        "facet_name"  => "candidate_info_ci_type_of_work",
+                        "facet_value" => isset($item->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
+                    ]
+                ],
+                "data"            => $candidate
+
+            ];
+
+            $can = new Candidate();
+            $can->addDocToIndex($idCandidate, $param);
+
+            $alert = [
+                'type'    => 'success',
+                'message' => 'Đã sửa ứng viên!'
+            ];
+
+            \Session::flash('toastr', $alert);
+
+        }
+
+        return redirect('candidate/list');
 
     }
 
     public function showAjax(Request $request)
     {
-        $id = $request->get('id');
 
-        $result = $this->candidateRepository->getById($id);
+        if ($id = $request->get('id'))
+        {
 
-        return response([
-//            'candidate'     => $result->toArray(),
-//            'candidateInfo' => $result->candidateInfo()->get()->toArray()[0],
-            'candidate' => $this->candidateRepository->getById($id, ['candidateInfo', 'career:ca_name',
-                'skill:sk_name', 'location:loc_name'])
+            $candidate = Candidate::getOne($id);
 
-        ]);
+        }
 
+        return response($candidate->first());
     }
 
     public function destroyAjax(Request $request)
     {
         if ($id = $request->get('id'))
         {
+            $can = new Candidate();
+            $can->deleteDoc($id);
+
             $this->candidateRepository->delete($id);
             $this->candidateinfoRepository->deleteByCandidateId($id, 'ci_candidates_id');
             $this->candidateCareerRepository->deleteByCandidateId($id, 'cc_candidates_id');
@@ -2107,14 +1797,33 @@ class CandidateController extends Controller
             $this->workplaceRepository->deleteByCandidateId($id, 'wp_candidates_id');
 
             return response([
-                'message' => 'Xóa thành công'
+                'type'    => 'success',
+                'message' => 'Xóa thành công!'
             ]);
         }
 
         return response([
+            'type' => 'warm',
             'message' => 'Xóa không thành công'
         ]);
 
+    }
+
+    public function exportPDF(Request $request){
+        if ($html=$request->get('html')){
+            $pdf=\App::make('dompdf.wrapper');
+
+            return $pdf->stream();
+        }
+
+        $alert = [
+            'type'    => 'success',
+            'message' => 'Đã có lỗi xảy ra!'
+        ];
+
+        \Session::flash('toastr', $alert);
+
+        return redirect()->route('candidate.list');
     }
 
 }
