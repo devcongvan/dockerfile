@@ -151,7 +151,6 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Elasticquent\ElasticquentServiceProvider::class,
-        Cviebrock\LaravelElasticsearch\ServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
 
@@ -221,6 +220,7 @@ return [
         'Es' => Elasticquent\ElasticquentElasticsearchFacade::class,
         'DOMPDF' => Barryvdh\DomPDF\Facade::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'ES' => Basemkhirat\Elasticsearch\Facades\ES::class
 
     ],
 

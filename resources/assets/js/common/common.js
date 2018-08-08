@@ -48,9 +48,9 @@ export var Common={
 
     configDatepicker: function () {
         $('.datepicker').datepicker({
-            format: 'dd-mm-yyyy',
+            format: 'yyyy-mm-dd',
             todayHighlight: true,
-            defaultViewDate: new Date(),
+            defaultViewDate: new Date()
         });
     },
 

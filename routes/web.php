@@ -31,6 +31,8 @@ Route::group(['prefix' => 'candidate'], function() {
     
     Route::post('export','CandidateController@exportPDF')->name('candidate.exportt');
 
+    Route::get('testjoin','CandidateController@jointest');
+
     Route::group(['prefix' => 'ajax'], function() {
         Route::post('show', 'CandidateController@showAjax')->name('candidate.ajax.show');
 
@@ -148,7 +150,11 @@ Route::group(['prefix' => 'diary'], function() {
 
 Route::group(['prefix'=>'elastic'], function (){
     Route::get('index','ElasticController@createIndex')->name('elastic.index');
-    
+
+    Route::get('reindex','ElasticController@reindex')->name('elastic.reindex');
+
+    Route::get('mapping','ElasticController@mapping')->name('elastic.mapping');
+
     Route::get('movedata','ElasticController@moveDataToElastic')->name('elastic.movedata');
 });
 

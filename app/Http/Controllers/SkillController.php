@@ -55,7 +55,7 @@ class SkillController extends Controller
         $formatted_tags = [];
 
         foreach ($result as $item) {
-            $formatted_tags[] = ['id' => $item->id.'|'.$item->sk_name, 'text' => $item->sk_name];
+            $formatted_tags[] = ['id' => $item->id, 'text' => $item->sk_name];
         }
 
         return response($formatted_tags);

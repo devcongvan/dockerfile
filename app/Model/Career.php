@@ -16,6 +16,10 @@ class Career extends Model
         return $this->hasMany(CandidateCareer::class,'cc_careers_id');
     }
 
+    public function candidates(){
+        return $this->morphToMany(Candidate::class, 'candidate_tag');
+    }
+
 
 
 

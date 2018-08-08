@@ -17,12 +17,13 @@
                 <div class="row candidateBox-row">
                     Ngành nghề
 
-                    <select class=" career" name="career[]" data-placeholder="Chọn một ngành nghề" data-url="{{route('career.ajax.search')}}" multiple="multiple" placeholder="Chọn ngành nghề">
+                    <select class=" career" name="careers[]" data-placeholder="Chọn một ngành nghề" data-url="{{route('career.ajax.search')}}" multiple="multiple" placeholder="Chọn ngành nghề">
                         <option value="">-- Chọn một ngành nghề --</option>
+
                         @if(!empty($careers))
                             @foreach($careers as $index => $item)
                                 @php $selected='' @endphp
-                                @if(in_array($item->id,old('career',isset($candidate->career)?$candidate->career->pluck('cc_careers_id')->toArray():[])))
+                                @if(in_array($item->id,old('careers',isset($candidate->career)?$candidate->career->pluck('cc_careers_id')->toArray():[])))
                                     @php $selected='selected="selected"' @endphp
                                 @endif
                                 <option value="{{$item->id}}" {{$selected}}>{{$item->ca_name}}</option>
@@ -33,14 +34,27 @@
                 <div class="row candidateBox-row">
                     <div>Kỹ năng</div>
                     <div class="d-flex" style="width: 100%;">
-                        <select class="skill" name="skill[]" data-url="{{route('skill.ajax.search')}}" data-ajax--cache="true" data-placeholder="Chọn kỹ năng" multiple="multiple">
-                            @foreach (old('skill',isset($candidate->skill)?$candidate->skill:[]) as $item)
-                                @if(!empty(old('skill')))
-                                    <option value="{{$item}}" selected="selected">{{preg_replace('/(\d+\|)/','', $item)}}</option>
-                                @elseif(!empty($candidate->skill->toArray()))
-                                    <option value="{{$item->cs_skills_id}}|{{ $item->sk_name}}" selected="selected">{{ $item->sk_name }}</option>
-                                @endif
-                            @endforeach
+                        <select class="select3" name="skills[]" data-url="" data-ajax--cache="true" data-placeholder="Chọn kỹ năng" multiple="multiple">
+                            @if (!empty($skills))
+                                @foreach($skills as $index => $item)
+                                    @php $selected='' @endphp
+                                    @if (in_array($item->id,old('skills',isset($candidate->skill)?$candidate->skill->pluck('cs_skills_id')->toArray():[])))
+                                        @php $selected='selected="selected"' @endphp
+                                    @endif
+                                    <option value="{{$item->id}}" {{$selected}}>{{$item->sk_name}}</option>
+                                @endforeach
+                            @endif
+
+
+                            {{--@foreach (old('skills',isset($candidate->skill)?$candidate->skill:(isset($skills)?$skills:[])) as $item)--}}
+                                {{--@if(!empty(old('skills')))--}}
+                                    {{--<option value="{{$item}}" selected="selected">{{preg_replace('/(\d+\|)/','', $item)}}</option>--}}
+                                {{--@elseif(isset($candidate->skill))--}}
+                                    {{--<option value="{{$item->id}}" selected="selected">{{ $item->sk_name }}</option>--}}
+                                {{--@elseif (isset($skills))--}}
+                                    {{--<option value="{{$item->id}}">{{ $item->sk_name }}</option>--}}
+                                {{--@endif--}}
+                            {{--@endforeach--}}
                         </select>
 
                         <button style="height: 30px!important;" data-toggle="modal" data-backdrop="static" data-url="{{route('skill.ajax.create')}}" data-btn="skill" data-target="#candidate-popup" type="button" class="btn btn-common btn-common">
@@ -51,38 +65,34 @@
 
                 <div class="row candidateBox-row">
                     Chọn thành phố/tỉnh thành mong muốn làm việc
-
-                    <select class="select3" id="city_want_to_work" data-placeholder="Chọn thành phố muốn làm việc" data-url="{{route('location.ajax.search')}}" name="city">
+                    @php dump(old('locations')) @endphp
+                    <select class="select3" id="city_want_to_work" data-placeholder="Chọn thành phố muốn làm việc" data-url="{{route('location.ajax.search')}}" name="locations[]">
                         <option value="">Chọn thành phố nơi bạn muốn làm việc</option>
-
                         @if(isset($city))
                             @foreach($city as $item)
-                                <option value="{{ $item->id }}" {{old('city',isset($candidate)?(!empty($candidate->location->first()->wp_locations_id)?$candidate->location->first()->wp_locations_id:''):'')==$item->id?'selected':''}}
-                                >{{ $item->loc_name  }}</option>
+
+                                <option value="{{$item->id}}" {{!empty(old('locations')[0])&&old('locations')[0]==$item->id?'selected="selected"':(isset($candidate)&&$candidate->location->first()->wp_locations_id==$item->id?'selected="selected"':'') }}>{{$item->loc_name}}</option>
 
                                 @if(isset($candidate->location)&&!empty($candidate->location))  unset($candidate->location[0]) @endif
                                 {{--<option value="{{ $item->id }}" >{{ $item->loc_name  }}</option>--}}
                             @endforeach
                         @endif
-
                     </select>
                 </div>
 
-                <div class="row candidateBox-row {{!empty($candidate)||!empty(old('district'))?'':'hide'}} ">
+                <div class="row candidateBox-row ">
                     Chọn quận/huyện mong muốn làm việc
-
                     <select class="select3" id="district_want_to_work" data-placeholder="Chọn quận huyện mong muốn làm việc" data-url="{{route('location.ajax.search')}}" data-parent-id=""
-                            name="district[]" multiple="multiple">
-                        @foreach (old('district',isset($candidate->location)?$candidate->location->toArray():[]) as $item)
-                            @if(!empty(old('district')))
+                            name="locations[]" multiple="multiple">
+                        @foreach (old('locations[]',isset($candidate->location)?$candidate->location->toArray():[]) as $item)
+                            @if(!empty(old('locations[]')))
                                 <option value="{{$item}}" selected="selected">{{preg_replace('/(\d+\|)/','', $item)}}</option>
                             @elseif(!empty($candidate->location->toArray()))
-                                <option value="{{ $item['wp_locations_id'] }}|{{ $item['loc_name']}}" selected="selected">{{ $item['loc_name'] }}</option>
+                                <option value="{{ $item['wp_locations_id'] }}" selected="selected">{{ $item['loc_name'] }}</option>
                             @endif
                         @endforeach
                     </select>
                 </div>
-
 
                 <div class="row candidateBox-row want-to-abroad">
                     <p>Mong muốn làm việc tại nước ngoài</p>

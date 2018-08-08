@@ -11,7 +11,9 @@ class Location extends Model
     protected $fillable=[
         'loc_name','loc_slug'
     ];
-
-
+    
+    public function candidates(){
+        return $this->morphToMany(Candidate::class, 'candidate_tag');
+    }
 
 }

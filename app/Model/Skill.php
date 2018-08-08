@@ -19,4 +19,8 @@ class Skill extends Model
     public function getNameForSelect(){
         return $this->id.'|'.$this->sk_name;
     }
+
+    public function candidates(){
+        return $this->morphToMany(Candidate::class, 'candidate_tag');
+    }
 }

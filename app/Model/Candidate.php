@@ -30,6 +30,28 @@ class Candidate extends Model
         'can_diary'
     ];
 
+    protected $indexSettings = [
+        "analysis"=>[
+         "analyzer"=>[
+            "synonym_analyzer"=>[
+               "filter"=> [
+                  "lowercase",
+                  "synonym_filter"
+               ],
+               "tokenizer"=> "standard"
+            ]
+         ],
+         "filter"=>[
+            "synonym_filter"=>[
+               "type"=> "synonym",
+               "synonyms_path"=>"synonym.txt",
+               "tokenizer"=> "keyword",
+               "ignore_case"=> true
+            ]
+         ]
+      ]
+    ];
+
     protected $mappingProperties = array(
         "entity"          => [
             "properties" => [
@@ -62,7 +84,8 @@ class Candidate extends Model
                             "type"         => "keyword",
                             "ignore_above" => 256
                         ]
-                    ]
+                    ],
+                    "analyzer"=> "synonym_analyzer"
                 ]
             ]
         ],
@@ -121,9 +144,6 @@ class Candidate extends Model
                     "format" => "yyyy-MM-dd HH:mm:ss"
                 ]
             ]
-        ],
-        "data"            => [
-            "type" => "object"
         ]
     );
 
@@ -142,24 +162,24 @@ class Candidate extends Model
         return $this->hasOne(CandidateInfo::class, 'ci_candidates_id');
     }
 
-    public function location()
-    {
-        return $this->belongsToMany(Location::class, 'workplaces', 'wp_candidates_id', 'wp_locations_id');
-    }
-
     public function candidateCareer()
     {
         return $this->hasMany(CandidateCareer::class, 'cc_candidates_id');
     }
 
-    public function career()
+    public function locations()
     {
-        return $this->belongsToMany(Career::class, 'candidates_careers', 'cc_candidates_id', 'cc_careers_id');
+        return $this->morphedByMany(Location::class,'candidate_tag');
     }
 
-    public function skill()
+    public function careers()
     {
-        return $this->belongsToMany(Skill::class, 'candidates_skills', 'cs_candidates_id', 'cs_skills_id');
+        return $this->morphedByMany(Career::class,'candidate_tag');
+    }
+
+    public function skills()
+    {
+        return $this->morphedByMany(Skill::class ,'candidate_tag');
     }
 
     public function source()

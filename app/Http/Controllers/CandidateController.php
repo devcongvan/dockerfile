@@ -8,20 +8,15 @@ use App\Repositories\Eloquents\CandidateCareerRepository;
 use App\Repositories\Eloquents\CandidateInfoRepository;
 use App\Repositories\Eloquents\CandidateRepository;
 use App\Repositories\Eloquents\CandidateSkillRepository;
+use App\Repositories\Eloquents\CandidateTagRepository;
 use App\Repositories\Eloquents\CandidateTypeRepository;
 use App\Repositories\Eloquents\CareerRepository;
 use App\Repositories\Eloquents\LocationRepository;
+use App\Repositories\Eloquents\SkillRepository;
 use App\Repositories\Eloquents\SourceRepository;
 
 use App\Repositories\Eloquents\WorkplaceRepository;
 use Illuminate\Http\Request;
-
-use Elasticsearch\Client;
-
-use App\Model\Location;
-use App\Http\Requests\CandidateRequest;
-
-use Maatwebsite\Excel;
 
 class CandidateController extends Controller
 {
@@ -34,8 +29,11 @@ class CandidateController extends Controller
     protected $sourceRepository;
     protected $locationRepository;
     protected $candidateTypeRepository;
+    protected $candidateTagRepository;
 
     protected $careerRepository;
+
+    protected $skillRepository;
 
     protected $elasticsearch;
 
@@ -47,7 +45,9 @@ class CandidateController extends Controller
                                 CandidateCareerRepository $candidateCareerRepository,
                                 CandidateSkillRepository $candidateSkillRepository,
                                 WorkplaceRepository $workplaceRepository,
-                                CandidateInfoRepository $candidateInfoRepository)
+                                CandidateInfoRepository $candidateInfoRepository,
+                                CandidateTagRepository $candidateTagRepository,
+                                SkillRepository $skillRepository)
     {
         $this->candidateRepository = $candidateRepository;
         $this->sourceRepository = $sourceRepository;
@@ -58,6 +58,8 @@ class CandidateController extends Controller
         $this->candidateSkillRepository = $candidateSkillRepository;
         $this->workplaceRepository = $workplaceRepository;
         $this->candidateinfoRepository = $candidateInfoRepository;
+        $this->candidateTagRepository = $candidateTagRepository;
+        $this->skillRepository = $skillRepository;
     }
 
     /**
@@ -66,6 +68,7 @@ class CandidateController extends Controller
      */
     public function index()
     {
+        dump(config('candidate_options.candidate_tags'));
 
         $candidateTypes = $this->candidateTypeRepository->getAll();
         $sources = $this->sourceRepository->getAll();
@@ -484,7 +487,8 @@ class CandidateController extends Controller
         // search theo mức lương
         if (isset($request->salary))
         {
-            if ($request->get('salary')!=='0,100'){
+            if ($request->get('salary') !== '0,100')
+            {
                 $arrSalary = explode(',', $request->get('salary'));
 
                 $query['bool']['filter'][] = [
@@ -736,9 +740,9 @@ class CandidateController extends Controller
         return response($data);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-
+        dump($request->all());
         $cityCondition = [
             'columns' => ['id', 'loc_name'],
             'wheres'  => ['loc_parent_id' => 0]
@@ -747,6 +751,7 @@ class CandidateController extends Controller
         $data = [
             'careers'         => $this->careerRepository->getAll(['columns' => ['id', 'ca_name']]),
             'sources'         => $this->sourceRepository->getAll(['columns' => ['id', 'so_name']]),
+            'skills'          => $this->skillRepository->getAll(['columns' => ['id', 'sk_name']]),
             'city'            => $this->locationRepository->getAll($cityCondition),
             'time_experience' => config('candidate_options.time_experience'),
             'qualification'   => config('candidate_options.qualification'),
@@ -760,6 +765,7 @@ class CandidateController extends Controller
 
     public function postStore(CandidateRequest2 $request)
     {
+
         if ($request->has('can_phone') && $request->has('can_email'))
         {
             $condidtion = [
@@ -879,7 +885,6 @@ class CandidateController extends Controller
         if (!empty($request->get('can_birthday')))
         {
             $arrCandidate['can_birthday'] = date("Y-m-d", strtotime($request->get('can_birthday')));
-
         }
         else
         {
@@ -907,7 +912,8 @@ class CandidateController extends Controller
             $arrCandidate['can_avatar'] = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Missing_avatar.svg/2000px-Missing_avatar.svg.png';
         }
 
-        $lastCandidateId = $this->candidateRepository->create($arrCandidate)->id;
+        $candidate = $this->candidateRepository->create($arrCandidate);
+        $lastCandidateId = $candidate->id;
 
         if ($salarys = $request->get('ci_salary'))
         {
@@ -921,7 +927,7 @@ class CandidateController extends Controller
             'ci_qualification'   => strip_tags($request->get('ci_qualification')),
             'ci_english_level'   => strip_tags($request->get('ci_english_level')),
             'ci_type_of_work'    => strip_tags($request->get('ci_type_of_work')),
-            'ci_salary'          => strip_tags($request->get('ci_salary')),
+            'ci_salary'          => strip_tags(isset($arrSalary[0]) ? $arrSalary[0] : 0),
             'ci_target'          => strip_tags($request->get('ci_target')),
             'ci_about'           => strip_tags($request->get('ci_about')),
             'ci_work_experience' => json_encode($ci_work_experience),
@@ -931,8 +937,8 @@ class CandidateController extends Controller
             'ci_prize'           => json_encode($ci_prize),
             'ci_skill'           => json_encode($ci_skill),
             'ci_hobby'           => strip_tags($request->get('ci_hobby')),
-            'ci_salary_from' => isset($arrSalary) ? $arrSalary[1] : 0,
-            'ci_salary_to'   => isset($arrSalary) ? $arrSalary[2] : 0
+            'ci_salary_from'     => strip_tags(isset($arrSalary[1]) ? $arrSalary[1] : 0),
+            'ci_salary_to'       => strip_tags(isset($arrSalary[2]) ? $arrSalary[2] : 0)
         ];
 
         if ($careers = $request->get('career'))
@@ -948,15 +954,15 @@ class CandidateController extends Controller
             $this->candidateCareerRepository->insert($arrCandidateCareer);
         }
 
-        if ($skills = $request->get('skill'))
+        if ($skills = $request->get('skills'))
         {
             $arrCandidateSkill = [];
             foreach ($skills as $item)
             {
-                $idSkill = preg_replace('/[^0-9]/', '', $item);
+//                $idSkill = preg_replace('/[^0-9]/', '', $item);
                 $arrCandidateSkill[] = [
                     'cs_candidates_id' => $lastCandidateId,
-                    'cs_skills_id'     => $idSkill
+                    'cs_skills_id'     => $item
                 ];
             }
             $this->candidateSkillRepository->insert($arrCandidateSkill);
@@ -964,154 +970,202 @@ class CandidateController extends Controller
 
         if ($city = $request->get('city'))
         {
-            dd($city);
             $idCity = preg_replace('/[^0-9]/', '', $city);
             $arrWorkplace[] = [
                 'wp_candidates_id' => $lastCandidateId,
                 'wp_locations_id'  => $idCity
             ];
-            if ($districts = $request->get('district'))
-            {
-                foreach ($districts as $item)
-                {
-                    $arrWorkplace[] = [
-                        'wp_candidates_id' => $lastCandidateId,
-                        'wp_locations_id'  => preg_replace('/[^0-9]/', '', $item)
-                    ];
-                }
-            }
 
-            $this->workplaceRepository->insert($arrWorkplace);
         }
 
-        if ($this->candidateinfoRepository->create($arrCandidateInfo))
+        if ($locations = $request->get('locations'))
         {
-            $candidate = $this->candidateRepository->getOneByElastic($lastCandidateId);
+            foreach ($locations as $item)
+            {
+                $arrWorkplace[] = [
+                    'wp_candidates_id' => $lastCandidateId,
+                    'wp_locations_id'  => $item
+                ];
+            }
+        }
 
-            $param = [
-                "entity"          => ["name" => "candidates"],
-                "text_facets"     => [
-                    [
-                        "facet_name"  => "can_name",
-                        "facet_value" => $candidate->can_name
-                    ],
-                    [
-                        "facet_name"  => "can_title",
-                        "facet_value" => $candidate->can_title
-                    ]
-                ],
-                "keyword_facets"  => [
-                    [
-                        "facet_name"  => "can_email",
-                        "facet_value" => $candidate->can_email
-                    ]
-                ],
-                "long_facets"     => [
-                    [
-                        "facet_name"  => "can_source_id",
-                        "facet_value" => $candidate->can_source_id
-                    ],
-                    [
-                        "facet_name"  => "can_year",
-                        "facet_value" => $candidate->can_year
-                    ],
-                    [
-                        "facet_name"  => "can_gender",
-                        "facet_value" => $candidate->can_gender
-                    ],
-                    [
-                        "facet_name"  => "candidate_info.ci_type_of_work",
-                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
-                    ],
-                    [
-                        "facet_name"  => "candidate_info.ci_english_level",
-                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_english_level : null
-                    ],
-                    [
-                        "facet_name"  => "candidate_info.ci_qualification",
-                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_qualification : null
-                    ],
-                    [
-                        "facet_name"  => "candidate_info.ci_time_experience",
-                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_time_experience : null
-                    ],
-                    [
-                        "facet_name"  => "candidate_info.ci_salary_from",
-                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_from : null
-                    ],
-                    [
-                        "facet_name"  => "candidate_info.ci_salary_to",
-                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_to : null
-                    ],
-                    [
-                        "facet_name"  => "latest_diary.d_evaluate",
-                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_evaluate : null
-                    ],
-                    [
-                        "facet_name"  => "latest_diary.d_cantype_id",
-                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
-                    ]
-                ],
-                "nested_facets"   => [
-                    [
-                        "facet_name"  => "location",
-                        "facet_value" => $candidate->location->toArray()
-                    ],
-                    [
-                        "facet_name"  => "career",
-                        "facet_value" => $candidate->career->toArray()
-                    ],
-                    [
-                        "facet_name"  => "skill",
-                        "facet_value" => $candidate->skill->toArray()
-                    ],
+        $this->workplaceRepository->insert($arrWorkplace);
 
-                ],
-                "date_facets"     => [
-                    [
-                        "facet_name"  => "can_birthday",
-                        "facet_value" => $candidate->can_birthday
-                    ]
-                ],
-                "datetime_facets" => [
-                    [
-                        "facet_name"  => "created_at",
-                        "facet_value" => $candidate->created_at->format('Y-m-d H:m:s')
-                    ],
-                    [
-                        "facet_name"  => "updated_at",
-                        "facet_value" => $candidate->updated_at->format('Y-m-d H:m:s')
-                    ],
-                    [
-                        "facet_name"  => "latest_diary.created_at",
-                        "facet_value" => isset($candidate->latest_diary->created_at) ? $candidate->latest_diary->created_at->format('Y-m-d H:m:s') : null
-                    ]
-                ],
-                "aggs_facets"     => [
-                    [
-                        "facet_name"  => "latest_diary_d_cantype_id",
-                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
-                    ],
-                    [
-                        "facet_name"  => "can_source_id",
-                        "facet_value" => $candidate->can_source_id
-                    ],
-                    [
-                        "facet_name"  => "latest_diary_d_evaluate",
-                        "facet_value" => isset($item->latest_diary) ? $candidate->latest_diary->d_evaluate : null
-                    ],
-                    [
-                        "facet_name"  => "candidate_info_ci_type_of_work",
-                        "facet_value" => isset($item->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
-                    ]
-                ],
-                "data"            => $candidate
+        if ($candidateInfo = $this->candidateinfoRepository->create($arrCandidateInfo))
+        {
+            $post = $request->all();
+            $config = config('candidate_options.candidate_tags');
 
-            ];
+            $paramElastic = [];
+            $paramCandidateTag = [];
+            $firstFacade = '';
+            $dt = date('Y-m-d H:i:s');
+//            $dt=$dt->format('Y-m-d H:i:s');
+            foreach ($config as $key => $item)
+            {
+                $explode = explode('|', $item);
+                $child = '';
+                if (count($explode) > 2)
+                {
+                    list($facet, $attributeOrTable, $children) = $explode;
+                    $child = $children;
+                }
+                else
+                {
+                    list($facet, $attributeOrTable) = $explode;
+                }
+                if ($firstFacade != $facet)
+                {
+                    $arr1 = [];
+                }
+                if ($facet == 'data')
+                {
+                    $paramElastic[$facet][$attributeOrTable] = $$attributeOrTable;
+                }
+                else
+                {
+                    $arr1[] = [
+                        'facet_name'  => !empty($child) ? $attributeOrTable . '_' . $child : $attributeOrTable,
+                        'facet_value' => !empty($child) ? (!empty($arrCandidateInfo[$child]) ? $arrCandidateInfo[$child] : ($child == 'created_at' || $child == 'updated_at' ? $dt : '')) : (!empty($arrCandidate[$attributeOrTable]) ? $arrCandidate[$attributeOrTable] : ($attributeOrTable == 'created_at' || $attributeOrTable == 'updated_at' ? $dt : (!empty($post[$attributeOrTable])?$post[$attributeOrTable]:'')))
+                    ];
+                    $paramElastic[$facet] = $arr1;
+                }
+                $firstFacade = $facet;
+                $arrr = [
+                    'candidate_id'            => $lastCandidateId,
+                    'candidate_tag_value'     => !empty($child) ? (!empty($post[$child]) ? (is_array($post[$child]) ? implode('|', $post[$child]) : $post[$child]) : ($child == 'created_at' || $child == 'updated_at' ? $dt : '')) : (!empty($post[$attributeOrTable]) ? (is_array($post[$attributeOrTable]) ? implode('|', $post[$attributeOrTable]) : $post[$attributeOrTable]) : ($attributeOrTable == 'created_at' || $attributeOrTable == 'updated_at' ? $dt : '')),
+                    'candidate_tag_attribute' => $item
+                ];
+                $paramCandidateTag[] = $arrr;
+            }
+
+            dump($request->all());
+            dump($paramCandidateTag);
+            dump($paramElastic);
 
             $can = new Candidate();
-            $can->addDocToIndex($lastCandidateId, $param);
+            $can->addDocToIndex($lastCandidateId, $paramElastic);
+            $this->candidateTagRepository->insert($paramCandidateTag);
 
+////            $candidate = $this->candidateRepository->getOneByElastic($lastCandidateId);
+//
+////            $param = [
+////                "entity"          => ["name" => "candidates"],
+////                "text_facets"     => [
+////                    [
+////                        "facet_name"  => "can_name",
+////                        "facet_value" => $candidate->can_name
+////                    ],
+////                    [
+////                        "facet_name"  => "can_title",
+////                        "facet_value" => $candidate->can_title
+////                    ]
+////                ],
+////                "keyword_facets"  => [
+////                    [
+////                        "facet_name"  => "can_email",
+////                        "facet_value" => $candidate->can_email
+////                    ]
+////                ],
+////                "long_facets"     => [
+////                    [
+////                        "facet_name"  => "can_source_id",
+////                        "facet_value" => $candidate->can_source_id
+////                    ],
+////                    [
+////                        "facet_name"  => "can_year",
+////                        "facet_value" => $candidate->can_year
+////                    ],
+////                    [
+////                        "facet_name"  => "can_gender",
+////                        "facet_value" => $candidate->can_gender
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info.ci_type_of_work",
+////                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info.ci_english_level",
+////                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_english_level : null
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info.ci_qualification",
+////                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_qualification : null
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info.ci_time_experience",
+////                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_time_experience : null
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info.ci_salary_from",
+////                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_from : null
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info.ci_salary_to",
+////                        "facet_value" => isset($candidate->candidateInfo) ? $candidate->candidateInfo->ci_salary_to : null
+////                    ],
+////                    [
+////                        "facet_name"  => "latest_diary.d_evaluate",
+////                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_evaluate : null
+////                    ],
+////                    [
+////                        "facet_name"  => "latest_diary.d_cantype_id",
+////                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
+////                    ]
+////                ],
+////                "date_facets"     => [
+////                    [
+////                        "facet_name"  => "can_birthday",
+////                        "facet_value" => $candidate->can_birthday
+////                    ]
+////                ],
+////                "datetime_facets" => [
+////                    [
+////                        "facet_name"  => "created_at",
+////                        "facet_value" => $candidate->created_at->format('Y-m-d H:m:s')
+////                    ],
+////                    [
+////                        "facet_name"  => "updated_at",
+////                        "facet_value" => $candidate->updated_at->format('Y-m-d H:m:s')
+////                    ],
+////                    [
+////                        "facet_name"  => "latest_diary.created_at",
+////                        "facet_value" => isset($candidate->latest_diary->created_at) ? $candidate->latest_diary->created_at->format('Y-m-d H:m:s') : null
+////                    ]
+////                ],
+////                "aggs_facets"     => [
+////                    [
+////                        "facet_name"  => "latest_diary_d_cantype_id",
+////                        "facet_value" => isset($candidate->latest_diary) ? $candidate->latest_diary->d_cantype_id : null
+////                    ],
+////                    [
+////                        "facet_name"  => "can_source_id",
+////                        "facet_value" => $candidate->can_source_id
+////                    ],
+////                    [
+////                        "facet_name"  => "latest_diary_d_evaluate",
+////                        "facet_value" => isset($item->latest_diary) ? $candidate->latest_diary->d_evaluate : null
+////                    ],
+////                    [
+////                        "facet_name"  => "candidate_info_ci_type_of_work",
+////                        "facet_value" => isset($item->candidateInfo) ? $candidate->candidateInfo->ci_type_of_work : null
+////                    ]
+////                ],
+////                "data"            => $candidate
+////
+////            ];
+//
+////            foreach (config('candidate_options.candidate_tags') as $it)
+////            {
+////                $param['nested_facets'][] = [
+////                    "facet_name"  => $it,
+////                    "facet_value" => $candidate->$it->toArray()
+////                ];
+////            }
+//
+//            $can = new Candidate();
+////            $can->addDocToIndex($lastCandidateId, $param);
+//
             $alert = [
                 'type'    => 'success',
                 'message' => 'Đã thêm ứng viên!'
@@ -1119,11 +1173,15 @@ class CandidateController extends Controller
 
             \Session::flash('toastr', $alert);
 
-            return redirect('candidate/list');
+//            return redirect('candidate/list');
 
         }
 
-        return redirect('candidate/new');
+//        return redirect('candidate/new');
+
+    }
+
+    public function jointest(){
 
     }
 
@@ -1552,8 +1610,9 @@ class CandidateController extends Controller
             $this->candidateSkillRepository->deleteByCandidateId($idCandidate, 'cs_candidates_id');
         }
 
-        if ($salarys=$request->get('ci_salary')){
-            $arrSalary=explode('|', $salarys);
+        if ($salarys = $request->get('ci_salary'))
+        {
+            $arrSalary = explode('|', $salarys);
         }
 
         $arrCandidateInfo = [
@@ -1563,7 +1622,7 @@ class CandidateController extends Controller
             'ci_qualification'   => strip_tags($request->get('ci_qualification')),
             'ci_english_level'   => strip_tags($request->get('ci_english_level')),
             'ci_type_of_work'    => strip_tags($request->get('ci_type_of_work')),
-            'ci_salary'          => isset($arrSalary)?$arrSalary[0]:0,
+            'ci_salary'          => isset($arrSalary) ? $arrSalary[0] : 0,
             'ci_target'          => strip_tags($request->get('ci_target')),
             'ci_about'           => strip_tags($request->get('ci_about')),
             'ci_work_experience' => json_encode($ci_work_experience),
@@ -1573,8 +1632,8 @@ class CandidateController extends Controller
             'ci_prize'           => json_encode($ci_prize),
             'ci_skill'           => json_encode($ci_skill),
             'ci_hobby'           => strip_tags($request->get('ci_hobby')),
-            'ci_salary_from' => isset($arrSalary) ? $arrSalary[1] : 0,
-            'ci_salary_to'   => isset($arrSalary) ? $arrSalary[2] : 0
+            'ci_salary_from'     => isset($arrSalary[1]) ? $arrSalary[1] : 0,
+            'ci_salary_to'       => isset($arrSalary[2]) ? $arrSalary[2] : 0
         ];
 
         if ($idCandidateInfo = $request->get('candidateInfo_id'))
@@ -1631,8 +1690,9 @@ class CandidateController extends Controller
             $this->workplaceRepository->insert($arrWorkplace);
         }
 
-        if ($idCandidate){
-            $candidate=$this->candidateRepository->getOneByElastic($idCandidate);
+        if ($idCandidate)
+        {
+            $candidate = $this->candidateRepository->getOneByElastic($idCandidate);
             $param = [
                 "entity"          => ["name" => "candidates"],
                 "text_facets"     => [
@@ -1754,6 +1814,14 @@ class CandidateController extends Controller
 
             ];
 
+            foreach (config('candidate_options.candidate_tags') as $it)
+            {
+                $param['nested_facets'][] = [
+                    "facet_name"  => $it,
+                    "facet_value" => $candidate->$it->toArray()
+                ];
+            }
+
             $can = new Candidate();
             $can->addDocToIndex($idCandidate, $param);
 
@@ -1803,15 +1871,17 @@ class CandidateController extends Controller
         }
 
         return response([
-            'type' => 'warm',
+            'type'    => 'warm',
             'message' => 'Xóa không thành công'
         ]);
 
     }
 
-    public function exportPDF(Request $request){
-        if ($html=$request->get('html')){
-            $pdf=\App::make('dompdf.wrapper');
+    public function exportPDF(Request $request)
+    {
+        if ($html = $request->get('html'))
+        {
+            $pdf = \App::make('dompdf.wrapper');
 
             return $pdf->stream();
         }

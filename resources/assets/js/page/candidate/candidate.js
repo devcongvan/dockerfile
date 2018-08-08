@@ -59,7 +59,7 @@ var Candidate={
                 .done(function (reponse) {
                     var html = '';
                     $.each(reponse, function (key, item) {
-                        var option = '<option value="' + item.id + '|' + item.text + '" >' + item.text + '</option>';
+                        var option = '<option value="' + item.id + '" >' + item.text + '</option>';
                         html += option;
                     });
                     $district.html(html);

@@ -17939,7 +17939,7 @@ var Common = {
 
     configDatepicker: function configDatepicker() {
         $('.datepicker').datepicker({
-            format: 'dd-mm-yyyy',
+            format: 'yyyy-mm-dd',
             todayHighlight: true,
             defaultViewDate: new Date()
         });
@@ -18123,7 +18123,7 @@ var Candidate = {
             }).done(function (reponse) {
                 var html = '';
                 $.each(reponse, function (key, item) {
-                    var option = '<option value="' + item.id + '|' + item.text + '" >' + item.text + '</option>';
+                    var option = '<option value="' + item.id + '" >' + item.text + '</option>';
                     html += option;
                 });
                 $district.html(html);
@@ -18333,17 +18333,19 @@ $(function () {
         var today = new Date();
         var html = '';
         $.each(data.candidates, function (key, value) {
+            var candidate = value.data.candidate;
+            console.log(value);
             var age;
-            if (value.data.can_birthday) {
-                var birthDate = new Date(value.data.can_birthday);
+            if (candidate.can_birthday) {
+                var birthDate = new Date(candidate.can_birthday);
                 age = today.getFullYear() - birthDate.getFullYear();
-            } else if (value.data.can_year) {
-                age = today.getFullYear() - value.data.can_year;
+            } else if (candidate.can_year) {
+                age = today.getFullYear() - candidate.can_year;
             }
 
-            var item = '<div class="candidate-item row" style="overflow: hidden">\n                                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">\n                                                            <div class="candidate-item-left">\n                                                                <div class="image">\n                                                                    <img class="img-responsive" src="' + (value.data.can_avatar !== null ? value.data.can_avatar : '') + '" alt="">\n                                                                </div>\n                                                                <div class="option">\n\n                                                                    <div class="text-center time">\n                                                                        <i class="fa fa-calendar" aria-hidden="true"></i> ' + (value.data.created_at !== null ? value.data.created_at : '') + '\n                                                                    </div>\n                                                                </div>\n                                                            </div> <!-- /. candidate item left -->\n                                                        </div>\n                                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">\n                                                            <div class="candidate-item-main">\n                                                                <div class="candidate-item-main-row">\n                                                                    <h5 class="pull-left candidate-item-main-name" data-id="' + (value.data.id !== null ? value.data.id : '') + '" toggle="false">' + (value.data.can_name !== null ? value.data.can_name : '') + '</h5>\n                                                                    <div class="dropdown pull-right">\n                                                                        <button class="btn candidate-item-destroy" type="button" data-id="' + (value.data.id !== null ? value.data.id : '') + '" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n                                                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>\n                                                                        </button>\n                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">\n                                                                            <a class="dropdown-item" href="' + (editUrl + '/') + (value.data.id !== null ? value.data.id : '') + '" data-id="' + (value.data.id !== null ? value.data.id : '') + '">S\u1EEDa</a>\n                                                                            <a class="dropdown-item" href="#" data-id="' + value.data.id + '" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">X\xF3a</a>\n                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="' + (value.data.id !== null ? value.data.id : '') + '" data-name="' + (value.data.can_name !== null ? value.data.can_name : '') + '" data-avatar="' + (value.data.can_avatar !== null ? value.data.can_avatar : '') + '" data-age="' + (value.data.can_year !== null ? value.data.can_year : '') + '" data-title="' + (value.data.can_title !== null ? value.data.can_title : '') + '" data-delete-url="{{route(\'diary.ajax.delete\')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">\u0110\xE1nh gi\xE1</a>\n                                                                        </div>\n                                                                    </div>\n                                                                    <div class="clearfix"></div>\n                                                                </div>\n\n                                                                <div class="candidate-item-main-row row">\n                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-globe" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="">\n                                                                                <h6>' + (value.data.source !== null ? value.data.source.so_name : '') + ' - ' + (value.data.can_title !== null ? value.data.can_title : '') + '</h6>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n                                                                    </div>\n                                                                </div>\n                                                                <div class="candidate-item-main-row row special-box">\n                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-map-marker" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + (value.data.can_address !== null ? value.data.can_address : '') + '</div>\n                                                                        </div> <!-- /. box -->\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-birthday-cake" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + (age !== null ? age : 'Chưa có dữ liệu') + '</div>\n                                                                        </div> <!-- /. box -->\n\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-mobile" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + (value.data.can_phone !== null ? value.data.can_phone : '') + '</div>\n                                                                        </div> <!-- /. box -->\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-envelope-o" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (value.data.can_email !== null ? value.data.can_email : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                    </div>\n                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-skype" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (value.data.can_skype !== null ? value.data.can_skype : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-facebook-square" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (value.data.can_facebook !== null ? value.data.can_facebook : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (value.data.can_linkedin !== null ? value.data.can_linkedin : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-github" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (value.data.can_github !== null ? value.data.can_github : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                    </div>';
-            if (value.data.can_diary) {
-                item += '\n\n                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">\n                                                                        <div class="row">\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                <span>' + (value.data.can_diary.created_at !== null ? value.data.can_diary.created_at : '') + '</span>\n                                                                                <span class="bg-green c-white" style="background: ' + value.data.can_diary.canty_color + '!important;">' + value.data.can_diary.canty_name + '</span>\n                                                                            </div>\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                @if(!empty($diary->d_evaluate))\n                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> ' + (value.data.can_diary.d_evaluate !== null ? value.data.can_diary.d_evaluate : '') + '</span>\n                                                                                    @else\n                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i> ' + (value.data.can_diary.d_set_time !== null ? value.data.can_diary.d_set_time : '') + ', ' + (value.data.can_diary.d_set_calendar !== null ? value.data.can_diary.d_set_calendar : '') + ', ' + (value.data.can_diary.d_notice_before !== null ? value.data.can_diary.d_notice_before : '') + ' </span>\n                                                                                @endif\n                                                                            </div>\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                <span>' + (value.data.can_diary.d_note !== null ? value.data.can_diary.d_note : '') + '</span>\n                                                                            </div>\n                                                                        </div>\n                                                                    </div>';
+            var item = '<div class="candidate-item row" style="overflow: hidden">\n                                                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">\n                                                            <div class="candidate-item-left">\n                                                                <div class="image">\n                                                                    <img class="img-responsive" src="' + (candidate.can_avatar !== null ? candidate.can_avatar : '') + '" alt="">\n                                                                </div>\n                                                                <div class="option">\n\n                                                                    <div class="text-center time">\n                                                                        <i class="fa fa-calendar" aria-hidden="true"></i> ' + (candidate.created_at !== null ? candidate.created_at : '') + '\n                                                                    </div>\n                                                                </div>\n                                                            </div> <!-- /. candidate item left -->\n                                                        </div>\n                                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">\n                                                            <div class="candidate-item-main">\n                                                                <div class="candidate-item-main-row">\n                                                                    <h5 class="pull-left candidate-item-main-name" data-id="' + (candidate.id !== null ? candidate.id : '') + '" toggle="false">' + (candidate.can_name !== null ? candidate.can_name : '') + '</h5>\n                                                                    <div class="dropdown pull-right">\n                                                                        <button class="btn candidate-item-destroy" type="button" data-id="' + (candidate.id !== null ? candidate.id : '') + '" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n                                                                            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>\n                                                                        </button>\n                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">\n                                                                            <a class="dropdown-item" href="' + (editUrl + '/') + (candidate.id !== null ? candidate.id : '') + '" data-id="' + (candidate.id !== null ? candidate.id : '') + '">S\u1EEDa</a>\n                                                                            <a class="dropdown-item" href="#" data-id="' + candidate.id + '" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">X\xF3a</a>\n                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="' + (candidate.id !== null ? candidate.id : '') + '" data-name="' + (candidate.can_name !== null ? candidate.can_name : '') + '" data-avatar="' + (candidate.can_avatar !== null ? candidate.can_avatar : '') + '" data-age="' + (candidate.can_year !== null ? candidate.can_year : '') + '" data-title="' + (candidate.can_title !== null ? candidate.can_title : '') + '" data-delete-url="{{route(\'diary.ajax.delete\')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">\u0110\xE1nh gi\xE1</a>\n                                                                        </div>\n                                                                    </div>\n                                                                    <div class="clearfix"></div>\n                                                                </div>\n                                                                \n                                                                <div class="candidate-item-main-row row">\n                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-globe" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="">\n                                                                                <h6> - ' + (candidate.can_title !== null ? candidate.can_title : '') + '</h6>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n                                                                    </div>\n                                                                </div>\n                                                                <div class="candidate-item-main-row row special-box">\n                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-map-marker" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + (candidate.can_address !== null ? candidate.can_address : '') + '</div>\n                                                                        </div> <!-- /. box -->\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-birthday-cake" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + (age !== null ? age : 'Chưa có dữ liệu') + '</div>\n                                                                        </div> <!-- /. box -->\n\n                                                                        <div class="box ">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-mobile" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">' + (candidate.can_phone !== null ? candidate.can_phone : '') + '</div>\n                                                                        </div> <!-- /. box -->\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-envelope-o" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (candidate.can_email !== null ? candidate.can_email : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                    </div>\n                                                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-skype" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (candidate.can_skype !== null ? candidate.can_skype : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-facebook-square" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (candidate.can_facebook !== null ? candidate.can_facebook : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-linkedin-square" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (candidate.can_linkedin !== null ? candidate.can_linkedin : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                        <div class="box">\n                                                                            <div class="box-icon">\n                                                                                <i class="fa fa-github" aria-hidden="true"></i>\n                                                                            </div>\n                                                                            <div class="box-text">\n                                                                                <a href="#">' + (candidate.can_github !== null ? candidate.can_github : '') + '</a>\n                                                                            </div>\n                                                                        </div> <!-- /. box -->\n\n                                                                    </div>';
+            if (candidate.can_diary) {
+                item += '\n\n                                                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">\n                                                                        <div class="row">\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                <span>' + (candidate.can_diary.created_at !== null ? candidate.can_diary.created_at : '') + '</span>\n                                                                                <span class="bg-green c-white" style="background: ' + value.data.can_diary.canty_color + '!important;">' + candidate.can_diary.canty_name + '</span>\n                                                                            </div>\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                @if(!empty($diary->d_evaluate))\n                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> ' + (candidate.can_diary.d_evaluate !== null ? candidate.can_diary.d_evaluate : '') + '</span>\n                                                                                    @else\n                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i> ' + (candidate.can_diary.d_set_time !== null ? candidate.can_diary.d_set_time : '') + ', ' + (candidate.can_diary.d_set_calendar !== null ? candidate.can_diary.d_set_calendar : '') + ', ' + (candidate.can_diary.d_notice_before !== null ? candidate.can_diary.d_notice_before : '') + ' </span>\n                                                                                @endif\n                                                                            </div>\n                                                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\n                                                                                <span>' + (candidate.can_diary.d_note !== null ? candidate.can_diary.d_note : '') + '</span>\n                                                                            </div>\n                                                                        </div>\n                                                                    </div>';
             }
 
             item += '\n                                                                </div>\n                                                            </div>\n                                                        </div>\n                                                    </div> <!-- /. candidate item -->';
@@ -18654,7 +18656,6 @@ var CandidateList = {
                 dataType: 'JSON',
                 data: { id: id }
             }).done(function (reponse) {
-
                 $this.renderCV(reponse);
             }).fail(function (error) {
                 console.log(error);
@@ -18713,10 +18714,11 @@ var CandidateList = {
     },
 
     renderCV: function renderCV(data) {
-
+        console.log(data);
         var notify = 'Chưa có dữ liệu';
 
-        var candidate = data.data;
+        var candidate = data.data.candidate;
+        var candidate_info = data.data.candidateInfo;
 
         if (candidate.can_name) {
             $('#can_name').html(candidate.can_name);
@@ -18805,8 +18807,8 @@ var CandidateList = {
         }
 
         var stringCareer = '';
-        if (candidate.career) {
-            $.each(candidate.career, function (index, item) {
+        if (candidate.careers) {
+            $.each(candidate.careers, function (index, item) {
                 stringCareer += item.ca_name + ', ';
             });
             stringCareer = stringCareer.slice(0, -2);
@@ -18816,8 +18818,8 @@ var CandidateList = {
         }
 
         var stringSkill = '';
-        if (candidate.skill) {
-            $.each(candidate.skill, function (index, item) {
+        if (candidate.skills) {
+            $.each(candidate.skills, function (index, item) {
                 stringSkill += item.sk_name + ', ';
             });
             stringSkill = stringSkill.slice(0, -2);
@@ -18827,8 +18829,8 @@ var CandidateList = {
         }
 
         var stringLocation = '';
-        if (candidate.location) {
-            $.each(candidate.location, function (index, item) {
+        if (candidate.locations) {
+            $.each(candidate.locations, function (index, item) {
                 if (index == 0) {
                     stringLocation += item.loc_name + ' - ';
                 } else {
@@ -18841,71 +18843,71 @@ var CandidateList = {
             $('#loc_name').html(notify);
         }
 
-        if (candidate.candidate_info.ci_work_abroad) {
-            $('#ci_work_abroad').html(candidate.candidate_info.ci_work_abroad == 1 ? 'Có' : 'Không');
+        if (candidate_info.ci_work_abroad) {
+            $('#ci_work_abroad').html(candidate_info.ci_work_abroad == 1 ? 'Có' : 'Không');
         } else {
             $('#ci_work_abroad').html(notify);
         }
 
-        if (candidate.candidate_info.ci_time_experience) {
+        if (candidate_info.ci_time_experience) {
             $.getJSON('json/time_experience.json', function (data) {
-                $('#ci_time_experience').html(data[candidate.candidate_info.ci_time_experience].name);
+                $('#ci_time_experience').html(data[candidate_info.ci_time_experience].name);
             });
         } else {
             $('#ci_time_experience').html(notify);
         }
 
-        if (candidate.candidate_info.ci_qualification) {
+        if (candidate_info.ci_qualification) {
             $.getJSON('json/qualification.json', function (data) {
-                $('#ci_qualification').html(data[candidate.candidate_info.ci_qualification].name);
+                $('#ci_qualification').html(data[candidate_info.ci_qualification].name);
             });
         } else {
             $('#ci_qualification').html(notify);
         }
 
-        if (candidate.candidate_info.ci_qualification) {
+        if (candidate_info.ci_qualification) {
             $.getJSON('json/english_level.json', function (data) {
 
-                $('#ci_english_level').html(data[candidate.candidate_info.ci_qualification].name);
+                $('#ci_english_level').html(data[candidate_info.ci_qualification].name);
             });
         } else {
             $('#ci_english_level').html(notify);
         }
 
-        if (candidate.candidate_info.ci_type_of_work) {
+        if (candidate_info.ci_type_of_work) {
             $.getJSON('json/type_of_work.json', function (data) {
-                $('#ci_type_of_work').html(data[candidate.candidate_info.ci_type_of_work].name);
+                $('#ci_type_of_work').html(data[candidate_info.ci_type_of_work].name);
             });
         } else {
             $('#ci_type_of_work').html(notify);
         }
 
-        if (candidate.candidate_info.ci_salary_from) {
-            $('#ci_salary').html('Từ ' + candidate.candidate_info.ci_salary_from + ' đến ' + candidate.candidate_info.ci_salary_to + ' triệu');
+        if (candidate_info.ci_salary_from) {
+            $('#ci_salary').html('Từ ' + candidate_info.ci_salary_from + ' đến ' + candidate_info.ci_salary_to + ' triệu');
         } else {
             $('#ci_salary').html(notify);
         }
 
-        if (candidate.candidate_info.ci_target) {
+        if (candidate_info.ci_target) {
             $('#ci_about').closest('.candidate-cv-box').hide();
         } else {
             $('#ci_about').closest('.candidate-cv-box').show();
-            if (candidate.candidate_info.ci_target == null) {
+            if (candidate_info.ci_target == null) {
                 $('#ci_target').closest('.candidate-cv-item').hide();
             } else {
                 $('#ci_target').closest('.candidate-cv-item').show();
-                $('#ci_target').html(candidate.candidate_info.ci_target);
+                $('#ci_target').html(candidate_info.ci_target);
             }
-            if (candidate.candidate_info.ci_about == null) {
+            if (candidate_info.ci_about == null) {
                 $('#ci_about').closest('.candidate-cv-item').hide();
             } else {
                 $('#ci_about').closest('.candidate-cv-item').show();
-                $('#ci_about').html(candidate.candidate_info.ci_about);
+                $('#ci_about').html(candidate_info.ci_about);
             }
         }
 
-        if (candidate.candidate_info.ci_certificate) {
-            var certificate = $.parseJSON(candidate.candidate_info.ci_certificate);
+        if (candidate_info.ci_certificate) {
+            var certificate = $.parseJSON(candidate_info.ci_certificate);
 
             if (certificate.length > 0) {
                 var html = '';
@@ -18926,8 +18928,8 @@ var CandidateList = {
             $('.ci_certificate').hide();
         }
 
-        if (candidate.candidate_info.ci_prize) {
-            var prize = $.parseJSON(candidate.candidate_info.ci_prize);
+        if (candidate_info.ci_prize) {
+            var prize = $.parseJSON(candidate_info.ci_prize);
 
             if (prize.length > 0) {
                 var hrml = '';
@@ -18947,8 +18949,8 @@ var CandidateList = {
             $('.ci_prize').hide();
         }
 
-        if (candidate.candidate_info.ci_skill) {
-            var skill = $.parseJSON(candidate.candidate_info.ci_skill);
+        if (candidate_info.ci_skill) {
+            var skill = $.parseJSON(candidate_info.ci_skill);
             if (skill.length > 0) {
                 var html = '';
                 $.each(skill, function (index, item) {
@@ -18969,16 +18971,16 @@ var CandidateList = {
             $('.ci_skill').hide();
         }
 
-        if (candidate.candidate_info.ci_hobby) {
+        if (candidate_info.ci_hobby) {
             $('.ci_hobby').show();
 
-            $('.ci_hobby-content').html(candidate.candidate_info.ci_hobby);
+            $('.ci_hobby-content').html(candidate_info.ci_hobby);
         } else {
             $('.ci_hobby').hide();
         }
 
-        if (candidate.candidate_info.ci_education) {
-            var education = $.parseJSON(candidate.candidate_info.ci_education);
+        if (candidate_info.ci_education) {
+            var education = $.parseJSON(candidate_info.ci_education);
 
             if (education.length > 0) {
 
@@ -18998,9 +19000,9 @@ var CandidateList = {
             $('.ci_education').hide();
         }
 
-        if (candidate.candidate_info.ci_work_experience) {
-            var experience = $.parseJSON(candidate.candidate_info.ci_work_experience);
-            console.log(experience);
+        if (candidate_info.ci_work_experience) {
+            var experience = $.parseJSON(candidate_info.ci_work_experience);
+
             if (experience.length > 0) {
 
                 var html = '';
@@ -19020,8 +19022,8 @@ var CandidateList = {
             $('.ci_work_experience').hide();
         }
 
-        if (candidate.candidate_info.ci_activity) {
-            var activity = $.parseJSON(candidate.candidate_info.ci_activity);
+        if (candidate_info.ci_activity) {
+            var activity = $.parseJSON(candidate_info.ci_activity);
             if (activity.length > 0) {
 
                 var html = '';

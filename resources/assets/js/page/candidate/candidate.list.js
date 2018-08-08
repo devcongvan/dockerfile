@@ -148,7 +148,6 @@ var CandidateList = {
                 data: {id: id},
             })
                 .done(function (reponse) {
-
                     $this.renderCV(reponse);
                 })
                 .fail(function (error) {
@@ -213,10 +212,11 @@ var CandidateList = {
     },
 
     renderCV: function (data) {
-
+        console.log(data);
         var notify = 'Chưa có dữ liệu';
 
-        var candidate = data.data;
+        var candidate = data.data.candidate;
+        var candidate_info = data.data.candidateInfo;
 
         if (candidate.can_name) {
             $('#can_name').html(candidate.can_name);
@@ -305,8 +305,8 @@ var CandidateList = {
         }
 
         var stringCareer = '';
-        if (candidate.career) {
-            $.each(candidate.career, function (index, item) {
+        if (candidate.careers) {
+            $.each(candidate.careers, function (index, item) {
                 stringCareer += item.ca_name + ', ';
             })
             stringCareer = stringCareer.slice(0, -2);
@@ -316,8 +316,8 @@ var CandidateList = {
         }
 
         var stringSkill = '';
-        if (candidate.skill) {
-            $.each(candidate.skill, function (index, item) {
+        if (candidate.skills) {
+            $.each(candidate.skills, function (index, item) {
                 stringSkill += item.sk_name + ', ';
             })
             stringSkill = stringSkill.slice(0, -2);
@@ -327,8 +327,8 @@ var CandidateList = {
         }
 
         var stringLocation = '';
-        if (candidate.location) {
-            $.each(candidate.location, function (index, item) {
+        if (candidate.locations) {
+            $.each(candidate.locations, function (index, item) {
                 if (index == 0) {
                     stringLocation += item.loc_name + ' - ';
                 } else {
@@ -341,71 +341,71 @@ var CandidateList = {
             $('#loc_name').html(notify);
         }
 
-        if (candidate.candidate_info.ci_work_abroad) {
-            $('#ci_work_abroad').html(candidate.candidate_info.ci_work_abroad == 1 ? 'Có' : 'Không');
+        if (candidate_info.ci_work_abroad) {
+            $('#ci_work_abroad').html(candidate_info.ci_work_abroad == 1 ? 'Có' : 'Không');
         } else {
             $('#ci_work_abroad').html(notify);
         }
 
-        if (candidate.candidate_info.ci_time_experience) {
+        if (candidate_info.ci_time_experience) {
             $.getJSON('json/time_experience.json', function (data) {
-                $('#ci_time_experience').html(data[candidate.candidate_info.ci_time_experience].name);
+                $('#ci_time_experience').html(data[candidate_info.ci_time_experience].name);
             });
         } else {
             $('#ci_time_experience').html(notify);
         }
 
-        if (candidate.candidate_info.ci_qualification) {
+        if (candidate_info.ci_qualification) {
             $.getJSON('json/qualification.json', function (data) {
-                $('#ci_qualification').html(data[candidate.candidate_info.ci_qualification].name);
+                $('#ci_qualification').html(data[candidate_info.ci_qualification].name);
             });
         } else {
             $('#ci_qualification').html(notify);
         }
 
-        if (candidate.candidate_info.ci_qualification) {
+        if (candidate_info.ci_qualification) {
             $.getJSON('json/english_level.json', function (data) {
 
-                $('#ci_english_level').html(data[candidate.candidate_info.ci_qualification].name);
+                $('#ci_english_level').html(data[candidate_info.ci_qualification].name);
             });
         } else {
             $('#ci_english_level').html(notify);
         }
 
-        if (candidate.candidate_info.ci_type_of_work) {
+        if (candidate_info.ci_type_of_work) {
             $.getJSON('json/type_of_work.json', function (data) {
-                $('#ci_type_of_work').html(data[candidate.candidate_info.ci_type_of_work].name);
+                $('#ci_type_of_work').html(data[candidate_info.ci_type_of_work].name);
             });
         } else {
             $('#ci_type_of_work').html(notify);
         }
 
-        if (candidate.candidate_info.ci_salary_from) {
-            $('#ci_salary').html('Từ ' + candidate.candidate_info.ci_salary_from + ' đến ' + candidate.candidate_info.ci_salary_to + ' triệu');
+        if (candidate_info.ci_salary_from) {
+            $('#ci_salary').html('Từ ' + candidate_info.ci_salary_from + ' đến ' + candidate_info.ci_salary_to + ' triệu');
         } else {
             $('#ci_salary').html(notify);
         }
 
-        if (candidate.candidate_info.ci_target) {
+        if (candidate_info.ci_target) {
             $('#ci_about').closest('.candidate-cv-box').hide();
         } else {
             $('#ci_about').closest('.candidate-cv-box').show();
-            if (candidate.candidate_info.ci_target == null) {
+            if (candidate_info.ci_target == null) {
                 $('#ci_target').closest('.candidate-cv-item').hide();
             } else {
                 $('#ci_target').closest('.candidate-cv-item').show();
-                $('#ci_target').html(candidate.candidate_info.ci_target);
+                $('#ci_target').html(candidate_info.ci_target);
             }
-            if (candidate.candidate_info.ci_about == null) {
+            if (candidate_info.ci_about == null) {
                 $('#ci_about').closest('.candidate-cv-item').hide();
             } else {
                 $('#ci_about').closest('.candidate-cv-item').show();
-                $('#ci_about').html(candidate.candidate_info.ci_about);
+                $('#ci_about').html(candidate_info.ci_about);
             }
         }
 
-        if (candidate.candidate_info.ci_certificate) {
-            var certificate = $.parseJSON(candidate.candidate_info.ci_certificate);
+        if (candidate_info.ci_certificate) {
+            var certificate = $.parseJSON(candidate_info.ci_certificate);
 
             if (certificate.length > 0) {
                 var html = '';
@@ -442,8 +442,8 @@ var CandidateList = {
             $('.ci_certificate').hide();
         }
 
-        if (candidate.candidate_info.ci_prize) {
-            var prize = $.parseJSON(candidate.candidate_info.ci_prize);
+        if (candidate_info.ci_prize) {
+            var prize = $.parseJSON(candidate_info.ci_prize);
 
             if (prize.length > 0) {
                 var hrml = '';
@@ -478,8 +478,8 @@ var CandidateList = {
         }
 
 
-        if (candidate.candidate_info.ci_skill) {
-            var skill = $.parseJSON(candidate.candidate_info.ci_skill);
+        if (candidate_info.ci_skill) {
+            var skill = $.parseJSON(candidate_info.ci_skill);
             if (skill.length > 0) {
                 var html = '';
                 $.each(skill, function (index, item) {
@@ -530,16 +530,16 @@ var CandidateList = {
             $('.ci_skill').hide();
         }
 
-        if (candidate.candidate_info.ci_hobby) {
+        if (candidate_info.ci_hobby) {
             $('.ci_hobby').show();
 
-            $('.ci_hobby-content').html(candidate.candidate_info.ci_hobby);
+            $('.ci_hobby-content').html(candidate_info.ci_hobby);
         } else {
             $('.ci_hobby').hide();
         }
 
-        if (candidate.candidate_info.ci_education) {
-            var education = $.parseJSON(candidate.candidate_info.ci_education);
+        if (candidate_info.ci_education) {
+            var education = $.parseJSON(candidate_info.ci_education);
 
             if (education.length > 0) {
 
@@ -585,9 +585,9 @@ var CandidateList = {
             $('.ci_education').hide();
         }
 
-        if (candidate.candidate_info.ci_work_experience) {
-            var experience = $.parseJSON(candidate.candidate_info.ci_work_experience);
-            console.log(experience);
+        if (candidate_info.ci_work_experience) {
+            var experience = $.parseJSON(candidate_info.ci_work_experience);
+
             if (experience.length > 0) {
 
                 var html = '';
@@ -635,8 +635,8 @@ var CandidateList = {
             $('.ci_work_experience').hide();
         }
 
-        if (candidate.candidate_info.ci_activity) {
-            var activity = $.parseJSON(candidate.candidate_info.ci_activity);
+        if (candidate_info.ci_activity) {
+            var activity = $.parseJSON(candidate_info.ci_activity);
             if (activity.length > 0) {
 
                 var html = '';

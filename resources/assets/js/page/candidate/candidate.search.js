@@ -75,25 +75,27 @@ var CandidateSearch = {
         var today=new Date();
         var html = '';
         $.each(data.candidates, function (key, value) {
+            var candidate=value.data.candidate;
+            console.log(value);
             var age;
-            if (value.data.can_birthday) {
-                var birthDate = new Date(value.data.can_birthday);
+            if (candidate.can_birthday) {
+                var birthDate = new Date(candidate.can_birthday);
                 age = today.getFullYear() - birthDate.getFullYear();
 
-            } else if (value.data.can_year) {
-                age = today.getFullYear() - value.data.can_year;
+            } else if (candidate.can_year) {
+                age = today.getFullYear() - candidate.can_year;
             }
 
             var item = `<div class="candidate-item row" style="overflow: hidden">
                                                         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                                                             <div class="candidate-item-left">
                                                                 <div class="image">
-                                                                    <img class="img-responsive" src="${ value.data.can_avatar!==null? value.data.can_avatar:''}" alt="">
+                                                                    <img class="img-responsive" src="${ candidate.can_avatar!==null? candidate.can_avatar:''}" alt="">
                                                                 </div>
                                                                 <div class="option">
 
                                                                     <div class="text-center time">
-                                                                        <i class="fa fa-calendar" aria-hidden="true"></i> ${ value.data.created_at!==null? value.data.created_at:''}
+                                                                        <i class="fa fa-calendar" aria-hidden="true"></i> ${ candidate.created_at!==null? candidate.created_at:''}
                                                                     </div>
                                                                 </div>
                                                             </div> <!-- /. candidate item left -->
@@ -101,20 +103,20 @@ var CandidateSearch = {
                                                         <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
                                                             <div class="candidate-item-main">
                                                                 <div class="candidate-item-main-row">
-                                                                    <h5 class="pull-left candidate-item-main-name" data-id="${ value.data.id!==null? value.data.id:''}" toggle="false">${ value.data.can_name!==null? value.data.can_name:''}</h5>
+                                                                    <h5 class="pull-left candidate-item-main-name" data-id="${ candidate.id!==null? candidate.id:''}" toggle="false">${ candidate.can_name!==null? candidate.can_name:''}</h5>
                                                                     <div class="dropdown pull-right">
-                                                                        <button class="btn candidate-item-destroy" type="button" data-id="${ value.data.id !== null ? value.data.id : ''}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                        <button class="btn candidate-item-destroy" type="button" data-id="${ candidate.id !== null ? candidate.id : ''}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                             <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
                                                                         </button>
                                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <a class="dropdown-item" href="${editUrl + '/'}${value.data.id !== null ? value.data.id : ''}" data-id="${ value.data.id!==null? value.data.id:''}">Sửa</a>
-                                                                            <a class="dropdown-item" href="#" data-id="${value.data.id}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">Xóa</a>
-                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="${ value.data.id!==null? value.data.id:''}" data-name="${ value.data.can_name!==null? value.data.can_name:''}" data-avatar="${ value.data.can_avatar!==null? value.data.can_avatar:''}" data-age="${ value.data.can_year!==null? value.data.can_year:''}" data-title="${ value.data.can_title!==null? value.data.can_title:''}" data-delete-url="{{route('diary.ajax.delete')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">Đánh giá</a>
+                                                                            <a class="dropdown-item" href="${editUrl + '/'}${candidate.id !== null ? candidate.id : ''}" data-id="${ candidate.id!==null? candidate.id:''}">Sửa</a>
+                                                                            <a class="dropdown-item" href="#" data-id="${candidate.id}" data-toggle="modal" data-backdrop="static" data-target="#candidate-confirm">Xóa</a>
+                                                                            <a class="dropdown-item" href="#candidate-evaluate" data-id="${ candidate.id!==null? candidate.id:''}" data-name="${ candidate.can_name!==null? candidate.can_name:''}" data-avatar="${ candidate.can_avatar!==null? candidate.can_avatar:''}" data-age="${ candidate.can_year!==null? candidate.can_year:''}" data-title="${ candidate.can_title!==null? candidate.can_title:''}" data-delete-url="{{route('diary.ajax.delete')}}" data-toggle="modal" data-backdrop="static" data-target="#candidate-evaluate">Đánh giá</a>
                                                                         </div>
                                                                     </div>
                                                                     <div class="clearfix"></div>
                                                                 </div>
-
+                                                                
                                                                 <div class="candidate-item-main-row row">
                                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                                         <div class="box ">
@@ -122,7 +124,7 @@ var CandidateSearch = {
                                                                                 <i class="fa fa-globe" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="">
-                                                                                <h6>${value.data.source!==null? value.data.source.so_name:''} - ${ value.data.can_title!==null? value.data.can_title:''}</h6>
+                                                                                <h6> - ${candidate.can_title!==null?candidate.can_title:''}</h6>
                                                                             </div>
                                                                         </div> <!-- /. box -->
                                                                     </div>
@@ -133,7 +135,7 @@ var CandidateSearch = {
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                                                             </div>
-                                                                            <div class="box-text">${value.data.can_address!==null? value.data.can_address:''}</div>
+                                                                            <div class="box-text">${candidate.can_address!==null? candidate.can_address:''}</div>
                                                                         </div> <!-- /. box -->
                                                                         <div class="box ">
                                                                             <div class="box-icon">
@@ -146,14 +148,14 @@ var CandidateSearch = {
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-mobile" aria-hidden="true"></i>
                                                                             </div>
-                                                                            <div class="box-text">${ value.data.can_phone!==null? value.data.can_phone:''}</div>
+                                                                            <div class="box-text">${ candidate.can_phone!==null? candidate.can_phone:''}</div>
                                                                         </div> <!-- /. box -->
                                                                         <div class="box">
                                                                             <div class="box-icon">
                                                                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">${ value.data.can_email!==null? value.data.can_email:''}</a>
+                                                                                <a href="#">${ candidate.can_email!==null? candidate.can_email:''}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -164,7 +166,7 @@ var CandidateSearch = {
                                                                                 <i class="fa fa-skype" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">${ value.data.can_skype!==null? value.data.can_skype:''}</a>
+                                                                                <a href="#">${ candidate.can_skype!==null? candidate.can_skype:''}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -174,7 +176,7 @@ var CandidateSearch = {
                                                                                 <i class="fa fa-facebook-square" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">${ value.data.can_facebook!==null? value.data.can_facebook:''}</a>
+                                                                                <a href="#">${ candidate.can_facebook!==null? candidate.can_facebook:''}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -184,7 +186,7 @@ var CandidateSearch = {
                                                                                 <i class="fa fa-linkedin-square" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">${ value.data.can_linkedin!==null? value.data.can_linkedin:''}</a>
+                                                                                <a href="#">${ candidate.can_linkedin!==null? candidate.can_linkedin:''}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
@@ -193,29 +195,29 @@ var CandidateSearch = {
                                                                                 <i class="fa fa-github" aria-hidden="true"></i>
                                                                             </div>
                                                                             <div class="box-text">
-                                                                                <a href="#">${ value.data.can_github!==null? value.data.can_github:''}</a>
+                                                                                <a href="#">${ candidate.can_github!==null? candidate.can_github:''}</a>
                                                                             </div>
                                                                         </div> <!-- /. box -->
 
                                                                     </div>`;
-            if (value.data.can_diary) {
+            if (candidate.can_diary) {
                 item += `
 
                                                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diary-box">
                                                                         <div class="row">
                                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span>${ value.data.can_diary.created_at!==null? value.data.can_diary.created_at:''}</span>
-                                                                                <span class="bg-green c-white" style="background: ${value.data.can_diary.canty_color}!important;">${value.data.can_diary.canty_name}</span>
+                                                                                <span>${ candidate.can_diary.created_at!==null? candidate.can_diary.created_at:''}</span>
+                                                                                <span class="bg-green c-white" style="background: ${value.data.can_diary.canty_color}!important;">${candidate.can_diary.canty_name}</span>
                                                                             </div>
                                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                                                 @if(!empty($diary->d_evaluate))
-                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> ${ value.data.can_diary.d_evaluate!==null? value.data.can_diary.d_evaluate:''}</span>
+                                                                                    <span><i class="fa fa-star" aria-hidden="true"></i></span><span> ${ candidate.can_diary.d_evaluate!==null? candidate.can_diary.d_evaluate:''}</span>
                                                                                     @else
-                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i> ${ value.data.can_diary.d_set_time!==null? value.data.can_diary.d_set_time:''}, ${ value.data.can_diary.d_set_calendar!==null? value.data.can_diary.d_set_calendar:''}, ${ value.data.can_diary.d_notice_before!==null? value.data.can_diary.d_notice_before:''} </span>
+                                                                                    <span class="time-expired"><i class="fa fa-clock-o"></i> ${ candidate.can_diary.d_set_time!==null? candidate.can_diary.d_set_time:''}, ${ candidate.can_diary.d_set_calendar!==null? candidate.can_diary.d_set_calendar:''}, ${ candidate.can_diary.d_notice_before!==null? candidate.can_diary.d_notice_before:''} </span>
                                                                                 @endif
                                                                             </div>
                                                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                                                <span>${ value.data.can_diary.d_note!==null? value.data.can_diary.d_note:''}</span>
+                                                                                <span>${ candidate.can_diary.d_note!==null? candidate.can_diary.d_note:''}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>`;
