@@ -1,5 +1,0 @@
-@extends('')
-
-@section('content')
-
-@endsection

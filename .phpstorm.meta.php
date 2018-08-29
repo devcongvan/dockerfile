@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2018-08-06 07:13:15.
+    * Generated on 2018-08-27 09:45:42.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -41,8 +41,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
@@ -197,8 +195,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
@@ -353,8 +349,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
@@ -509,8 +503,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
@@ -665,8 +657,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
@@ -821,8 +811,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
@@ -977,8 +965,6 @@ namespace PHPSTORM_META {
         'view.engine.resolver' => \Illuminate\View\Engines\EngineResolver::class,
         'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
         'command.debugbar.clear' => \Barryvdh\Debugbar\Console\ClearCommand::class,
-        'dompdf' => \Dompdf\Dompdf::class,
-        'dompdf.wrapper' => \Barryvdh\DomPDF\PDF::class,
         'elasticsearch.factory' => \Cviebrock\LaravelElasticsearch\Factory::class,
         'elasticsearch' => \Cviebrock\LaravelElasticsearch\Manager::class,
         'Elasticsearch\Client' => \Elasticsearch\Client::class,
